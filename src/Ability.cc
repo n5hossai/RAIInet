@@ -37,20 +37,23 @@ Ability::Ability(char code){
     isUsed = false;
 }
 
+Ability::~Ability(){
+
+}
 
 std::string Ability::getAbilityName(){
     
-    switch (name)
-    {
-        case LinkBoost:   return "LinkBoost";
-        case Firewall:   return "Firewall";
-        case Download: return "Download";
-        case Polarize:   return "Polarize";
-        case Scan: return "Scan";
-        case Sand:   return "Sand";
-        case Portal: return "Portal";
-        case Strengthen: return "Strengthen";
-    }
+        switch (name)
+        {
+            case LinkBoost:   return "LinkBoost";
+            case Firewall:   return "Firewall";
+            case Download: return "Download";
+            case Polarize:   return "Polarize";
+            case Scan: return "Scan";
+            case Sand:   return "Sand";
+            case Portal: return "Portal";
+            case Strengthen: return "Strengthen";
+        }
     
 }
 
