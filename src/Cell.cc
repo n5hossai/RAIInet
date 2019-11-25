@@ -1,23 +1,37 @@
 #include "Cell.h"
+using namespace std;
 
-Cell::Cell(int row, int col){}
+Cell::Cell(int row, int col) : row(row), col(col)
+{
+    
+    if ((row == 0)  && ((col == 3) || (col == 4)))
+    {
+        this->text = 'S';
+        this->isServerPort = true;
+        this->whoseServerPort = 1; // for player 1
+        this->isEmpty = true; // it is always empty, because the links gets downloaded anyway.
 
-Cell::~Cell(){}
+        this->isFireWall = false;
+    }
+    else if ((row == 7)  && ((col == 3) || (col == 4)))
+    {
+        this->text = 'S';
+        this->isServerPort = true;
+        this->whoseServerPort = 2; // for player 2
+        this->isEmpty = true; // it is always empty, because the links gets downloaded anyway.
 
-int Cell::getRow(){}
+        this->isFireWall = false;
+    }
+    else
+    {
+        this->text = '.';
+        this->isServerPort = false;
+        this->whoseServerPort = 0; // NO ONE's serverport
+    }
 
-int Cell::getCol(){}
+    if ((row == 0) || (row == 7))
+    {
+        this->isEdge = true;
+    }
+}
 
-void Cell::setCellText(char text){}
-
-std::string Cell::getCellText(){}
-
-bool Cell::isEdge(){}
-
-int Cell::getEdgeOfPlayer(){}
-
-bool Cell::getIsServerPort(){}
-
-bool Cell::getHasFireWall(){}
-
-int Cell::getWhoBuiltFireWall(){}

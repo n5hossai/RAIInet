@@ -1,28 +1,21 @@
 #ifndef CELL_H
 #define CELL_H
 #include <string>
+#include "Player.h"
+class Player;
+struct Cell
+{
 
-class Cell{
-    private:
-        int row;
-        int col;
-        char cellText;
-        bool isServerPort;
-        bool hasFireWall;
-        int whoBuiltFirewall; 
-        int edgeOfPlayer();
-    public:
-        Cell(int row, int col);
-        ~Cell();
-        int getRow();
-        int getCol();
-        void setCellText(char text);
-        std::string getCellText();
-        bool isEdge();
-        int getEdgeOfPlayer();
-        bool getIsServerPort();
-        bool getHasFireWall();
-        int getWhoBuiltFireWall();
+    int row;
+    int col;
+    char text;
+    bool isServerPort;
+    int whoseServerPort;
+    bool isFireWall;
+    int fireWallOwner;
+    bool isEmpty;
+    bool isEdge;
+    Cell(int row, int col);
 };
 
 #endif
