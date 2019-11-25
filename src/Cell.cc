@@ -3,7 +3,7 @@ using namespace std;
 
 Cell::Cell(int row, int col) : row(row), col(col)
 {
-    // text = '.';
+    
     if ((row == 0)  && ((col == 3) || (col == 4)))
     {
         this->text = 'S';
