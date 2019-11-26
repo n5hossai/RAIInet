@@ -7,8 +7,9 @@
 
 class Player{
     private:
+       int playerNumber;
        std::vector<Link> links; 
-       std::vector<Ability> abilities; 
+       std::vector<Ability> abilities;
        int numOfDataDld;
        int numOfVirusDld;
        std::vector <Cell*> fwCells;
@@ -17,6 +18,7 @@ class Player{
         ~Player();
         void setAbilityOrder(std::string order);
         void setLinkOrder(std::string order);
+        int numOfUnusedAbilities();
 };
 
 #endif
