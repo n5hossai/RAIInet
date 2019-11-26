@@ -13,7 +13,7 @@ struct Cell
     int whoseServerPort;
     bool isFireWall;
     int fireWallOwner;
-    bool isEmpty;
+    bool isEmpty= true;
     bool isEdge;
     Cell(int row, int col);
 };
