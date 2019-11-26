@@ -15,3 +15,19 @@ int Player::numOfUnusedAbilities() {
 	}
 	return unused;
 }
+
+int Player::getPlayerNum() {
+	return this->playerNumber;
+}
+
+int Player::getNumOfData() {
+	return this->numOfDataDld;
+}
+
+int Player::getNumOfVirus() {
+	return this->numOfVirusDld;
+}
+        
+std::vector<Link> Player::getLinks() {
+	return this->links;
+}

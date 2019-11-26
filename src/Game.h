@@ -31,7 +31,9 @@ class Game : public Subject{
         ~Game();
         void init(std::string abilities1, std::string abilities2, std::string links1, std::string links2);
         void move(char id, std::string direction);
-        
+        int getCurrPlayer() override;
+        std::vector<Player> getPlayers() override;
+        std::vector<std::vector<Cell>> getBoard() override;
 };
 
 #endif

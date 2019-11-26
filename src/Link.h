@@ -30,7 +30,7 @@ class Link{
         void polarize();
         void scan();
         void linkBoost();
-        void setStrength(int strength);
+        void strengthen(int strength);
 };
 
 #endif

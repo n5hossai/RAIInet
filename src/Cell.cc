@@ -10,7 +10,9 @@ int Cell::getCol(){}
 
 void Cell::setCellText(char text){}
 
-std::string Cell::getCellText(){}
+char Cell::getCellText(){
+	return this->cellText;
+}
 
 bool Cell::isEdge(){}
 

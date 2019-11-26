@@ -17,7 +17,7 @@ class Cell{
         int getRow();
         int getCol();
         void setCellText(char text);
-        std::string getCellText();
+        char getCellText();
         bool isEdge();
         int getEdgeOfPlayer();
         bool getIsServerPort();
