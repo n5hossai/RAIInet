@@ -1,19 +1,14 @@
-#ifndef ABILITY_H
-#define ABILITY_H
-#include <string>
+#ifndef Ability_H
+#define Ability_H
 
-enum Abilities {LinkBoost = 'L', Firewall = 'F', Download = 'D', Polarize = 'P', Scan = 'S', Sand = 'N', Portal = 'O', Strengthen = 'R'} ;
+enum AbilityName {LinkBooster, Firewall, Download, Polarize, Scan} ;// add new abilities
+
 class Ability{
     private:
-        Abilities name;
-        bool isUsed;
+       
     public:
-        Ability(char code);
-        ~Ability();
-        std::string getAbilityName(); 
-        bool getIsUsed();
-        void UseAbility();
-        
+    Ability(char code);
+    AbilityName name;
 };
 
 #endif

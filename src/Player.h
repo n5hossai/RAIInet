@@ -7,12 +7,13 @@
 
 class Player{
     private:
-       std::vector<Link> links; 
+        
        std::vector<Ability> abilities; 
        int numOfDataDld;
        int numOfVirusDld;
        std::vector <Cell*> fwCells;
     public:
+        std::vector<Link> links;
         Player();
         ~Player();
         void setAbilityOrder(std::string order);
