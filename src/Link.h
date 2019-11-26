@@ -2,35 +2,46 @@
 #define LINK_H
 #include <string>
 
-class Link{
-    private:
-        int row; 
-        int col;
-        char id;
-        int type;
-        int strength;
-        bool isLinkBoosted;
-        bool isVisible;
-        bool isDownloaded;
-    public:
-        Link(char id, int type, int strength);
-        ~Link();
-        //getters
-        int getRow(); 
-        int getCol();
-        char getId();
-        int getType();
-        int getStrength();
-        bool getIsLinkBoosted();
-        bool getIsVisible();
-        bool getIsDownloaded();
+class Link
+{
+private:
+    int row;
+    int col;
+    char id;
+    int type;
+    int strength;
+    bool isLinkBoosted;
+    bool isVisible;
+    bool isDownloaded;
 
-        std::string linkDescription(); // ex returns "a: D1" or "D1"
-        void toggleType();
-        void polarize();
-        void scan();
-        void linkBoost();
-        void setStrength(int strength);
+public:
+    Link(char id, int type, int strength);
+    ~Link();
+    //getters
+    int getRow() const;
+    int getCol() const;
+    char getId() const;
+    int getType() const;
+    int getStrength() const;
+    bool getIsLinkBoosted() const;
+    bool getIsVisible() const;
+    bool getIsDownloaded() const;
+    //setters
+    void setRow(int row_){};
+    void setCol(int col_){};
+    void getId(char id_){};
+    void getType(int type_){};
+    void setStrength(int strength_){};
+    void setIsLinkBoosted(bool boolean_){};
+    void setIsVisible(bool boolean_){};
+    void setIsDownloaded(bool boolean_){};
+
+    std::string linkDescription(); // ex returns "a: D1" or "D1"
+    void toggleType();
+    void polarize();
+    void scan();
+    void linkBoost();
+    void setStrength(int strength);
 };
 
 #endif
