@@ -8,8 +8,8 @@
 //#include "GRaphicsDisplay.h"
 
 class Game{
-    private:
-        std::vector<std::vector <Cell> > board;
+    public:
+    std::vector<std::vector <Cell> > board;
         std::vector<Player> players;
         int boardSize;
         bool isGraphics;
@@ -25,11 +25,11 @@ class Game{
         void applyFirewall(int r, int c);
         void applyPolarize(char id);
         void applyScan(char id);
-    public:
-        Game();
+        Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics);
         ~Game();
-        void init(std::string abilities1, std::string abilities2, std::string links1, std::string links2);
+        void init();
         void move(char id, std::string direction);
+        void togglePlayer();
         
 };
 

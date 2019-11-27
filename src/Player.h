@@ -5,6 +5,7 @@
 #include "Link.h"
 #include "Cell.h"
 
+class Cell;
 class Player{
     private:
        std::vector<Link> links; 
@@ -13,10 +14,11 @@ class Player{
        int numOfVirusDld;
        std::vector <Cell*> fwCells;
     public:
-        Player();
+        Player(int p = 1);
         ~Player();
         void setAbilityOrder(std::string order);
-        void setLinkOrder(std::string order);
+        void setLinkOrder(int p,std::string order);
+        void printAbilities();
 };
 
 #endif
