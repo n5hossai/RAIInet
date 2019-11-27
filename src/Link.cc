@@ -53,11 +53,11 @@ void Link::setCol(int col_)
 {
     this->col = col_;
 }
-void Link::getId(char id_)
+void Link::setId(char id_)
 {
     this->id = id_;
 }
-void Link::getType(int type_)
+void Link::setType(int type_)
 {
     this->type = type_;
 }
