@@ -8,22 +8,6 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-Game::Game(string abilities1, string abilities2, string links1, string links2, bool hasGraphics){
-	for (int i = 0; i < boardSize; ++i) {
-		vector<Cell> row_i;
-		for (int j = 0; j < boardSize; ++j) {
-			row_i.emplace_back(Cell(i, j));
-		}
-		board.emplace_back(row_i);
-	}
-	Player p1(abilities1,links1,1);
-	Player p2(abilities2,links2,2);
-	players.clear();
-	players.push_back(p1);
-	players.push_back(p2);
-	setIsGraphics(hasGraphics);
-=======
 Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics){
     for (int i = 0; i < boardSize; ++i) {
         vector<Cell> row_i;
@@ -36,48 +20,32 @@ Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics){
         players.emplace_back(make_shared<Player>(abilities[i], links[i], i));
     }
     setIsGraphics(hasGraphics);
->>>>>>> modifeid current design to use smart pointers
 }
 
 Game::~Game(){}
 
 void Game::battle(int op, Link& link1, Link& link2){
     
-<<<<<<< HEAD
-}
-
-void Game::applyLinkBoost(char id)
-{
-    if (!players[currPlay - 1].hasAbility("LinkBoost")) return;
-    if (players[currPlay - 1].links[id - players[currPlay - 1].getFirstId()].getIsLinkBoosted()) return;
-    (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setIsLinkBoosted(true);
-    players[currPlay - 1].useAbility("LinkBoost");
-}   
-
-void Game::applyPortal(char id, int r, int c){
-    if (!players[currPlay - 1].hasAbility("Portal")) return;
-    //...
-    players[currPlay - 1].useAbility("Portal");
-=======
 }
 
 //TODO:check if ability is available FOR ALL ABILITIES
 //TODO:check if meets the condition of using abilities
 void Game::applyLinkBoost(char id)
 {   
+    if (!players[currPlay - 1]->hasAbility("LinkBoost")) return;
     if (players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getIsLinkBoosted()) return;
     players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->setIsLinkBoosted(true);
     players[currPlay - 1]->useAbility("LinkBoost");
 }
 
 void Game::applyPortal(char id, int r, int c){
-
->>>>>>> modifeid current design to use smart pointers
+    if (!players[currPlay - 1]->hasAbility("Portal")) return;
+    //...
+    players[currPlay - 1]->useAbility("Portal");
 }
 
 void Game::applyStrengthen(char id)
 {
-<<<<<<< HEAD
     if (!players[currPlay - 1].hasAbility("Strengthen")) return;
     int tmp_strength = (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].getStrength();
     if (tmp_strength <=3)
@@ -85,19 +53,19 @@ void Game::applyStrengthen(char id)
         (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setStrength(tmp_strength + 1);
     }
     players[currPlay - 1].useAbility("Strengthen");
-=======
+
+    if (!players[currPlay - 1]->hasAbility("Strengthen")) return;
     int tmp_strength = players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getStrength();
     if (tmp_strength <=3)
     {
         players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->setStrength(tmp_strength + 1);
         players[currPlay - 1]->useAbility("Strengthen");
     }
->>>>>>> modifeid current design to use smart pointers
 }
 
 int Game::applyFirewall(int r, int c, int p)
 {
-    if (!players[currPlay - 1].hasAbility("Firewall")) return 0;
+    if (!players[currPlay - 1]->hasAbility("Firewall")) return 0;
     try
     {
         if (((r == 0) || (r == 7)) && ((c == 3) || (c == 4)))
@@ -121,11 +89,8 @@ int Game::applyFirewall(int r, int c, int p)
         {
             board[r][c].isFireWall = true; //NOTE: i did not change the text as that would be handled in textdisplay
             board[r][c].fireWallOwner = p; //      to check if the cell is a firewall.
-<<<<<<< HEAD
-            players[currPlay - 1].useAbility("Firewall");
-=======
+
             players[currPlay - 1]->useAbility("Firewall");
->>>>>>> modifeid current design to use smart pointers
         }
     }
     catch (string err_statement)
@@ -138,7 +103,7 @@ int Game::applyFirewall(int r, int c, int p)
 
 int Game::applySand(int r, int c, int p)
 {
-    if (!players[currPlay - 1].hasAbility("Sand")) return 0;
+    if (!players[currPlay - 1]->hasAbility("Sand")) return 0;
     try
     {
         if (!board[r][c].isFireWall)
@@ -150,11 +115,7 @@ int Game::applySand(int r, int c, int p)
         {
             board[r][c].isFireWall = false;
             board[r][c].fireWallOwner = 0;
-<<<<<<< HEAD
-            players[currPlay - 1].useAbility("Sand");
-=======
             players[currPlay - 1]->useAbility("Sand");
->>>>>>> modifeid current design to use smart pointers
         }
     }
     catch (string err_statement)
@@ -166,35 +127,18 @@ int Game::applySand(int r, int c, int p)
 }
 
 void Game::applyDownload(char id){
-<<<<<<< HEAD
     if (!players[currPlay - 1].hasAbility("Download")) return;
     //...
     players[currPlay - 1].useAbility("Download");
-=======
+    if (!players[currPlay - 1]->hasAbility("Download")) return;
+    //...
     // if the target is not already in your knownList, add it to you knownList
     players[currPlay - 1]->useAbility("Download");
->>>>>>> modifeid current design to use smart pointers
 }
 
 void Game::applyPolarize(char id)
 {
-<<<<<<< HEAD
-    if (!players[currPlay - 1].hasAbility("Polarize")) return;
-    bool tmp= (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].getType();
-    (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setType(!tmp);
-    players[currPlay - 1].useAbility("Polarize");
-}
-
-void Game::applyScan(char id)
-{
-    if (!players[currPlay - 1].hasAbility("Scan")) return;
-    (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setIsVisible(true);
-    players[currPlay - 1].useAbility("Scan");
-}
-
-void Game::move(char id, string direction){
-
-=======
+    if (!players[currPlay - 1]->hasAbility("Polarize")) return;
     bool tmp= players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getType();
     players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->setType(!tmp);
     players[currPlay - 1]->useAbility("Polarize");
@@ -202,6 +146,7 @@ void Game::move(char id, string direction){
 
 void Game::applyScan(char id)
 {   
+    if (!players[currPlay - 1]->hasAbility("Scan")) return;
     int known_size = players[currPlay - 1]->knownLinks.size();
     for (int i = 0; i < known_size; ++i) {
         if (players[currPlay - 1]->knownLinks[i]->getId() == id) return;
@@ -217,7 +162,6 @@ void Game::move(char id, string direction){
         // 1. when move to a cell with someone else's firewall, add yourself to that everyone else's knownList
         // 2. when move results in a battle, add yourself to everyone else's knownList
         // 3. when you move to by someone else's server port and gets downloaded, add yourself to that 1 person's knownList
->>>>>>> modifeid current design to use smart pointers
 }
 
 //getters
@@ -235,26 +179,15 @@ void Game::setBoardSize(int size)
 {
     this->boardSize = size;
 }
-<<<<<<< HEAD
 
 void Game::setIsGraphics(bool boolean_)
-
-=======
-void Game::setIsGraphics(bool boolean_)
->>>>>>> modifeid current design to use smart pointers
 {
     this->isGraphics = boolean_;
 }
 
 void Game::togglePlayer(){
-<<<<<<< HEAD
     if (currPlay == 1) currPlay = 2;
     else currPlay = 1;
-=======
-    int temp = currPlay;
-    if (temp == 1) currPlay == 2;
-    else currPlay == 1;
->>>>>>> modifeid current design to use smart pointers
 }
 
 string Game::getAbilityStatus(){
@@ -278,7 +211,6 @@ string Game::getAbilityStatus(){
     builder += "\n";
     return builder;
 }
-<<<<<<< HEAD
 
 //override Subject class public methods
 int Game::getCurrPlayer() {
@@ -293,5 +225,3 @@ vector<vector<Cell>> Game::getBoard() {
 	return this->board;
 
 } 
-=======
->>>>>>> modifeid current design to use smart pointers

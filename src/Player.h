@@ -23,6 +23,7 @@ class Player{
         Player(std::string abilityOrder, std::string linkOrder, int number);
         ~Player();
         char getFirstId();
+        bool hasAbility(string name);
         void setAbilities(string order);
         void setLinks(string order);
         bool hasAbility(string name);
