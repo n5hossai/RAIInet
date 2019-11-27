@@ -34,4 +34,3 @@ Cell::Cell(int row, int col) : row(row), col(col)
         this->isEdge = true;
     }
 }
-

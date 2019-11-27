@@ -1,6 +1,8 @@
+
 #include "Link.h"
 
-Link::Link(char id, int type, int strength) {}
+Link::Link(int row, int col, char id, int type, int strength):
+	row{row}, col{col}, id{id}, type{type}, strength{strength} {}
 
 Link::~Link() {}
 //getters:
@@ -53,7 +55,7 @@ void Link::setCol(int col_)
 {
     this->col = col_;
 }
-void Link::getId(char id_)
+void Link::setId(char id_)
 {
     this->id = id_;
 }
@@ -78,14 +80,33 @@ void Link::setIsDownloaded(bool boolean_)
     this->isDownloaded = boolean_;
 }
 
-std::string linkDescription() {}
+// functions:
+std::string Link::linkDescription(){
+	std::string s = "";
+	std::istringstream ss{s};
+	s += (this->type) ? "V" : "D";
+	ss >> this->strength;
+	s += ss;
+	return s;
+}
 
-void Link::toggleType() {}
+void Link::toggleType(){
+	this->type = !this->type;
+}
 
-void Link::polarize() {}
+void Link::polarize(){
+	this->toggleType();
+}
 
-void Link::scan() {}
+void Link::scan(){
+	this->isVisible = true;
+}
 
-void Link::linkBoost() {}
+void Link::linkBoost(){
+	this->isLinkBoosted = true;
+}
 
-void Link::setStrength(int strength) {}
+void Link::strengthen(){
+	this->strength += (this->strength <= 4) ? 1 : 0;
+}
+

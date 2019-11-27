@@ -1,10 +1,23 @@
 #include "Game.h"
 #include "Cell.h"
+
+#include "Player.h"
+
 #include <vector>
 #include <string>
 #include <iostream>
 
 using namespace std;
+
+Game::Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics){
+Player p1(abilities1,links1,1);
+Player p2(abilities2,links2,2);
+players.clear();
+players.push_back(p1);
+players.push_back(p2);
+setIsGraphics(hasGraphics);
+}
+
 
 //getters
 int Game::getBoardSize() const
@@ -20,8 +33,9 @@ bool Game::getIsGraphics() const
 void Game::setBoardSize(int size)
 {
     this->boardSize = size;
-}
-void Game::getIsGraphics(bool boolean_)
+
+void Game::setIsGraphics(bool boolean_)
+
 {
     this->isGraphics = boolean_;
 }
@@ -37,7 +51,9 @@ int Game::applyFirewall(int r, int c, int p)
         }
         else if (board[r][c].isFireWall)
         {
-            string err_st = "Player" + to_string(board[r][c].fireWallOwner + 1) + " already owns a firewall here";
+
+            string err_st = "Player" + to_string(board[r][c].fireWallOwner) + " already owns a firewall here";
+
             throw err_st;
         }
         else if ((!board[r][c].isFireWall) && (!board[r][c].isEmpty))
@@ -81,6 +97,7 @@ int Game::applySand(int r, int c, int p)
         return 0;
     }
 }
+
 
 void Game::applyPolarize(char id)
 {
@@ -145,4 +162,25 @@ void Game::applyLinkBoost(char id)
     {
         (players[1]).links[id - 'A'].setIsLinkBoosted(true);
     }
+
+string Game::getAbilityStatus(){
+    string builder;
+    for(int i = 0 ; i < 5; i++){
+            builder += "["+ to_string(i+1)+"] "+ players[currPlay].abilities[i].getAbilityName() +  (players[currPlay].abilities[i].getIsUsed() ?" USED" : "") + "\n";
+
+    }
+    return builder;
+}
+
+int Game::getCurrPlayer() {
+	return this->currPlay;
+}
+
+std::vector<Player> Game::getPlayers() {
+	return this->players;
+}
+
+std::vector<std::vector<Cell>> Game::getBoard() {
+	return this->board;
+
 }

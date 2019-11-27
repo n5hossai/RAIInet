@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -12,7 +13,11 @@ int main(int argc, const char* argv[]){
     //Initialize Game players default links V1D4V3V2D3V4D2D1
 
     //Setting Command Line Argument Options
-    Game* game = new Game();
+    string ability1 = "LFDPS";
+    string ability2="LFDPS";
+    string link1="V1V2V3V4D1D2D3D4";
+    string link2="V1V2V3V4D1D2D3D4";
+    bool hasGraphics = false;
     for(int i = 1 ; i < argc ; i++){
         string argument;
         istringstream argReader(argv[i]);
@@ -22,8 +27,7 @@ int main(int argc, const char* argv[]){
         i++;
         istringstream optionReader(argv[i]);
         string abilityOrder;
-        optionReader >> abilityOrder;
-        game->p1.setAbilityOrder(abilityOrder);
+        optionReader >> ability1;
         continue;
       }
       else if(argument=="-ability2"){
@@ -31,17 +35,15 @@ int main(int argc, const char* argv[]){
         i++;
         istringstream optionReader(argv[i]);
         string abilityOrder;
-        optionReader >> abilityOrder;
-        game->p2.setAbilityOrder(abilityOrder);
+        optionReader >> ability2;
         continue;
       }
       else if(argument=="-link1"){
-        //Player 1 Link already default initialize
+        //Player 2 Link already default initialize
         i++;
         istringstream optionReader(argv[i]);
         string linkOrder;
-        optionReader >> linkOrder;
-        game->p1.setLinkOrder(linkOrder);
+        optionReader >> link1;
         continue;
       }
       else if(argument=="-link2"){
@@ -49,13 +51,12 @@ int main(int argc, const char* argv[]){
         i++;
         istringstream optionReader(argv[i]);
         string linkOrder;
-        optionReader >> linkOrder;
-        game->p2.setLinkOrder(linkOrder);
+        optionReader >> link2;
         continue;
       }
       else if(argument=="-graphics"){
         //Game default graphic display option is false
-        game->setGraphicsDisplay(true);
+        hasGraphics=true;
         continue;
       }
       else{
@@ -63,9 +64,27 @@ int main(int argc, const char* argv[]){
           continue;
       }
     }
-    game->setPlayerLinks();
-    game->printBoard();
-    game->togglePlayer();
-    game->printBoard();
-    
+
+    Game* game = new Game(ability1,ability2,link1,link2,hasGraphics);
+    string command;
+    while(cin >> command){
+      if(command == "ability"){
+       cout << game->getAbilityStatus();
+       continue;
+      }
+      else if(command == "board"){
+       //game->printBoard();
+       continue;
+      }
+      else if(command == "move"){
+        //executemove
+        game->togglePlayer();
+      }
+      else if(command == "quit"){
+        cout<<"GAME TERMINATED";
+       break;
+      }
+
+    }
+
 }
