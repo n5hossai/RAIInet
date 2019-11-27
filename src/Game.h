@@ -1,5 +1,3 @@
-
-
 #ifndef GAME_H
 #define GAME_H
 #include <vector>
@@ -7,20 +5,20 @@
 #include "Player.h"
 #include "Link.h"
 #include "TextDisplay.h"
-#include "Graphics.h"
+//#include "Graphics.h"
 #include "Subject.h"
 
 class Game : public Subject{
     private:        
-        int boardSize;
+        int boardSize = 8;
         bool isGraphics;
         TextDisplay* td;
-        GraphicDisplay* gd;
+        //Graphics* graphics;
     public:
         std::vector<std::vector <Cell> > board;
         std::vector<Player> players;
         int numOfPlayers = 2;
-        int currPlay;
+        int currPlay = 1;
         void battle(int op, Link& link1, Link& link2);
         void applyLinkBoost(char id);
         void applyPortal(char id, int r, int c);

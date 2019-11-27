@@ -12,14 +12,14 @@ class Player{
         int numOfDataDld;
         int numOfVirusDld;
         std::vector <Cell*> fwCells;
-        int playerNumber;
+        int playerNumber;  // actualy player number, starting from 1
     public:
         std::vector<Ability> abilities;
         std::vector<Link> links; 
-        Player( std::string abilityOrder, std::string linkOrder, int p = 1);
+        Player(std::string abilityOrder, std::string linkOrder);
         ~Player();
-        void setAbilityOrder(std::string order);
-        void setLinkOrder(int p,std::string order);
+        void setAbilities(std::string order);
+        void setLinks(std::string order);
         int numOfUnusedAbilities() const;
         int getPlayerNum() const;
         int getNumOfData() const;

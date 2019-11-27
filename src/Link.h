@@ -14,7 +14,7 @@ class Link{
         bool isVisible = 0;
         bool isDownloaded = 0;
     public:
-        Link(int row, int col, char id, int type, int strength);
+        Link(char id, int type, int strength);
         ~Link();
         //getters:
         int getRow(); 

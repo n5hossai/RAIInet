@@ -1,8 +1,8 @@
 
 #include "Link.h"
 
-Link::Link(int row, int col, char id, int type, int strength):
-	row{row}, col{col}, id{id}, type{type}, strength{strength} {}
+Link::Link(char id, int type, int strength):
+	id{id}, type{type}, strength{strength} {}
 
 Link::~Link() {}
 //getters:

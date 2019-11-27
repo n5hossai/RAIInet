@@ -3,9 +3,9 @@
  #include <iostream>
  using namespace std;
 
-Player::Player(string abilityorder, string linkorder,int p){
-    setAbilityOrder(abilityorder);
-    setLinkOrder(p,linkorder);
+Player::Player(string abilityorder, string linkorder){
+    setAbilities(abilityorder);
+    setLinks(linkorder);
 }
 
 Player::~Player(){
@@ -17,7 +17,7 @@ Player::~Player(){
     }
 }
 
-void Player::setAbilityOrder(std::string order){
+void Player::setAbilities(std::string order){
     abilities.clear();
     if(order.size() > 5){
         throw "Invalid Abilities List";
@@ -29,15 +29,28 @@ void Player::setAbilityOrder(std::string order){
    //We Shall assume invalid arguments not allowed, I am not checking for >2 Abilities
 }
 
-void Player::setLinkOrder(int p,std::string order){
+void Player::setLinks(std::string order){
     links.clear();
     if(order.size() > 16){
         throw "Invalid Links List";
     }
-    char a = p == 1?'a':'A';
+    char a = (playerNumber == 1)?'a':'A';
     for (int i = 0; i<order.size(); i=i+2) {
         Link newLink((char)(a + i),order[i],order[i+1]-'0');
         links.push_back(newLink);
+    }
+
+    // set up row and col numbers for each link
+    for (int i = 0; i < 8; ++i ) {
+        links[i].setCol(i);
+        if ((i != 3) && (i != 4)) {
+            if (playerNumber == 1) links[i].setRow(0);
+            else links[i].setRow(7);
+        }
+        else {
+            if (playerNumber == 1) links[i].setRow(1);
+            else links[i].setRow(6);
+        }
     }
 }
 

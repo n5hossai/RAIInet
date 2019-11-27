@@ -1,8 +1,6 @@
 #include "Game.h"
 #include "Cell.h"
-
 #include "Player.h"
-
 #include <vector>
 #include <string>
 #include <iostream>
@@ -10,34 +8,63 @@
 using namespace std;
 
 Game::Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics){
-Player p1(abilities1,links1,1);
-Player p2(abilities2,links2,2);
-players.clear();
-players.push_back(p1);
-players.push_back(p2);
-setIsGraphics(hasGraphics);
+	for (int i = 0; i < boardSize; ++i) {
+		std::vector<Cell> row_i;
+		for (int j = 0; j < boardSize; ++j) {
+			row_i.emplace_back(Cell(i, j));
+		}
+		board.emplace_back(row_i);
+	}
+	Player p1(abilities1,links1);
+	Player p2(abilities2,links2);
+	players.clear();
+	players.push_back(p1);
+	players.push_back(p2);
+	setIsGraphics(hasGraphics);
 }
 
+Game::~Game(){}
 
-//getters
-int Game::getBoardSize() const
-{
-    return this->boardSize;
-}
-bool Game::getIsGraphics() const
-{
-    return this->isGraphics;
+void Game::battle(int op, Link& link1, Link& link2){
+    
 }
 
-//setters
-void Game::setBoardSize(int size)
+void Game::applyLinkBoost(char id)
 {
-    this->boardSize = size;
+    if ((id >= 'a') && (id <= 'h'))
+    {
+        (players[0]).links[id - 'a'].setIsLinkBoosted(true);
+    }
 
-void Game::setIsGraphics(bool boolean_)
+    else if ((id >= 'A') && (id <= 'H'))
+    {
+        (players[1]).links[id - 'A'].setIsLinkBoosted(true);
+    }
+}
 
+void Game::applyPortal(char id, int r, int c){
+
+}
+void Game::applyStrengthen(char id)
 {
-    this->isGraphics = boolean_;
+    if ((id >= 'a') && (id <= 'h'))
+    {
+        int tmp_strength = (players[0]).links[id - 'a'].getStrength();
+        if (tmp_strength <=3)
+        {
+            (players[0]).links[id - 'a'].setStrength(tmp_strength + 1);
+        }
+        
+    }
+
+    else if ((id >= 'A') && (id <= 'H'))
+    {
+         int tmp_strength = (players[1]).links[id - 'A'].getStrength();
+        if (tmp_strength <=3)
+        {
+            (players[1]).links[id - 'A'].setStrength(tmp_strength + 1);
+        }
+    }
 }
 
 int Game::applyFirewall(int r, int c, int p)
@@ -98,6 +125,9 @@ int Game::applySand(int r, int c, int p)
     }
 }
 
+void Game::applyDownload(char id){
+
+}
 
 void Game::applyPolarize(char id)
 {
@@ -128,40 +158,36 @@ void Game::applyScan(char id)
 
 }
 
-void Game::applyStrengthen(char id)
-{
-    if ((id >= 'a') && (id <= 'h'))
-    {
-        int tmp_strength = (players[0]).links[id - 'a'].getStrength();
-        if (tmp_strength <=3)
-        {
-            (players[0]).links[id - 'a'].setStrength(tmp_strength + 1);
-        }
-        
-    }
+void Game::move(char id, std::string direction){
 
-    else if ((id >= 'A') && (id <= 'H'))
-    {
-         int tmp_strength = (players[1]).links[id - 'A'].getStrength();
-        if (tmp_strength <=3)
-        {
-            (players[1]).links[id - 'A'].setStrength(tmp_strength + 1);
-        }
-    }
 }
 
-
-void Game::applyLinkBoost(char id)
+//getters
+int Game::getBoardSize() const
 {
-    if ((id >= 'a') && (id <= 'h'))
-    {
-        (players[0]).links[id - 'a'].setIsLinkBoosted(true);
-    }
+    return this->boardSize;
+}
+bool Game::getIsGraphics() const
+{
+    return this->isGraphics;
+}
 
-    else if ((id >= 'A') && (id <= 'H'))
-    {
-        (players[1]).links[id - 'A'].setIsLinkBoosted(true);
-    }
+//setters
+void Game::setBoardSize(int size)
+{
+    this->boardSize = size;
+}
+
+void Game::setIsGraphics(bool boolean_)
+
+{
+    this->isGraphics = boolean_;
+}
+
+void Game::togglePlayer(){
+    if (currPlay == 1) currPlay == 2;
+    else currPlay == 1;
+}
 
 string Game::getAbilityStatus(){
     string builder;
@@ -172,6 +198,7 @@ string Game::getAbilityStatus(){
     return builder;
 }
 
+//override Subject class public methods
 int Game::getCurrPlayer() {
 	return this->currPlay;
 }
@@ -183,4 +210,4 @@ std::vector<Player> Game::getPlayers() {
 std::vector<std::vector<Cell>> Game::getBoard() {
 	return this->board;
 
-}
+} 

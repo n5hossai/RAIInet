@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -66,6 +65,8 @@ int main(int argc, const char* argv[]){
     }
 
     Game* game = new Game(ability1,ability2,link1,link2,hasGraphics);
+    cout << *(game->td);
+
     string command;
     while(cin >> command){
       if(command == "ability"){
@@ -73,12 +74,14 @@ int main(int argc, const char* argv[]){
        continue;
       }
       else if(command == "board"){
-       //game->printBoard();
+       out << *(game->td);
        continue;
       }
       else if(command == "move"){
         //executemove
+        cout << *(game->td);
         game->togglePlayer();
+        cout << *(game->td);
       }
       else if(command == "quit"){
         cout<<"GAME TERMINATED";
@@ -86,5 +89,4 @@ int main(int argc, const char* argv[]){
       }
 
     }
-
 }
