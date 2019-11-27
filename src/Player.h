@@ -13,6 +13,7 @@ class Player{
         int numOfVirusDld;
         std::vector <Cell*> fwCells;
         int playerNumber;  // actualy player number, starting from 1
+        int unusedAbilities = 5;
     public:
         std::vector<Ability> abilities;
         std::vector<Link> links; 

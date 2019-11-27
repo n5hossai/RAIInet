@@ -57,7 +57,7 @@ void Player::setLinks(std::string order){
     }
 }
 
-bool hasAbility(std::string name) {
+bool Player::hasAbility(std::string name) {
     for (int i = 0; i < unusedAbilities; ++i) {
         if (abilities[i].getAbilityName() == name) {
             return true;
@@ -69,7 +69,7 @@ bool hasAbility(std::string name) {
 void Player::useAbility(std::string name) {
     for (int i = 0; i < unusedAbilities; ++i) {
         if (abilities[i].getAbilityName() == name) {
-            abilities[i].useAbility();
+            abilities[i].UseAbility();
             break;
         }
     }
@@ -77,11 +77,7 @@ void Player::useAbility(std::string name) {
 }
 
 int Player::numOfUnusedAbilities() {
-	int unused = 0;
-	for (int i = 0; i < 5; ++i) {
-		if (!this->abilities[i].getIsUsed()) unused += 1;
-	}
-	return unused;
+	return unusedAbilities;
 }
 
 int Player::getPlayerNum() {
