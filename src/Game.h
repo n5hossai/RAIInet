@@ -1,21 +1,24 @@
-
 #ifndef GAME_H
 #define GAME_H
 #include <vector>
+#include <memory>
 #include "Cell.h"
 #include "Player.h"
 #include "Link.h"
 //#include "TextDisplay.h"
-//#include "GRaphicsDisplay.h"
+//#include "Gaphics.h"
+
+using namespace std;
+
 class Game{
     private:        
         int boardSize;
         bool isGraphics;
         //TextDisplay* td;
-        //GraphicDisplay* gd;
+        //Graphics* graphics;
     public:
-        std::vector<std::vector <Cell> > board;
-        std::vector<Player> players;
+        vector<vector <Cell>> board;
+        vector<Player> players;
         int currPlay;
         void battle(int op, Link& link1, Link& link2);
         void applyLinkBoost(char id);
@@ -27,9 +30,9 @@ class Game{
         void applyPolarize(char id);
         void applyScan(char id);
     
-        Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics);
+        Game(string abilities1, string abilities2, string links1, string links2, bool hasGraphics);
         ~Game();
-        void move(char id, std::string direction);
+        void move(char id, string direction);
 
         //getters
         int getBoardSize() const;
@@ -38,7 +41,7 @@ class Game{
         void setBoardSize(int size);
         void setIsGraphics(bool boolean_);
         void togglePlayer();
-        std::string getAbilityStatus();
+        string getAbilityStatus();
         
 };
 

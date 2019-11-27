@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Game::Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics){
+Game::Game(string abilities1, string abilities2, string links1, string links2, bool hasGraphics){
 Player p1(abilities1,links1,1);
 Player p2(abilities2,links2,2);
 players.clear();
