@@ -13,7 +13,6 @@ Player::~Player(){
     for(int i=0; i< fwCells.size(); ++i){
         fwCells[i]->isFireWall = false;
         fwCells[i]->fireWallOwner = 0;
-        delete fwCells[i];
     }
 }
 
