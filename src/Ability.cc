@@ -1,7 +1,7 @@
 #include "Ability.h"
 #include <iostream>
 
-Ability::Ability(char code){
+Ability::Ability(char code, int id) : ID{id} {
     try{
     switch (code)
         {
@@ -39,6 +39,10 @@ Ability::Ability(char code){
 
 Ability::~Ability(){
 
+}
+
+int Ability::getAbilityID() {
+    return this->ID;
 }
 
 std::string Ability::getAbilityName(){

@@ -1,8 +1,6 @@
 #include "Link.h"
-#include <sstream>
 
-Link::Link(char id, int type, int strength):
-	id{id}, type{type}, strength{strength} {}
+Link::Link(char id, int type, int strength) {}
 
 Link::~Link() {}
 //getters:
@@ -36,15 +34,15 @@ bool Link::getIsLinkBoosted() const
     return this->isLinkBoosted;
 }
 
-bool Link::getIsVisible() const 
-{
-    return this->isVisible;
-}
+// bool Link::getIsVisible() const 
+// {
+//     return this->isVisible;
+// }
 
-bool Link::getIsDownloaded() const 
-{
-    return this->isDownloaded;
-}
+// bool Link::getIsDownloaded() const 
+// {
+//     return this->isDownloaded;
+// }
 
 //setters:
 void Link::setRow(int row_)
@@ -71,42 +69,23 @@ void Link::setIsLinkBoosted(bool boolean_)
 {
     this->isLinkBoosted = boolean_;
 }
-void Link::setIsVisible(bool boolean_)
-{
-    this->isVisible = boolean_;
-}
-void Link::setIsDownloaded(bool boolean_)
-{
-    this->isDownloaded = boolean_;
-}
+// void Link::setIsVisible(bool boolean_)
+// {
+//     this->isVisible = boolean_;
+// }
+// void Link::setIsDownloaded(bool boolean_)
+// {
+//     this->isDownloaded = boolean_;
+// }
 
-// functions:
-std::string Link::linkDescription(){
-	std::string s = "";
-	std::istringstream ss{s};
-	s += (this->type) ? "V" : "D";
-	ss >> this->strength;
-	s += ss.str();
-	return s;
-}
+std::string linkDescription() {}
 
-void Link::toggleType(){
-	this->type = !this->type;
-}
+void Link::toggleType() {}
 
-void Link::polarize(){
-	this->toggleType();
-}
+void Link::polarize() {}
 
-void Link::scan(){
-	this->isVisible = true;
-}
+void Link::scan() {}
 
-void Link::linkBoost(){
-	this->isLinkBoosted = true;
-}
+void Link::linkBoost() {}
 
-void Link::strengthen(){
-	this->strength += (this->strength <= 4) ? 1 : 0;
-}
-
+void Link::strengthen() {}

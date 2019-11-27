@@ -17,78 +17,72 @@ Player::~Player(){
 }
 
 char Player::getFirstId() {
-    return links[0].getId();
+    return links[0]->getId();
 }
 
-void Player::setAbilities(std::string order){
+void Player::setAbilities(string order){
     abilities.clear();
     if(order.size() > 5){
         throw "Invalid Abilities List";
     }
     for (unsigned int i = 0; i<order.size(); i++) {
-        Ability newAbility(order[i]);
-        abilities.push_back(newAbility);
+        abilities.emplace_back(make_shared<Ability>(order[i],i+1));
     }
    //We Shall assume invalid arguments not allowed, I am not checking for >2 Abilities
 }
 
-void Player::setLinks(std::string order){
+void Player::setLinkLists(string order){
     links.clear();
     if(order.size() > 16){
         throw "Invalid Links List";
     }
     char a = (playerNumber == 1)?'a':'A';
     for (unsigned int i = 0; i<order.size(); i=i+2) {
-        Link newLink((char)(a + i),order[i],order[i+1]-'0');
-        links.push_back(newLink);
+        shared_ptr<Link> sp = make_shared<Link>((char)(a + i),order[i],order[i+1]-'0');
+        links.emplace_back(sp);
+        knownLinks.emplace_back(sp);
     }
 
     // set up row and col numbers for each link
     for (int i = 0; i < 8; ++i ) {
-        links[i].setCol(i);
+        links[i]->setCol(i);
         if ((i != 3) && (i != 4)) {
-            if (playerNumber == 1) links[i].setRow(0);
-            else links[i].setRow(7);
+            if (playerNumber == 1) links[i]->setRow(0);
+            else links[i]->setRow(7);
         }
         else {
-            if (playerNumber == 1) links[i].setRow(1);
-            else links[i].setRow(6);
+            if (playerNumber == 1) links[i]->setRow(1);
+            else links[i]->setRow(6);
         }
     }
 }
 
-bool Player::hasAbility(std::string name) {
+void Player::useAbility(string name) {
+    int index_to_delete;
     for (int i = 0; i < unusedAbilities; ++i) {
-        if (abilities[i].getAbilityName() == name) {
-            return true;
-        }
-    }
-    return false;
-}
-
-void Player::useAbility(std::string name) {
-    for (int i = 0; i < unusedAbilities; ++i) {
-        if (abilities[i].getAbilityName() == name) {
-            abilities[i].UseAbility();
+        if (abilities[i]->getAbilityName() == name) {
+            index_to_delete = i;
             break;
         }
     }
+    shared_ptr<Ability> used = abilities[index_to_delete];
+    usedAbilities.emplace_back(used);
+    abilities.erase(abilities.begin() + index_to_delete);
     unusedAbilities -= 1;
 }
 
 int Player::numOfUnusedAbilities() {
-	return unusedAbilities;
+    return this->unusedAbilities;
 }
 
 int Player::getPlayerNum() {
-	return this->playerNumber;
+    return this->playerNumber;
 }
 
 int Player::getNumOfData() {
-	return this->numOfDataDld;
+    return this->numOfDataDld;
 }
 
 int Player::getNumOfVirus() {
-	return this->numOfVirusDld;
+    return this->numOfVirusDld;
 }
-
