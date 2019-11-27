@@ -29,8 +29,8 @@ public:
     //setters
     void setRow(int row_){};
     void setCol(int col_){};
-    void getId(char id_){};
-    void getType(int type_){};
+    void setId(char id_){};
+    void setType(int type_){};
     void setStrength(int strength_){};
     void setIsLinkBoosted(bool boolean_){};
     void setIsVisible(bool boolean_){};
