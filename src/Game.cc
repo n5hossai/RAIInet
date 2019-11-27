@@ -32,17 +32,21 @@ void Game::battle(int op, Link& link1, Link& link2){
 //TODO:check if meets the condition of using abilities
 void Game::applyLinkBoost(char id)
 {   
+    if (!players[currPlay - 1]->hasAbility("LinkBoost")) return;
     if (players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getIsLinkBoosted()) return;
     players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->setIsLinkBoosted(true);
     players[currPlay - 1]->useAbility("LinkBoost");
 }
 
 void Game::applyPortal(char id, int r, int c){
-
+    if (!players[currPlay - 1]->hasAbility("Portal")) return;
+    //...
+    players[currPlay - 1]->useAbility("Portal");
 }
 
 void Game::applyStrengthen(char id)
 {
+    if (!players[currPlay - 1]->hasAbility("Strengthen")) return;
     int tmp_strength = players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getStrength();
     if (tmp_strength <=3)
     {
@@ -53,6 +57,7 @@ void Game::applyStrengthen(char id)
 
 int Game::applyFirewall(int r, int c, int p)
 {
+    if (!players[currPlay - 1]->hasAbility("Firewall")) return 0;
     try
     {
         if (((r == 0) || (r == 7)) && ((c == 3) || (c == 4)))
@@ -89,6 +94,7 @@ int Game::applyFirewall(int r, int c, int p)
 
 int Game::applySand(int r, int c, int p)
 {
+    if (!players[currPlay - 1]->hasAbility("Sand")) return 0;
     try
     {
         if (!board[r][c].isFireWall)
@@ -112,12 +118,15 @@ int Game::applySand(int r, int c, int p)
 }
 
 void Game::applyDownload(char id){
+    if (!players[currPlay - 1]->hasAbility("Download")) return;
+    //...
     // if the target is not already in your knownList, add it to you knownList
     players[currPlay - 1]->useAbility("Download");
 }
 
 void Game::applyPolarize(char id)
 {
+    if (!players[currPlay - 1]->hasAbility("Polarize")) return;
     bool tmp= players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getType();
     players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->setType(!tmp);
     players[currPlay - 1]->useAbility("Polarize");
@@ -125,6 +134,7 @@ void Game::applyPolarize(char id)
 
 void Game::applyScan(char id)
 {   
+    if (!players[currPlay - 1]->hasAbility("Scan")) return;
     int known_size = players[currPlay - 1]->knownLinks.size();
     for (int i = 0; i < known_size; ++i) {
         if (players[currPlay - 1]->knownLinks[i]->getId() == id) return;
@@ -163,9 +173,8 @@ void Game::setIsGraphics(bool boolean_)
 }
 
 void Game::togglePlayer(){
-    int temp = currPlay;
-    if (temp == 1) currPlay == 2;
-    else currPlay == 1;
+    if (currPlay == 1) currPlay = 2;
+    else currPlay = 1;
 }
 
 string Game::getAbilityStatus(){

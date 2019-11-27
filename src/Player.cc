@@ -57,6 +57,15 @@ void Player::setLinkLists(string order){
     }
 }
 
+bool Player::hasAbility(string name) {
+    for (int i = 0; i < unusedAbilities; ++i) {
+        if (abilities[i]->getAbilityName() == name) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Player::useAbility(string name) {
     int index_to_delete;
     for (int i = 0; i < unusedAbilities; ++i) {

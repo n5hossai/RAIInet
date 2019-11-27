@@ -24,6 +24,7 @@ class Player{
         Player(string abilityOrder, string linkOrder, int playerNumber);
         ~Player();
         char getFirstId();
+        bool hasAbility(string name);
         void setAbilities(string order);
         void setLinkLists(string order);
         void useAbility(string name);
