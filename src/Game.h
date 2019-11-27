@@ -37,7 +37,7 @@ class Game{
         bool getIsGraphics() const;
         //setters
         void setBoardSize(int size);
-        void getIsGraphics(bool boolean_);
+        void setIsGraphics(bool boolean_);
         
 };
 
