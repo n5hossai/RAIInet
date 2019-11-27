@@ -2,9 +2,9 @@
  #include <iostream>
  using namespace std;
 
-Player::Player(int p ){
-    setAbilityOrder("LFDPS");
-    setLinkOrder(p,"V1V2V3V4D1D2D3D4");
+Player::Player(string abilityorder, string linkorder,int p){
+    setAbilityOrder(abilityorder);
+    setLinkOrder(p,linkorder);
 }
 
 Player::~Player(){
@@ -40,8 +40,3 @@ void Player::setLinkOrder(int p,std::string order){
     }
 }
 
-void Player::printAbilities(){
-    for(int i = 0 ; i < 5; i++){
-            std::cout<< "["<<i+1<<"] "<< abilities[i].getAbilityName() <<  (abilities[i].getIsUsed() ?" USED" : "")<<endl;
-        }
-}

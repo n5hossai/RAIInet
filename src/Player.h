@@ -9,16 +9,16 @@ class Cell;
 class Player{
     private:
        std::vector<Link> links; 
-       std::vector<Ability> abilities; 
+       
        int numOfDataDld;
        int numOfVirusDld;
        std::vector <Cell*> fwCells;
     public:
-        Player(int p = 1);
+        std::vector<Ability> abilities; 
+        Player( std::string abilityOrder, std::string linkOrder, int p = 1);
         ~Player();
         void setAbilityOrder(std::string order);
         void setLinkOrder(int p,std::string order);
-        void printAbilities();
 };
 
 #endif

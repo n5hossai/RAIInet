@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Cell.h"
+#include "Player.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -7,7 +8,11 @@
 using namespace std;
 
 Game::Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics){
-//call setplayerability order and link order for each player;
+Player p1(abilities1,links1,1);
+Player p2(abilities2,links2,2);
+players.clear();
+players.push_back(p1);
+players.push_back(p2);
 setIsGraphics(hasGraphics);
 }
 
@@ -85,4 +90,13 @@ int Game::applySand(int r, int c, int p)
         cout << err_statement << endl;
         return 0;
     }
+}
+
+string Game::getAbilityStatus(){
+    string builder;
+    for(int i = 0 ; i < 5; i++){
+            builder += "["+ to_string(i+1)+"] "+ players[currPlay].abilities[i].getAbilityName() +  (players[currPlay].abilities[i].getIsUsed() ?" USED" : "") + "\n";
+
+    }
+    return builder;
 }

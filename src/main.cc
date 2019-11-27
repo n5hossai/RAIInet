@@ -68,7 +68,7 @@ int main(int argc, const char* argv[]){
     string command;
     while(cin >> command){
       if(command == "ability"){
-       game->players[game->currPlay - 1].printAbilities();
+       cout << game->getAbilityStatus();
        continue;
       }
       else if(command == "board"){

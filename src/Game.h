@@ -7,7 +7,6 @@
 #include "Link.h"
 //#include "TextDisplay.h"
 //#include "GRaphicsDisplay.h"
-
 class Game{
     private:        
         int boardSize;
@@ -39,6 +38,7 @@ class Game{
         void setBoardSize(int size);
         void setIsGraphics(bool boolean_);
         void togglePlayer();
+        std::string getAbilityStatus();
         
 };
 
