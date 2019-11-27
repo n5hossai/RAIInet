@@ -34,15 +34,15 @@ bool Link::getIsLinkBoosted() const
     return this->isLinkBoosted;
 }
 
-bool Link::getIsVisible() const 
-{
-    return this->isVisible;
-}
+// bool Link::getIsVisible() const 
+// {
+//     return this->isVisible;
+// }
 
-bool Link::getIsDownloaded() const 
-{
-    return this->isDownloaded;
-}
+// bool Link::getIsDownloaded() const 
+// {
+//     return this->isDownloaded;
+// }
 
 //setters:
 void Link::setRow(int row_)
@@ -69,14 +69,14 @@ void Link::setIsLinkBoosted(bool boolean_)
 {
     this->isLinkBoosted = boolean_;
 }
-void Link::setIsVisible(bool boolean_)
-{
-    this->isVisible = boolean_;
-}
-void Link::setIsDownloaded(bool boolean_)
-{
-    this->isDownloaded = boolean_;
-}
+// void Link::setIsVisible(bool boolean_)
+// {
+//     this->isVisible = boolean_;
+// }
+// void Link::setIsDownloaded(bool boolean_)
+// {
+//     this->isDownloaded = boolean_;
+// }
 
 std::string linkDescription() {}
 

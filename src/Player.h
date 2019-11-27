@@ -1,24 +1,36 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <vector>
+#include <memory>
 #include "Ability.h"
 #include "Link.h"
 #include "Cell.h"
 
+using namespace std;
+
 class Cell;
 class Player{
     private:
-       std::vector<Link> links; 
-       
-       int numOfDataDld;
-       int numOfVirusDld;
-       std::vector <Cell*> fwCells;
+       int numOfDataDld = 0;
+       int numOfVirusDld = 0;
+       vector <Cell*> fwCells;
+       int playerNumber; // actualy player number, starting from 1
+       int unusedAbilities = 5;
     public:
-        std::vector<Ability> abilities; 
-        Player( std::string abilityOrder, std::string linkOrder, int p = 1);
+        vector<shared_ptr<Ability>> abilities;
+        vector<shared_ptr<Ability>> usedAbilities;
+        vector<shared_ptr<Link>> links;
+        vector<shared_ptr<Link>> knownLinks;
+        Player(string abilityOrder, string linkOrder, int playerNumber);
         ~Player();
-        void setAbilityOrder(std::string order);
-        void setLinkOrder(int p,std::string order);
+        char getFirstId();
+        void setAbilities(string order);
+        void setLinkLists(string order);
+        void useAbility(string name);
+        int numOfUnusedAbilities() ;
+        int getPlayerNum() ;
+        int getNumOfData() ;
+        int getNumOfVirus() ;
 };
 
 #endif

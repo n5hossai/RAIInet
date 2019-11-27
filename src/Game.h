@@ -18,8 +18,9 @@ class Game{
         //Graphics* graphics;
     public:
         vector<vector <Cell>> board;
-        vector<Player> players;
-        int currPlay;
+        vector<shared_ptr<Player>> players;
+        int numOfPlayers = 2;
+        int currPlay = 1;
         void battle(int op, Link& link1, Link& link2);
         void applyLinkBoost(char id);
         void applyPortal(char id, int r, int c);
@@ -30,7 +31,7 @@ class Game{
         void applyPolarize(char id);
         void applyScan(char id);
     
-        Game(string abilities1, string abilities2, string links1, string links2, bool hasGraphics);
+        Game(vector<string> abilities, vector<string> links, bool hasGraphics);
         ~Game();
         void move(char id, string direction);
 
@@ -42,7 +43,6 @@ class Game{
         void setIsGraphics(bool boolean_);
         void togglePlayer();
         string getAbilityStatus();
-        
 };
 
 #endif
