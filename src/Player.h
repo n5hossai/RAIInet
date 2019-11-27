@@ -18,12 +18,15 @@ class Player{
         std::vector<Link> links; 
         Player(std::string abilityOrder, std::string linkOrder);
         ~Player();
+        char getFirstId();
         void setAbilities(std::string order);
         void setLinks(std::string order);
-        int numOfUnusedAbilities() const;
-        int getPlayerNum() const;
-        int getNumOfData() const;
-        int getNumOfVirus() const;
+        bool hasAbility(std::string name);
+        void useAbility(std::string name);
+        int numOfUnusedAbilities() ;
+        int getPlayerNum() ;
+        int getNumOfData() ;
+        int getNumOfVirus() ;
 };
 
 

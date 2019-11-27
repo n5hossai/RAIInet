@@ -1,5 +1,5 @@
-
 #include "Link.h"
+#include <sstream>
 
 Link::Link(char id, int type, int strength):
 	id{id}, type{type}, strength{strength} {}
@@ -86,7 +86,7 @@ std::string Link::linkDescription(){
 	std::istringstream ss{s};
 	s += (this->type) ? "V" : "D";
 	ss >> this->strength;
-	s += ss;
+	s += ss.str();
 	return s;
 }
 

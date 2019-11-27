@@ -1,4 +1,3 @@
-
 #ifndef LINK_H
 #define LINK_H
 #include <string>
@@ -17,14 +16,14 @@ class Link{
         Link(char id, int type, int strength);
         ~Link();
         //getters:
-        int getRow(); 
-        int getCol();
-        char getId();
-        int getType();
-        int getStrength();
-        bool getIsLinkBoosted();
-        bool getIsVisible();
-        bool getIsDownloaded();
+        int getRow() const; 
+        int getCol() const;
+        char getId() const;
+        int getType() const;
+        int getStrength() const;
+        bool getIsLinkBoosted() const;
+        bool getIsVisible()const;
+        bool getIsDownloaded()const;
 
         //setters:
         void setRow(int row_);

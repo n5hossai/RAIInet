@@ -31,44 +31,32 @@ void Game::battle(int op, Link& link1, Link& link2){
 
 void Game::applyLinkBoost(char id)
 {
-    if ((id >= 'a') && (id <= 'h'))
-    {
-        (players[0]).links[id - 'a'].setIsLinkBoosted(true);
-    }
-
-    else if ((id >= 'A') && (id <= 'H'))
-    {
-        (players[1]).links[id - 'A'].setIsLinkBoosted(true);
-    }
-}
+    if (!players[currPlay - 1].hasAbility("LinkBoost")) return;
+    if (players[currPlay - 1].links[id - players[currPlay - 1].getFirstId()].getIsLinkBoosted()) return;
+    (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setIsLinkBoosted(true);
+    players[currPlay - 1].useAbility("LinkBoost");
+}   
 
 void Game::applyPortal(char id, int r, int c){
-
+    if (!players[currPlay - 1].hasAbility("Portal")) return;
+    //...
+    players[currPlay - 1].useAbility("Portal");
 }
+
 void Game::applyStrengthen(char id)
 {
-    if ((id >= 'a') && (id <= 'h'))
+    if (!players[currPlay - 1].hasAbility("Strengthen")) return;
+    int tmp_strength = (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].getStrength();
+    if (tmp_strength <=3)
     {
-        int tmp_strength = (players[0]).links[id - 'a'].getStrength();
-        if (tmp_strength <=3)
-        {
-            (players[0]).links[id - 'a'].setStrength(tmp_strength + 1);
-        }
-        
+        (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setStrength(tmp_strength + 1);
     }
-
-    else if ((id >= 'A') && (id <= 'H'))
-    {
-         int tmp_strength = (players[1]).links[id - 'A'].getStrength();
-        if (tmp_strength <=3)
-        {
-            (players[1]).links[id - 'A'].setStrength(tmp_strength + 1);
-        }
-    }
+    players[currPlay - 1].useAbility("Strengthen");
 }
 
 int Game::applyFirewall(int r, int c, int p)
 {
+    if (!players[currPlay - 1].hasAbility("Firewall")) return 0;
     try
     {
         if (((r == 0) || (r == 7)) && ((c == 3) || (c == 4)))
@@ -92,7 +80,7 @@ int Game::applyFirewall(int r, int c, int p)
         {
             board[r][c].isFireWall = true; //NOTE: i did not change the text as that would be handled in textdisplay
             board[r][c].fireWallOwner = p; //      to check if the cell is a firewall.
-            return 1;
+            players[currPlay - 1].useAbility("Firewall");
         }
     }
     catch (string err_statement)
@@ -100,10 +88,12 @@ int Game::applyFirewall(int r, int c, int p)
         cout << err_statement << endl;
         return 0;
     }
+    return 1;
 }
 
 int Game::applySand(int r, int c, int p)
 {
+    if (!players[currPlay - 1].hasAbility("Sand")) return 0;
     try
     {
         if (!board[r][c].isFireWall)
@@ -115,7 +105,7 @@ int Game::applySand(int r, int c, int p)
         {
             board[r][c].isFireWall = false;
             board[r][c].fireWallOwner = 0;
-            return 1;
+            players[currPlay - 1].useAbility("Sand");
         }
     }
     catch (string err_statement)
@@ -123,39 +113,28 @@ int Game::applySand(int r, int c, int p)
         cout << err_statement << endl;
         return 0;
     }
+    return 1;
 }
 
 void Game::applyDownload(char id){
-
+    if (!players[currPlay - 1].hasAbility("Download")) return;
+    //...
+    players[currPlay - 1].useAbility("Download");
 }
 
 void Game::applyPolarize(char id)
 {
-
-    if ((id >= 'a') && (id <= 'h'))
-    {
-        bool tmp= (players[0]).links[id - 'a'].getType();
-        (players[0]).links[id - 'a'].setType(!tmp);
-    }
-    else if ((id >= 'A') && (id <= 'H'))
-    {
-        bool tmp= (players[1]).links[id - 'A'].getType();
-        (players[1]).links[id - 'A'].setType(!tmp);
-    }
+    if (!players[currPlay - 1].hasAbility("Polarize")) return;
+    bool tmp= (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].getType();
+    (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setType(!tmp);
+    players[currPlay - 1].useAbility("Polarize");
 }
 
 void Game::applyScan(char id)
 {
-    if ((id >= 'a') && (id <= 'h'))
-    {
-        (players[0]).links[id - 'a'].setIsVisible(true);
-    }
-
-    else if ((id >= 'A') && (id <= 'H'))
-    {
-        (players[1]).links[id - 'A'].setIsVisible(true);
-    }
-
+    if (!players[currPlay - 1].hasAbility("Scan")) return;
+    (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setIsVisible(true);
+    players[currPlay - 1].useAbility("Scan");
 }
 
 void Game::move(char id, string direction){
@@ -185,8 +164,8 @@ void Game::setIsGraphics(bool boolean_)
 }
 
 void Game::togglePlayer(){
-    if (currPlay == 1) currPlay == 2;
-    else currPlay == 1;
+    if (currPlay == 1) currPlay = 2;
+    else currPlay = 1;
 }
 
 string Game::getAbilityStatus(){

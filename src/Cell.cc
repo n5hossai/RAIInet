@@ -25,12 +25,12 @@ Cell::Cell(int row, int col) : row(row), col(col)
     	this->text = (char)('a' + col - 2);
     	this->isEmpty = false;
     }
-    else if (((i == 7) && (j < 3)) || ((i == 6) && (j > 2) && (j < 5)))
+    else if (((row == 7) && (col < 3)) || ((row == 6) && (col > 2) && (col < 5)))
     {
     	this->text = (char)('A' + col);
     	this->isEmpty = false;
     }
-    else if ((i == 7) && (j < 3))
+    else if ((row == 7) && (col < 3))
     {
     	this->text = (char)('A' + col - 2);
     	this->isEmpty = false;

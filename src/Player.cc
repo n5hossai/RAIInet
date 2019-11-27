@@ -10,10 +10,14 @@ Player::Player(string abilityorder, string linkorder){
 
 Player::~Player(){
     std::vector <Cell*> fwCells;
-    for(int i=0; i< fwCells.size(); ++i){
+    for(unsigned int i=0; i< fwCells.size(); ++i){
         fwCells[i]->isFireWall = false;
         fwCells[i]->fireWallOwner = 0;
     }
+}
+
+char Player::getFirstId() {
+    return links[0].getId();
 }
 
 void Player::setAbilities(std::string order){
@@ -21,7 +25,7 @@ void Player::setAbilities(std::string order){
     if(order.size() > 5){
         throw "Invalid Abilities List";
     }
-    for (int i = 0; i<order.size(); i++) {
+    for (unsigned int i = 0; i<order.size(); i++) {
         Ability newAbility(order[i]);
         abilities.push_back(newAbility);
     }
@@ -34,7 +38,7 @@ void Player::setLinks(std::string order){
         throw "Invalid Links List";
     }
     char a = (playerNumber == 1)?'a':'A';
-    for (int i = 0; i<order.size(); i=i+2) {
+    for (unsigned int i = 0; i<order.size(); i=i+2) {
         Link newLink((char)(a + i),order[i],order[i+1]-'0');
         links.push_back(newLink);
     }
@@ -53,10 +57,29 @@ void Player::setLinks(std::string order){
     }
 }
 
+bool hasAbility(std::string name) {
+    for (int i = 0; i < unusedAbilities; ++i) {
+        if (abilities[i].getAbilityName() == name) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Player::useAbility(std::string name) {
+    for (int i = 0; i < unusedAbilities; ++i) {
+        if (abilities[i].getAbilityName() == name) {
+            abilities[i].useAbility();
+            break;
+        }
+    }
+    unusedAbilities -= 1;
+}
+
 int Player::numOfUnusedAbilities() {
 	int unused = 0;
 	for (int i = 0; i < 5; ++i) {
-		if (!this->abilities[i].isUsed) unused += 1;
+		if (!this->abilities[i].getIsUsed()) unused += 1;
 	}
 	return unused;
 }
@@ -71,9 +94,5 @@ int Player::getNumOfData() {
 
 int Player::getNumOfVirus() {
 	return this->numOfVirusDld;
-}
-        
-std::vector<Link> Player::getLinks() {
-	return this->links;
 }
 

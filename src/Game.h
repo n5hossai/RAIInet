@@ -50,3 +50,4 @@ class Game : public Subject{
         vector<vector<Cell>> getBoard() override;
 };
 
+#endif
