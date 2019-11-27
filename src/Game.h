@@ -1,3 +1,4 @@
+
 #ifndef GAME_H
 #define GAME_H
 #include <vector>
@@ -6,7 +7,6 @@
 #include "Link.h"
 //#include "TextDisplay.h"
 //#include "GRaphicsDisplay.h"
-
 class Game{
     private:        
         int boardSize;
@@ -27,9 +27,8 @@ class Game{
         void applyPolarize(char id);
         void applyScan(char id);
     
-        Game();
+        Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics);
         ~Game();
-        void init(std::string abilities1, std::string abilities2, std::string links1, std::string links2);
         void move(char id, std::string direction);
 
         //getters
@@ -38,6 +37,8 @@ class Game{
         //setters
         void setBoardSize(int size);
         void setIsGraphics(bool boolean_);
+        void togglePlayer();
+        std::string getAbilityStatus();
         
 };
 

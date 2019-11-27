@@ -88,4 +88,4 @@ void Link::scan() {}
 
 void Link::linkBoost() {}
 
-void Link::setStrength(int strength) {}
+void Link::strengthen() {}

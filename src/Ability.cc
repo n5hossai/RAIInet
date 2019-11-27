@@ -57,6 +57,6 @@ std::string Ability::getAbilityName(){
     
 }
 
-void Ability::UseAbility(){
-    isUsed = true;
+bool Ability::getIsUsed(){
+    return isUsed;
 }
