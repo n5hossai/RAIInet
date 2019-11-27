@@ -1,3 +1,4 @@
+
 #include "Link.h"
 
 Link::Link(int row, int col, char id, int type, int strength):
@@ -108,3 +109,4 @@ void Link::linkBoost(){
 void Link::strengthen(){
 	this->strength += (this->strength <= 4) ? 1 : 0;
 }
+

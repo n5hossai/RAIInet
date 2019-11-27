@@ -1,4 +1,5 @@
 
+
 #ifndef GAME_H
 #define GAME_H
 #include <vector>
@@ -49,4 +50,3 @@ class Game : public Subject{
         std::vector<std::vector<Cell>> getBoard() override;
 };
 
-#endif

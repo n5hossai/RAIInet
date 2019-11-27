@@ -1,3 +1,4 @@
+
  #include "Player.h"
  #include <iostream>
  using namespace std;
@@ -63,3 +64,4 @@ int Player::getNumOfVirus() {
 std::vector<Link> Player::getLinks() {
 	return this->links;
 }
+

@@ -1,3 +1,4 @@
+
 #ifndef CELL_H
 #define CELL_H
 #include <string>
@@ -21,4 +22,5 @@ struct Cell
     Cell(int row, int col);
     
 };
+
 #endif

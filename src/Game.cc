@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Cell.h"
+
 #include "Player.h"
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -16,6 +18,7 @@ players.push_back(p2);
 setIsGraphics(hasGraphics);
 }
 
+
 //getters
 int Game::getBoardSize() const
 {
@@ -30,8 +33,9 @@ bool Game::getIsGraphics() const
 void Game::setBoardSize(int size)
 {
     this->boardSize = size;
-}
+
 void Game::setIsGraphics(bool boolean_)
+
 {
     this->isGraphics = boolean_;
 }
@@ -47,7 +51,9 @@ int Game::applyFirewall(int r, int c, int p)
         }
         else if (board[r][c].isFireWall)
         {
+
             string err_st = "Player" + to_string(board[r][c].fireWallOwner) + " already owns a firewall here";
+
             throw err_st;
         }
         else if ((!board[r][c].isFireWall) && (!board[r][c].isEmpty))
@@ -91,6 +97,71 @@ int Game::applySand(int r, int c, int p)
         return 0;
     }
 }
+
+
+void Game::applyPolarize(char id)
+{
+
+    if ((id >= 'a') && (id <= 'h'))
+    {
+        bool tmp= (players[0]).links[id - 'a'].getType();
+        (players[0]).links[id - 'a'].setType(!tmp);
+    }
+    else if ((id >= 'A') && (id <= 'H'))
+    {
+        bool tmp= (players[1]).links[id - 'A'].getType();
+        (players[1]).links[id - 'A'].setType(!tmp);
+    }
+}
+
+void Game::applyScan(char id)
+{
+    if ((id >= 'a') && (id <= 'h'))
+    {
+        (players[0]).links[id - 'a'].setIsVisible(true);
+    }
+
+    else if ((id >= 'A') && (id <= 'H'))
+    {
+        (players[1]).links[id - 'A'].setIsVisible(true);
+    }
+
+}
+
+void Game::applyStrengthen(char id)
+{
+    if ((id >= 'a') && (id <= 'h'))
+    {
+        int tmp_strength = (players[0]).links[id - 'a'].getStrength();
+        if (tmp_strength <=3)
+        {
+            (players[0]).links[id - 'a'].setStrength(tmp_strength + 1);
+        }
+        
+    }
+
+    else if ((id >= 'A') && (id <= 'H'))
+    {
+         int tmp_strength = (players[1]).links[id - 'A'].getStrength();
+        if (tmp_strength <=3)
+        {
+            (players[1]).links[id - 'A'].setStrength(tmp_strength + 1);
+        }
+    }
+}
+
+
+void Game::applyLinkBoost(char id)
+{
+    if ((id >= 'a') && (id <= 'h'))
+    {
+        (players[0]).links[id - 'a'].setIsLinkBoosted(true);
+    }
+
+    else if ((id >= 'A') && (id <= 'H'))
+    {
+        (players[1]).links[id - 'A'].setIsLinkBoosted(true);
+    }
 
 string Game::getAbilityStatus(){
     string builder;
