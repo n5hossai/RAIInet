@@ -21,7 +21,7 @@ void Game::setBoardSize(int size)
 {
     this->boardSize = size;
 }
-void Game::getIsGraphics(bool boolean_)
+void Game::setIsGraphics(bool boolean_)
 {
     this->isGraphics = boolean_;
 }
