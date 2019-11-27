@@ -36,7 +36,7 @@ void TextDisplay::notify(Subject& whoNotified) {
 	std::vector<std::vector<Cell>> board = whoNotified.getBoard();
 	for (int i = 0; i < boardSize; ++i) {
 		for (int j = 0; j < boardSize; ++j) {
-			this->board[i][j] = board[i][j].getCellText();
+			this->board[i][j] = board[i][j].cellText;
 		}
 	}
 }

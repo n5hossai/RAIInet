@@ -7,17 +7,17 @@
 
 class Player{
     private:
-        int playerNumber; 
-        std::vector<Ability> abilities;
         int numOfDataDld;
         int numOfVirusDld;
         std::vector <Cell*> fwCells;
+        int playerNumber;
     public:
-        std::vector<Link> links;
-        Player();
+        std::vector<Ability> abilities;
+        std::vector<Link> links; 
+        Player( std::string abilityOrder, std::string linkOrder, int p = 1);
         ~Player();
         void setAbilityOrder(std::string order);
-        void setLinkOrder(std::string order);
+        void setLinkOrder(int p,std::string order);
         int numOfUnusedAbilities() const;
         int getPlayerNum() const;
         int getNumOfData() const;
