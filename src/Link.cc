@@ -1,33 +1,91 @@
 #include "Link.h"
 
-Link::Link(char id, int type, int strength){}
+Link::Link(char id, int type, int strength) {}
 
-Link::~Link(){}
+Link::~Link() {}
+//getters:
+int Link::getRow() const
+{
+    return this->row;
+}
 
-int Link::getRow(){}
+int Link::getCol() const 
+{
+    return this->col;
+}
 
-int Link::getCol(){}
+char Link::getId() const 
+{
+    return this->id;
+}
 
-char Link::getId(){}
+int Link::getType() const 
+{
+    return this->type;
+}
 
-int Link::getType(){}
+int Link::getStrength() const 
+{
+    return this->strength;
+}
 
-int Link::getStrength(){}
+bool Link::getIsLinkBoosted() const 
+{
+    return this->isLinkBoosted;
+}
 
-bool Link::getIsLinkBoosted(){}
+bool Link::getIsVisible() const 
+{
+    return this->isVisible;
+}
 
-bool Link::getIsVisible(){}
+bool Link::getIsDownloaded() const 
+{
+    return this->isDownloaded;
+}
 
-bool Link::getIsDownloaded(){}
+//setters:
+void Link::setRow(int row_)
+{
+    this->row = row_;
+}
+void Link::setCol(int col_)
+{
+    this->col = col_;
+}
+void Link::setId(char id_)
+{
+    this->id = id_;
+}
+void Link::setType(int type_)
+{
+    this->type = type_;
+}
+void Link::setStrength(int strength_)
+{
+    this->strength = strength_;
+}
+void Link::setIsLinkBoosted(bool boolean_)
+{
+    this->isLinkBoosted = boolean_;
+}
+void Link::setIsVisible(bool boolean_)
+{
+    this->isVisible = boolean_;
+}
+void Link::setIsDownloaded(bool boolean_)
+{
+    this->isDownloaded = boolean_;
+}
 
-std::string linkDescription(){}
+std::string linkDescription() {}
 
-void Link::toggleType(){}
+void Link::toggleType() {}
 
-void Link::polarize(){}
+void Link::polarize() {}
 
-void Link::scan(){}
+void Link::scan() {}
 
-void Link::linkBoost(){}
+void Link::linkBoost() {}
 
-void Link::setStrength(int strength){}
+void Link::strengthen() {}
