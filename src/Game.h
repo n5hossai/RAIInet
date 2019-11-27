@@ -8,6 +8,8 @@
 //#include "Graphics.h"
 #include "Subject.h"
 
+using namespace std;
+
 class Game : public Subject{
     private:        
         int boardSize = 8;
@@ -15,8 +17,8 @@ class Game : public Subject{
         TextDisplay* td;
         //Graphics* graphics;
     public:
-        std::vector<std::vector <Cell> > board;
-        std::vector<Player> players;
+        vector<vector<Cell>> board;
+        vector<Player> players;
         int numOfPlayers = 2;
         int currPlay = 1;
         void battle(int op, Link& link1, Link& link2);
@@ -29,9 +31,9 @@ class Game : public Subject{
         void applyPolarize(char id);
         void applyScan(char id);
 
-        Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics);
+        Game(string abilities1, string abilities2, string links1, string links2, bool hasGraphics);
         ~Game();
-        void move(char id, std::string direction);
+        void move(char id, string direction);
 
         //getters
         int getBoardSize() const;
@@ -40,11 +42,11 @@ class Game : public Subject{
         void setBoardSize(int size);
         void setIsGraphics(bool boolean_);
         void togglePlayer();
-        std::string getAbilityStatus();
+        string getAbilityStatus();
 
         //override Subject class public methods
         int getCurrPlayer() override;
-        std::vector<Player> getPlayers() override;
-        std::vector<std::vector<Cell>> getBoard() override;
+        vector<Player> getPlayers() override;
+        vector<vector<Cell>> getBoard() override;
 };
 

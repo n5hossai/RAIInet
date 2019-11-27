@@ -7,9 +7,9 @@
 
 using namespace std;
 
-Game::Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics){
+Game::Game(string abilities1, string abilities2, string links1, string links2, bool hasGraphics){
 	for (int i = 0; i < boardSize; ++i) {
-		std::vector<Cell> row_i;
+		vector<Cell> row_i;
 		for (int j = 0; j < boardSize; ++j) {
 			row_i.emplace_back(Cell(i, j));
 		}
@@ -158,7 +158,7 @@ void Game::applyScan(char id)
 
 }
 
-void Game::move(char id, std::string direction){
+void Game::move(char id, string direction){
 
 }
 
@@ -203,11 +203,11 @@ int Game::getCurrPlayer() {
 	return this->currPlay;
 }
 
-std::vector<Player> Game::getPlayers() {
+vector<Player> Game::getPlayers() {
 	return this->players;
 }
 
-std::vector<std::vector<Cell>> Game::getBoard() {
+vector<vector<Cell>> Game::getBoard() {
 	return this->board;
 
 } 
