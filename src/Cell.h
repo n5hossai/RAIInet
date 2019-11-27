@@ -21,5 +21,4 @@ struct Cell
     Cell(int row, int col);
     
 };
-
 #endif

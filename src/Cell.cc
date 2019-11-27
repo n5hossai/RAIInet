@@ -1,5 +1,4 @@
 #include "Cell.h"
-
 using namespace std;
 
 Cell::Cell(int row, int col) : row(row), col(col)

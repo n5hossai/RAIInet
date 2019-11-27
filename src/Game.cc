@@ -111,4 +111,5 @@ std::vector<Player> Game::getPlayers() {
 
 std::vector<std::vector<Cell>> Game::getBoard() {
 	return this->board;
+
 }

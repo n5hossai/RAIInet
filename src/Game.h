@@ -1,3 +1,4 @@
+
 #ifndef GAME_H
 #define GAME_H
 #include <vector>
@@ -33,7 +34,7 @@ class Game : public Subject{
         ~Game();
         void move(char id, std::string direction);
 
-        ///getters
+        //getters
         int getBoardSize() const;
         bool getIsGraphics() const;
         //setters
@@ -46,7 +47,6 @@ class Game : public Subject{
         int getCurrPlayer() override;
         std::vector<Player> getPlayers() override;
         std::vector<std::vector<Cell>> getBoard() override;
-
 };
 
 #endif

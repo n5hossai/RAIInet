@@ -5,6 +5,7 @@
 #include "Link.h"
 #include "Cell.h"
 
+class Cell;
 class Player{
     private:
         int numOfDataDld;
