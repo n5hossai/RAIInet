@@ -1,22 +1,26 @@
-
 #ifndef GAME_H
 #define GAME_H
 #include <vector>
 #include "Cell.h"
 #include "Player.h"
 #include "Link.h"
-//#include "TextDisplay.h"
-//#include "GRaphicsDisplay.h"
-class Game{
+#include "TextDisplay.h"
+//#include "Graphics.h"
+#include "Subject.h"
+
+using namespace std;
+
+class Game : public Subject{
     private:        
-        int boardSize;
+        int boardSize = 8;
         bool isGraphics;
-        //TextDisplay* td;
-        //GraphicDisplay* gd;
+        TextDisplay* td;
+        //Graphics* graphics;
     public:
-        std::vector<std::vector <Cell> > board;
-        std::vector<Player> players;
-        int currPlay;
+        vector<vector<Cell>> board;
+        vector<Player> players;
+        int numOfPlayers = 2;
+        int currPlay = 1;
         void battle(int op, Link& link1, Link& link2);
         void applyLinkBoost(char id);
         void applyPortal(char id, int r, int c);
@@ -26,10 +30,10 @@ class Game{
         int applyFirewall(int r, int c, int p); // returning 0 means ability cast failed, 1 means successful
         void applyPolarize(char id);
         void applyScan(char id);
-    
-        Game(std::string abilities1, std::string abilities2, std::string links1, std::string links2, bool hasGraphics);
+
+        Game(string abilities1, string abilities2, string links1, string links2, bool hasGraphics);
         ~Game();
-        void move(char id, std::string direction);
+        void move(char id, string direction);
 
         //getters
         int getBoardSize() const;
@@ -38,8 +42,12 @@ class Game{
         void setBoardSize(int size);
         void setIsGraphics(bool boolean_);
         void togglePlayer();
-        std::string getAbilityStatus();
-        
+        string getAbilityStatus();
+
+        //override Subject class public methods
+        int getCurrPlayer() override;
+        vector<Player> getPlayers() override;
+        vector<vector<Cell>> getBoard() override;
 };
 
 #endif

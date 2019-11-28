@@ -9,12 +9,13 @@ struct Cell
     int row;
     int col;
     char text;
-    bool isServerPort;
-    int whoseServerPort;
-    bool isFireWall;
-    int fireWallOwner;
-    bool isEmpty=true;
-    bool isEdge;
+    bool isServerPort = false;
+    int whoseServerPort = 0;
+    bool isFireWall = false;
+    int fireWallOwner = 0;
+    bool isEmpty = true;
+    bool isEdge = false;
+    int whoseEdge = 0;
 
 
 

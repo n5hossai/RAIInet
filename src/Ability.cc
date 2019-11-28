@@ -60,3 +60,8 @@ std::string Ability::getAbilityName(){
 bool Ability::getIsUsed(){
     return isUsed;
 }
+
+void Ability::UseAbility(){
+	if (!isUsed) isUsed = !isUsed;
+	else return;
+}
