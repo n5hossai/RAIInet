@@ -3,13 +3,14 @@
  #include <iostream>
  using namespace std;
 
-Player::Player(string abilityorder, string linkorder, int number): playerNumber{number} {
-    setAbilities(abilityorder);
-    setLinks(linkorder);
+Player::Player(string abilityOrder, string linkOrder, int playerNumber) :
+playerNumber{playerNumber} {
+    setAbilities(abilityOrder);
+    setLinkLists(linkOrder);
 }
 
 Player::~Player(){
-    std::vector <Cell*> fwCells;
+    vector <Cell*> fwCells;
     for(unsigned int i=0; i< fwCells.size(); ++i){
         fwCells[i]->isFireWall = false;
         fwCells[i]->fireWallOwner = 0;

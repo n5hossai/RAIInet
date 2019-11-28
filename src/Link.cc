@@ -89,3 +89,4 @@ void Link::scan() {}
 void Link::linkBoost() {}
 
 void Link::strengthen() {}
+

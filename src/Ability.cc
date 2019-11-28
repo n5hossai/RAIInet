@@ -34,7 +34,7 @@ Ability::Ability(char code, int id) : ID{id} {
     }catch(char e){
         std::cout << "Invalid Ability";
     }
-    isUsed = false;
+    // isUsed = false;
 }
 
 Ability::~Ability(){
@@ -61,6 +61,7 @@ std::string Ability::getAbilityName(){
     
 }
 
+<<<<<<< HEAD
 bool Ability::getIsUsed(){
     return isUsed;
 }
@@ -69,3 +70,8 @@ void Ability::UseAbility(){
 	if (!isUsed) isUsed = !isUsed;
 	else return;
 }
+=======
+// bool Ability::getIsUsed(){
+//     return isUsed;
+// }
+>>>>>>> 98f575fabe40f3f49754d7af884ea1e0d957c91c

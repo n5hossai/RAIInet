@@ -46,14 +46,6 @@ void Game::applyPortal(char id, int r, int c){
 
 void Game::applyStrengthen(char id)
 {
-    if (!players[currPlay - 1].hasAbility("Strengthen")) return;
-    int tmp_strength = (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].getStrength();
-    if (tmp_strength <=3)
-    {
-        (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setStrength(tmp_strength + 1);
-    }
-    players[currPlay - 1].useAbility("Strengthen");
-
     if (!players[currPlay - 1]->hasAbility("Strengthen")) return;
     int tmp_strength = players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getStrength();
     if (tmp_strength <=3)
@@ -89,7 +81,6 @@ int Game::applyFirewall(int r, int c, int p)
         {
             board[r][c].isFireWall = true; //NOTE: i did not change the text as that would be handled in textdisplay
             board[r][c].fireWallOwner = p; //      to check if the cell is a firewall.
-
             players[currPlay - 1]->useAbility("Firewall");
         }
     }
@@ -127,12 +118,8 @@ int Game::applySand(int r, int c, int p)
 }
 
 void Game::applyDownload(char id){
-    if (!players[currPlay - 1].hasAbility("Download")) return;
-    //...
-    players[currPlay - 1].useAbility("Download");
     if (!players[currPlay - 1]->hasAbility("Download")) return;
     //...
-    // if the target is not already in your knownList, add it to you knownList
     players[currPlay - 1]->useAbility("Download");
 }
 

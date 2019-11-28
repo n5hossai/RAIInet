@@ -25,8 +25,7 @@ class Player{
         char getFirstId();
         bool hasAbility(string name);
         void setAbilities(string order);
-        void setLinks(string order);
-        bool hasAbility(string name);
+        void setLinkLists(string order);
         void useAbility(string name);
         int numOfUnusedAbilities() ;
         int getPlayerNum() ;
