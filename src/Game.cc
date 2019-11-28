@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Cell.h"
 #include "Player.h"
+#include "Link.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -8,7 +9,10 @@
 
 using namespace std;
 
-Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics){
+Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers): numOfPlayers{numOfPlayers}{
+    if (numOfPlayers == 2) boardSize = 8;
+    else boardSize = 10;  //for 4 player, the board is 10*10 with 4 cells disabled
+
     for (int i = 0; i < boardSize; ++i) {
         vector<Cell> row_i;
         for (int j = 0; j < boardSize; ++j) {
@@ -17,7 +21,7 @@ Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics){
         board.emplace_back(row_i);
     }
     for (int i = 0; i < numOfPlayers; ++i) {
-        players.emplace_back(make_shared<Player>(abilities[i], links[i], i));
+        players.emplace_back(make_shared<Player>(abilities[i], links[i], i+1));
     }
     setIsGraphics(hasGraphics);
 }
@@ -134,21 +138,12 @@ void Game::applyPolarize(char id)
 void Game::applyScan(char id)
 {   
     if (!players[currPlay - 1]->hasAbility("Scan")) return;
-    int known_size = players[currPlay - 1]->knownLinks.size();
-    for (int i = 0; i < known_size; ++i) {
-        if (players[currPlay - 1]->knownLinks[i]->getId() == id) return;
-    }
-    shared_ptr<Link> known_sp = players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()];
-    players[currPlay - 1]->knownLinks.emplace_back(known_sp);
+    (players[currPlay - 1])->links[id - players[currPlay - 1]->getFirstId()]->setIsVisible(true);
     players[currPlay - 1]->useAbility("Scan");
 
 }
 
 void Game::move(char id, string direction){
-    // cases that need to add to the knownList:
-        // 1. when move to a cell with someone else's firewall, add yourself to that everyone else's knownList
-        // 2. when move results in a battle, add yourself to everyone else's knownList
-        // 3. when you move to by someone else's server port and gets downloaded, add yourself to that 1 person's knownList
 }
 
 //getters
@@ -179,23 +174,10 @@ void Game::togglePlayer(){
 
 string Game::getAbilityStatus(){
     string builder;
-    int unused_size = players[currPlay]->abilities.size();
-    int used_size = players[currPlay]->usedAbilities.size();
-    builder += "UNUSED:\n";
-    for(int i = 0 ; i < unused_size; i++){
-            istringstream is {builder};
-            int id = players[currPlay]->abilities[i]->getAbilityID();
-            is >> id;
-            builder += "["+ is.str() +"] "+ players[currPlay]->abilities[i]->getAbilityName() + " ";
+    for(int i = 0 ; i < 5; i++){
+            builder += "["+ to_string(i+1)+"] "+ players[currPlay - 1]->abilities[i]->getAbilityName() +  (players[currPlay - 1]->abilities[i]->getIsUsed() ?" USED" : "") + "\n";
+
     }
-    builder += "\nUSED:\n";
-    for(int i = 0 ; i < used_size; i++){
-            istringstream is {builder};
-            int id = players[currPlay]->usedAbilities[i]->getAbilityID();
-            is >> id;
-            builder += "["+ is.str() +"] "+ players[currPlay]->abilities[i]->getAbilityName() + " ";
-    }
-    builder += "\n";
     return builder;
 }
 
@@ -204,7 +186,7 @@ int Game::getCurrPlayer() {
 	return this->currPlay;
 }
 
-vector<Player> Game::getPlayers() {
+vector<shared_ptr<Player>> Game::getPlayers() {
 	return this->players;
 }
 

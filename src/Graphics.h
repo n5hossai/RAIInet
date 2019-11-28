@@ -7,14 +7,10 @@ class Graphics : public Observer {
 	Xwindow theDisplay;
 	int boardSize;
 public:
-	
-}
-class GraphicsDisplay : public Observer<Info, State> {
-    
-    int tileWidth;
-public:
     // try to set this up similar to textdisplay?
-    GraphicsDisplay(int n);
-    ~GraphicsDisplay() = default;
-    void notify(Subject<Info, State> &whoNotified) override;
+    Graphics(int n);
+    ~Graphics() = default;
+    void notify(Subject &whoNotified) override;
 };
+
+#endif

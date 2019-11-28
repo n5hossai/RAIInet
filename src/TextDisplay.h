@@ -10,10 +10,10 @@ class TextDisplay : public Observer {
 	int boardSize;
 	int currPlayer;
 	std::vector<std::vector<char>> board;
-	std::vector<Player> players;
-	std::string printPlayerStat (const Player &player, char first_link_name, bool is_curr) const;
+	std::vector<shared_ptr<Player>> players;
+	std::string printPlayerStat (shared_ptr<Player> player, char first_link_name, bool is_curr) const;
 public:
-	TextDisplay(int numOfPlayers = 2, int boardSize = 8);
+	TextDisplay(int numOfPlayers = 2);
 	void notify(Subject& whoNotified);
 	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
 };

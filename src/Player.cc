@@ -3,10 +3,10 @@
  #include <iostream>
  using namespace std;
 
-Player::Player(string abilityOrder, string linkOrder, int playerNumber) :
-playerNumber{playerNumber} {
+Player::Player(string abilityOrder, string linkOrder, int number) :
+playerNumber{number} {
     setAbilities(abilityOrder);
-    setLinkLists(linkOrder);
+    setLinks(linkOrder);
 }
 
 Player::~Player(){
@@ -27,21 +27,19 @@ void Player::setAbilities(string order){
         throw "Invalid Abilities List";
     }
     for (unsigned int i = 0; i<order.size(); i++) {
-        abilities.emplace_back(make_shared<Ability>(order[i],i+1));
+        abilities.emplace_back(make_unique<Ability>(order[i],i+1));
     }
    //We Shall assume invalid arguments not allowed, I am not checking for >2 Abilities
 }
 
-void Player::setLinkLists(string order){
+void Player::setLinks(string order){
     links.clear();
     if(order.size() > 16){
         throw "Invalid Links List";
     }
     char a = (playerNumber == 1)?'a':'A';
     for (unsigned int i = 0; i<order.size(); i=i+2) {
-        shared_ptr<Link> sp = make_shared<Link>((char)(a + i),order[i],order[i+1]-'0');
-        links.emplace_back(sp);
-        knownLinks.emplace_back(sp);
+        links.emplace_back(make_unique<Link>((char)(a + i),order[i],order[i+1]-'0'));
     }
 
     // set up row and col numbers for each link
@@ -60,7 +58,7 @@ void Player::setLinkLists(string order){
 
 bool Player::hasAbility(string name) {
     for (int i = 0; i < unusedAbilities; ++i) {
-        if (abilities[i]->getAbilityName() == name) {
+        if ((abilities[i]->getAbilityName() == name) && (!abilities[i]->getIsUsed())) {  //if the ability exists in the list and has not been used
             return true;
         }
     }
@@ -68,17 +66,18 @@ bool Player::hasAbility(string name) {
 }
 
 void Player::useAbility(string name) {
-    int index_to_delete;
+    int index_to_use = -1;
     for (int i = 0; i < unusedAbilities; ++i) {
         if (abilities[i]->getAbilityName() == name) {
-            index_to_delete = i;
+            index_to_use = i;
             break;
         }
     }
-    shared_ptr<Ability> used = abilities[index_to_delete];
-    usedAbilities.emplace_back(used);
-    abilities.erase(abilities.begin() + index_to_delete);
-    unusedAbilities -= 1;
+    if (index_to_use != -1) {
+        abilities[index_to_use]->useAbility();
+        unusedAbilities -= 1;
+    }  
+    else throw "cannot use this ability";
 }
 
 int Player::numOfUnusedAbilities() {

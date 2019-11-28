@@ -18,14 +18,14 @@ class Player{
         int playerNumber; // actualy player number, starting from 1
         int unusedAbilities = 5;
     public:
-        vector<shared_ptr<Ability>> abilities;
-        vector<shared_ptr<Link>> links; 
+        vector<unique_ptr<Ability>> abilities;
+        vector<unique_ptr<Link>> links; 
         Player(std::string abilityOrder, std::string linkOrder, int number);
         ~Player();
         char getFirstId();
         bool hasAbility(string name);
         void setAbilities(string order);
-        void setLinkLists(string order);
+        void setLinks(string order);
         void useAbility(string name);
         int numOfUnusedAbilities() ;
         int getPlayerNum() ;

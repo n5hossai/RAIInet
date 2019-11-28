@@ -7,14 +7,14 @@ class Ability{
     private:
     	int ID;
         Abilities name;
-        // bool isUsed;
+        bool isUsed;
     public:
         Ability(char code, int id);
         ~Ability();
         int getAbilityID();
         std::string getAbilityName(); 
-        // bool getIsUsed();
-        // void UseAbility();
+        bool getIsUsed();
+        void useAbility();
         
 };
 
