@@ -1,26 +1,28 @@
 #ifndef GAME_H
 #define GAME_H
 #include <vector>
+#include <memory>
 #include "Cell.h"
 #include "Player.h"
 #include "Link.h"
 #include "TextDisplay.h"
-//#include "Graphics.h"
+#include "Graphics.h"
 #include "Subject.h"
 
 using namespace std;
 
 class Game : public Subject{
     private:        
-        int boardSize = 8;
+        int boardSize;
         bool isGraphics;
-        TextDisplay* td;
-        //Graphics* graphics;
+        int numOfPlayers;
+        int currPlay;
     public:
-        vector<vector<Cell>> board;
-        vector<Player> players;
-        int numOfPlayers = 2;
-        int currPlay = 1;
+        vector<vector <Cell>> board;
+        vector<shared_ptr<Player>> players;
+        TextDisplay* td;
+        Graphics* graphics;
+
         void battle(int op, Link& link1, Link& link2);
         void applyLinkBoost(char id);
         void applyPortal(char id, int r, int c);
@@ -30,12 +32,13 @@ class Game : public Subject{
         int applyFirewall(int r, int c, int p); // returning 0 means ability cast failed, 1 means successful
         void applyPolarize(char id);
         void applyScan(char id);
-
-        Game(string abilities1, string abilities2, string links1, string links2, bool hasGraphics);
+        Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers = 2);
         ~Game();
         void move(char id, string direction);
 
         //getters
+        int getCurrPlayer() const;
+        int getNumOfPlayers() const;
         int getBoardSize() const;
         bool getIsGraphics() const;
         //setters
@@ -46,7 +49,7 @@ class Game : public Subject{
 
         //override Subject class public methods
         int getCurrPlayer() override;
-        vector<Player> getPlayers() override;
+        vector<shared_ptr<Player>> getPlayers() override;
         vector<vector<Cell>> getBoard() override;
 };
 

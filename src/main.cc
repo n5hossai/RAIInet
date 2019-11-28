@@ -64,7 +64,13 @@ int main(int argc, const char* argv[]){
       }
     }
 
-    Game* game = new Game(ability1,ability2,link1,link2,hasGraphics);
+    std::vector<std::string> abilities;
+    abilities.push_back(ability1);
+    abilities.push_back(ability2);
+    std::vector<std::string> links;
+    abilities.push_back(link1);
+    abilities.push_back(link2);
+    Game* game = new Game(abilities, links, hasGraphics);
     cout << *(game->td);
 
     string command;
@@ -74,7 +80,7 @@ int main(int argc, const char* argv[]){
        continue;
       }
       else if(command == "board"){
-       out << *(game->td);
+       cout << *(game->td);
        continue;
       }
       else if(command == "move"){

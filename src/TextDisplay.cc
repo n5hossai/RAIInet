@@ -4,7 +4,10 @@
 #include <iostream>
 #include "Subject.h"
 
-TextDisplay::TextDisplay(int numOfPlayers, int boardSize) : numOfPlayers{numOfPlayers}, boardSize{boardSize}, currPlayer{1} {
+TextDisplay::TextDisplay(int numOfPlayers) : numOfPlayers{numOfPlayers}, currPlayer{1} {
+	if (numOfPlayers == 2) boardSize = 8;
+	else boardSize = 10;
+	
 	for (int i = 0; i < boardSize; ++i) {
 		std::vector<char> row_i;
 		for (int j = 0; j < boardSize; ++j) {
@@ -36,37 +39,45 @@ void TextDisplay::notify(Subject& whoNotified) {
 	std::vector<std::vector<Cell>> board = whoNotified.getBoard();
 	for (int i = 0; i < boardSize; ++i) {
 		for (int j = 0; j < boardSize; ++j) {
-			this->board[i][j] = board[i][j].cellText;
+			if (board[i][j].isFireWall) {
+				this->board[i][j] = 'w' + board[i][j].fireWallOwner - 1;
+			}
+			else this->board[i][j] = board[i][j].text;
 		}
 	}
 }
 
-std::string TextDisplay::printPlayerStat (const Player &player, char first_link_name, bool is_curr) const{
+std::string TextDisplay::printPlayerStat (shared_ptr<Player> player, char first_link_name, bool is_curr) const{
 	std::string stats = "";
 	std::istringstream ss;
-	int temp = player.getPlayerNum();
+	int temp = player->getPlayerNum();
 	ss >> temp;
 	stats += "Player " + ss.str() + ": \n";
-	temp = player.getNumOfData();
+
+	temp = player->getNumOfData();
 	ss >> temp;
 	stats += "Downloaded: " + ss.str() + "D, ";
-	temp = player.getNumOfVirus();
+
+	temp = player->getNumOfVirus();
 	ss >> temp;
 	stats += ss.str() + "V" + "\n";
-	temp = player.numOfUnusedAbilities();
+
+	temp = player->numOfUnusedAbilities();
 	ss >> temp;
 	stats += "Abilities: " + ss.str() + "\n";
+
 	for (int i = 0; i < 8; ++i) {
-		Link link = player.links[i];
 		std::string s (1, first_link_name + i);
 		stats += s;
 		stats += ": ";
+
 		if (is_curr){
-			stats += link.linkDescription();
+			stats += player->links[i]->linkDescription();
 		}
 		else {
-			stats += (link.getIsVisible()) ? link.linkDescription() : "?";
+			stats += (player->links[i]->getIsVisible()) ? player->links[i]->linkDescription() : "?";
 		}
+
 		if ((i == 3) || (i == 7)) stats += "\n";
 		else stats += "   ";
 	}
@@ -74,17 +85,24 @@ std::string TextDisplay::printPlayerStat (const Player &player, char first_link_
 }
 
 std::ostream & operator<<(std::ostream &out, const TextDisplay &td) {
-	if (td.numOfPlayers == 2) {
-		out << td.printPlayerStat(td.players[0], 'a', (td.currPlayer == 1));
-		out << "========" << std::endl;
-		for (int i = 0; i < td.boardSize; ++i) {
-			for (int j = 0; j < td.boardSize; ++j) {
-				out << td.board[i][j];
-			}
-			out << std::endl;
+	out << td.printPlayerStat(td.players[0], 'a', (td.currPlayer == 1));
+	if (td.numOfPlayers != 2) out << td.printPlayerStat(td.players[1], 'a', (td.currPlayer == 2));
+	out << "========" << std::endl;
+	for (int i = 0; i < td.boardSize; ++i) {
+		for (int j = 0; j < td.boardSize; ++j) {
+			out << td.board[i][j];
 		}
-		out << "========" << std::endl;
+		out << std::endl;
+	}
+	out << "========" << std::endl;
+
+	if (td.numOfPlayers == 2){
 		out << td.printPlayerStat(td.players[1], 'A', (td.currPlayer == 2));
 	}
-	return out; //not sure how to print 4 players yet
+	//not sure how to print 4 players yet
+	// else {
+	// 	out << td.printPlayerStat(td.players[2], 'A', (td.currPlayer == 3));
+	// 	out << td.printPlayerStat(td.players[3], 'A', (td.currPlayer == 4));
+	// }
+	return out; 
 }

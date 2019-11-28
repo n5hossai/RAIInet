@@ -2,7 +2,7 @@
 #include <sstream>
 
 Link::Link(char id, int type, int strength):
-	id{id}, type{type}, strength{strength} {}
+    id{id}, type{type}, strength{strength} {}
 
 Link::~Link() {}
 //getters:
@@ -82,31 +82,30 @@ void Link::setIsDownloaded(bool boolean_)
 
 // functions:
 std::string Link::linkDescription(){
-	std::string s = "";
-	std::istringstream ss{s};
-	s += (this->type) ? "V" : "D";
-	ss >> this->strength;
-	s += ss.str();
-	return s;
+    std::string s = "";
+    std::istringstream ss{s};
+    s += (this->type) ? "V" : "D";
+    ss >> this->strength;
+    s += ss.str();
+    return s;
 }
 
 void Link::toggleType(){
-	this->type = !this->type;
+    this->type = !this->type;
 }
 
 void Link::polarize(){
-	this->toggleType();
+    this->toggleType();
 }
 
 void Link::scan(){
-	this->isVisible = true;
+    this->isVisible = true;
 }
 
 void Link::linkBoost(){
-	this->isLinkBoosted = true;
+    this->isLinkBoosted = true;
 }
 
 void Link::strengthen(){
-	this->strength += (this->strength <= 4) ? 1 : 0;
+    this->strength += (this->strength <= 4) ? 1 : 0;
 }
-

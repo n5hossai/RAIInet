@@ -1,7 +1,7 @@
 #include "Ability.h"
 #include <iostream>
 
-Ability::Ability(char code){
+Ability::Ability(char code, int id) : ID{id} {
     try{
     switch (code)
         {
@@ -41,6 +41,10 @@ Ability::~Ability(){
 
 }
 
+int Ability::getAbilityID() {
+    return this->ID;
+}
+
 std::string Ability::getAbilityName(){
     
         switch (name)
@@ -61,7 +65,7 @@ bool Ability::getIsUsed(){
     return isUsed;
 }
 
-void Ability::UseAbility(){
-	if (!isUsed) isUsed = !isUsed;
-	else return;
+void Ability::useAbility(){
+	if (isUsed) throw "cannot use this ability";
+	else isUsed = !isUsed;
 }

@@ -1,26 +1,29 @@
 #include "Game.h"
 #include "Cell.h"
 #include "Player.h"
+#include "Link.h"
 #include <vector>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
-Game::Game(string abilities1, string abilities2, string links1, string links2, bool hasGraphics){
-	for (int i = 0; i < boardSize; ++i) {
-		vector<Cell> row_i;
-		for (int j = 0; j < boardSize; ++j) {
-			row_i.emplace_back(Cell(i, j));
-		}
-		board.emplace_back(row_i);
-	}
-	Player p1(abilities1,links1,1);
-	Player p2(abilities2,links2,2);
-	players.clear();
-	players.push_back(p1);
-	players.push_back(p2);
-	setIsGraphics(hasGraphics);
+Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers): numOfPlayers{numOfPlayers}{
+    if (numOfPlayers == 2) boardSize = 8;
+    else boardSize = 10;  //for 4 player, the board is 10*10 with 4 cells disabled
+
+    for (int i = 0; i < boardSize; ++i) {
+        vector<Cell> row_i;
+        for (int j = 0; j < boardSize; ++j) {
+            row_i.emplace_back(Cell(i, j));
+        }
+        board.emplace_back(row_i);
+    }
+    for (int i = 0; i < numOfPlayers; ++i) {
+        players.emplace_back(make_shared<Player>(abilities[i], links[i], i+1));
+    }
+    setIsGraphics(hasGraphics);
 }
 
 Game::~Game(){}
@@ -29,34 +32,36 @@ void Game::battle(int op, Link& link1, Link& link2){
     
 }
 
+//TODO:check if ability is available FOR ALL ABILITIES
+//TODO:check if meets the condition of using abilities
 void Game::applyLinkBoost(char id)
-{
-    if (!players[currPlay - 1].hasAbility("LinkBoost")) return;
-    if (players[currPlay - 1].links[id - players[currPlay - 1].getFirstId()].getIsLinkBoosted()) return;
-    (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setIsLinkBoosted(true);
-    players[currPlay - 1].useAbility("LinkBoost");
-}   
+{   
+    if (!players[currPlay - 1]->hasAbility("LinkBoost")) return;
+    if (players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getIsLinkBoosted()) return;
+    players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->setIsLinkBoosted(true);
+    players[currPlay - 1]->useAbility("LinkBoost");
+}
 
 void Game::applyPortal(char id, int r, int c){
-    if (!players[currPlay - 1].hasAbility("Portal")) return;
+    if (!players[currPlay - 1]->hasAbility("Portal")) return;
     //...
-    players[currPlay - 1].useAbility("Portal");
+    players[currPlay - 1]->useAbility("Portal");
 }
 
 void Game::applyStrengthen(char id)
 {
-    if (!players[currPlay - 1].hasAbility("Strengthen")) return;
-    int tmp_strength = (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].getStrength();
+    if (!players[currPlay - 1]->hasAbility("Strengthen")) return;
+    int tmp_strength = players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getStrength();
     if (tmp_strength <=3)
     {
-        (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setStrength(tmp_strength + 1);
+        players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->setStrength(tmp_strength + 1);
+        players[currPlay - 1]->useAbility("Strengthen");
     }
-    players[currPlay - 1].useAbility("Strengthen");
 }
 
 int Game::applyFirewall(int r, int c, int p)
 {
-    if (!players[currPlay - 1].hasAbility("Firewall")) return 0;
+    if (!players[currPlay - 1]->hasAbility("Firewall")) return 0;
     try
     {
         if (((r == 0) || (r == 7)) && ((c == 3) || (c == 4)))
@@ -80,7 +85,7 @@ int Game::applyFirewall(int r, int c, int p)
         {
             board[r][c].isFireWall = true; //NOTE: i did not change the text as that would be handled in textdisplay
             board[r][c].fireWallOwner = p; //      to check if the cell is a firewall.
-            players[currPlay - 1].useAbility("Firewall");
+            players[currPlay - 1]->useAbility("Firewall");
         }
     }
     catch (string err_statement)
@@ -93,7 +98,7 @@ int Game::applyFirewall(int r, int c, int p)
 
 int Game::applySand(int r, int c, int p)
 {
-    if (!players[currPlay - 1].hasAbility("Sand")) return 0;
+    if (!players[currPlay - 1]->hasAbility("Sand")) return 0;
     try
     {
         if (!board[r][c].isFireWall)
@@ -105,7 +110,7 @@ int Game::applySand(int r, int c, int p)
         {
             board[r][c].isFireWall = false;
             board[r][c].fireWallOwner = 0;
-            players[currPlay - 1].useAbility("Sand");
+            players[currPlay - 1]->useAbility("Sand");
         }
     }
     catch (string err_statement)
@@ -117,28 +122,28 @@ int Game::applySand(int r, int c, int p)
 }
 
 void Game::applyDownload(char id){
-    if (!players[currPlay - 1].hasAbility("Download")) return;
+    if (!players[currPlay - 1]->hasAbility("Download")) return;
     //...
-    players[currPlay - 1].useAbility("Download");
+    players[currPlay - 1]->useAbility("Download");
 }
 
 void Game::applyPolarize(char id)
 {
-    if (!players[currPlay - 1].hasAbility("Polarize")) return;
-    bool tmp= (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].getType();
-    (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setType(!tmp);
-    players[currPlay - 1].useAbility("Polarize");
+    if (!players[currPlay - 1]->hasAbility("Polarize")) return;
+    bool tmp= players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->getType();
+    players[currPlay - 1]->links[id - players[currPlay - 1]->getFirstId()]->setType(!tmp);
+    players[currPlay - 1]->useAbility("Polarize");
 }
 
 void Game::applyScan(char id)
-{
-    if (!players[currPlay - 1].hasAbility("Scan")) return;
-    (players[currPlay - 1]).links[id - players[currPlay - 1].getFirstId()].setIsVisible(true);
-    players[currPlay - 1].useAbility("Scan");
+{   
+    if (!players[currPlay - 1]->hasAbility("Scan")) return;
+    (players[currPlay - 1])->links[id - players[currPlay - 1]->getFirstId()]->setIsVisible(true);
+    players[currPlay - 1]->useAbility("Scan");
+
 }
 
 void Game::move(char id, string direction){
-
 }
 
 //getters
@@ -158,7 +163,6 @@ void Game::setBoardSize(int size)
 }
 
 void Game::setIsGraphics(bool boolean_)
-
 {
     this->isGraphics = boolean_;
 }
@@ -171,7 +175,7 @@ void Game::togglePlayer(){
 string Game::getAbilityStatus(){
     string builder;
     for(int i = 0 ; i < 5; i++){
-            builder += "["+ to_string(i+1)+"] "+ players[currPlay].abilities[i].getAbilityName() +  (players[currPlay].abilities[i].getIsUsed() ?" USED" : "") + "\n";
+            builder += "["+ to_string(i+1)+"] "+ players[currPlay - 1]->abilities[i]->getAbilityName() +  (players[currPlay - 1]->abilities[i]->getIsUsed() ?" USED" : "") + "\n";
 
     }
     return builder;
@@ -182,7 +186,7 @@ int Game::getCurrPlayer() {
 	return this->currPlay;
 }
 
-vector<Player> Game::getPlayers() {
+vector<shared_ptr<Player>> Game::getPlayers() {
 	return this->players;
 }
 
