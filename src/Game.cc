@@ -15,8 +15,8 @@ Game::Game(string abilities1, string abilities2, string links1, string links2, b
 		}
 		board.emplace_back(row_i);
 	}
-	Player p1(abilities1,links1);
-	Player p2(abilities2,links2);
+	Player p1(abilities1,links1,1);
+	Player p2(abilities2,links2,2);
 	players.clear();
 	players.push_back(p1);
 	players.push_back(p2);

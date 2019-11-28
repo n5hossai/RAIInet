@@ -17,7 +17,7 @@ class Player{
     public:
         std::vector<Ability> abilities;
         std::vector<Link> links; 
-        Player(std::string abilityOrder, std::string linkOrder);
+        Player(std::string abilityOrder, std::string linkOrder, int number);
         ~Player();
         char getFirstId();
         void setAbilities(std::string order);

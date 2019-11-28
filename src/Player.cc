@@ -3,7 +3,7 @@
  #include <iostream>
  using namespace std;
 
-Player::Player(string abilityorder, string linkorder){
+Player::Player(string abilityorder, string linkorder, int number): playerNumber{number} {
     setAbilities(abilityorder);
     setLinks(linkorder);
 }
