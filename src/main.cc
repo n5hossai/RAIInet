@@ -86,7 +86,7 @@ int main(int argc, const char* argv[]){
     cout << *td;
     string command;
     while(cin >> command){
-      if(command == "ability"){
+      if(command == "abilities"){
        cout << game->getAbilityStatus();
        continue;
       }
@@ -94,7 +94,17 @@ int main(int argc, const char* argv[]){
        cout << *td;
        continue;
       }
+      else if(command == "ability"){
+       int ab;
+       cin>>ab;
+       game->applyAbility(ab);
+       continue;
+      }
       else if(command == "move"){
+        char id;
+        string dir;
+        cin >> id >> dir;
+        game->move(id,dir);
         //executemove
         //cout << *(game->td);
         game->togglePlayer();

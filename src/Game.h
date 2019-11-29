@@ -20,6 +20,7 @@ class Game : public Subject{
         vector<shared_ptr<Player>> players;
 
         void battle(int op, Link& link1, Link& link2);
+        void applyAbility(int ab);
         void applyLinkBoost(char id);
         void applyPortal(char id, int r, int c);
         void applyStrengthen(char id);
