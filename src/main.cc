@@ -3,6 +3,8 @@
 #include <sstream>
 #include <string>
 #include "Game.h"
+#include "TextDisplay.h"
+#include "Graphics.h"
 
 using namespace std;
 
@@ -77,8 +79,10 @@ int main(int argc, const char* argv[]){
 
     // start the diaplays
     TextDisplay* td = new TextDisplay( numOfPlayers, initPlayer, game->players);
+    Graphics* graphics = new Graphics(numOfPlayers, initPlayer, game->players);
     game->attach(td);
-    
+    game->attach(graphics);
+
     cout << *td;
     string command;
     while(cin >> command){
