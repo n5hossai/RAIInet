@@ -12,6 +12,7 @@ using namespace std;
 Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers): numOfPlayers{numOfPlayers}{
     if (numOfPlayers == 2) boardSize = 8;
     else boardSize = 10;  //for 4 player, the board is 10*10 with 4 cells disabled
+    currPlay = 1; // SHOULD WE ALWAYS START FROM 1
 
     for (int i = 0; i < boardSize; ++i) {
         vector<Cell> row_i;
@@ -24,6 +25,8 @@ Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int
         players.emplace_back(make_shared<Player>(abilities[i], links[i], i+1));
     }
     setIsGraphics(hasGraphics);
+    this->attach(td);
+    //this->attach(graphics);
 }
 
 Game::~Game(){}
@@ -59,9 +62,9 @@ void Game::applyStrengthen(char id)
     }
 }
 
-int Game::applyFirewall(int r, int c, int p)
+void Game::applyFirewall(int r, int c, int p)
 {
-    if (!players[currPlay - 1]->hasAbility("Firewall")) return 0;
+    if (!players[currPlay - 1]->hasAbility("Firewall")) return;
     try
     {
         if (((r == 0) || (r == 7)) && ((c == 3) || (c == 4)))
@@ -91,14 +94,13 @@ int Game::applyFirewall(int r, int c, int p)
     catch (string err_statement)
     {
         cout << err_statement << endl;
-        return 0;
+        return;
     }
-    return 1;
 }
 
-int Game::applySand(int r, int c, int p)
+void Game::applySand(int r, int c, int p)
 {
-    if (!players[currPlay - 1]->hasAbility("Sand")) return 0;
+    if (!players[currPlay - 1]->hasAbility("Sand")) return;
     try
     {
         if (!board[r][c].isFireWall)
@@ -116,9 +118,8 @@ int Game::applySand(int r, int c, int p)
     catch (string err_statement)
     {
         cout << err_statement << endl;
-        return 0;
+        return;
     }
-    return 1;
 }
 
 void Game::applyDownload(char id){
@@ -175,8 +176,12 @@ void Game::togglePlayer(){
 string Game::getAbilityStatus(){
     string builder;
     for(int i = 0 ; i < 5; i++){
-            builder += "["+ to_string(i+1)+"] "+ players[currPlay - 1]->abilities[i]->getAbilityName() +  (players[currPlay - 1]->abilities[i]->getIsUsed() ?" USED" : "") + "\n";
-
+            stringstream ss;
+            ss << i+1;
+            builder += "["+ ss.str()+"] ";
+            builder += players[currPlay - 1]->abilities[i]->getAbilityName();
+            builder += (players[currPlay - 1]->abilities[i]->getIsUsed()) ?" USED" : "";
+            builder += "\n";
     }
     return builder;
 }

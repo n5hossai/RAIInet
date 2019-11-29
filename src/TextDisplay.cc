@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Subject.h"
 
-TextDisplay::TextDisplay(int numOfPlayers) : numOfPlayers{numOfPlayers}, currPlayer{1} {
+TextDisplay::TextDisplay(vector<string> abilities, vector<string> links, int numOfPlayers) : numOfPlayers{numOfPlayers}, currPlayer{1} {
 	if (numOfPlayers == 2) boardSize = 8;
 	else boardSize = 10;
 	
@@ -23,14 +23,16 @@ TextDisplay::TextDisplay(int numOfPlayers) : numOfPlayers{numOfPlayers}, currPla
 			else if (((i == boardSize - 1) && (j < 3)) || ((i == 6) && (j > 2) && (j < 5))) {
 				row_i.emplace_back('A' + j);
 			}
-			else if ((i == boardSize - 1) && (j < 3)) {
+			else if ((i == boardSize - 1) && (j > 4)) {
 				row_i.emplace_back('A' + j - 2);
 			}
 			else row_i.emplace_back('.');
 		}
 		this->board.emplace_back(row_i);
 	}
-
+	for (int i = 0; i < numOfPlayers; ++i) {
+        players.emplace_back(make_shared<Player>(abilities[i], links[i], i+1));
+    }
 }
 
 void TextDisplay::notify(Subject& whoNotified) {
@@ -49,21 +51,24 @@ void TextDisplay::notify(Subject& whoNotified) {
 
 std::string TextDisplay::printPlayerStat (shared_ptr<Player> player, char first_link_name, bool is_curr) const{
 	std::string stats = "";
-	std::istringstream ss;
+	std::stringstream ss;
 	int temp = player->getPlayerNum();
-	ss >> temp;
+	ss << temp;
 	stats += "Player " + ss.str() + ": \n";
 
 	temp = player->getNumOfData();
-	ss >> temp;
+	ss.str(std::string());
+	ss << temp;
 	stats += "Downloaded: " + ss.str() + "D, ";
 
 	temp = player->getNumOfVirus();
-	ss >> temp;
+	ss.str(std::string());
+	ss << temp;
 	stats += ss.str() + "V" + "\n";
 
 	temp = player->numOfUnusedAbilities();
-	ss >> temp;
+	ss.str(std::string());
+	ss << temp;
 	stats += "Abilities: " + ss.str() + "\n";
 
 	for (int i = 0; i < 8; ++i) {

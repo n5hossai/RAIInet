@@ -68,9 +68,10 @@ int main(int argc, const char* argv[]){
     abilities.push_back(ability1);
     abilities.push_back(ability2);
     std::vector<std::string> links;
-    abilities.push_back(link1);
-    abilities.push_back(link2);
+    links.push_back(link1);
+    links.push_back(link2);
     Game* game = new Game(abilities, links, hasGraphics);
+    game->td = new TextDisplay(abilities, links, 2);
     cout << *(game->td);
 
     string command;
