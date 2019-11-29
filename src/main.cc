@@ -7,6 +7,9 @@
 using namespace std;
 
 int main(int argc, const char* argv[]){
+    int numOfPlayers = 2; //Only support 2 player from command line rn
+    int initPlayer = 2; // Begin with player 1
+
     //Start Game
     //Initialize Game players default abilities LFDPS
     //Initialize Game players default links V1D4V3V2D3V4D2D1
@@ -70,10 +73,13 @@ int main(int argc, const char* argv[]){
     std::vector<std::string> links;
     links.push_back(link1);
     links.push_back(link2);
-    Game* game = new Game(abilities, links, hasGraphics);
-    game->td = new TextDisplay(abilities, links, 2);
-    cout << *(game->td);
+    Game* game = new Game(abilities, links, hasGraphics, numOfPlayers, initPlayer);
 
+    // start the diaplays
+    game->td = new TextDisplay(game->players, numOfPlayers, initPlayer);
+    //game->graphics = new Graphics(game->players, numOfPlayers, initPlayer);
+
+    cout << *(game->td);
     string command;
     while(cin >> command){
       if(command == "ability"){

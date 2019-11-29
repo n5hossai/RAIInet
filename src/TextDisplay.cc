@@ -4,10 +4,8 @@
 #include <iostream>
 #include "Subject.h"
 
-TextDisplay::TextDisplay(vector<string> abilities, vector<string> links, int numOfPlayers) : numOfPlayers{numOfPlayers}, currPlayer{1} {
-	if (numOfPlayers == 2) boardSize = 8;
-	else boardSize = 10;
-	
+TextDisplay::TextDisplay(std::vector<shared_ptr<Player>> players, int numOfPlayers, int initPlayer) : 
+numOfPlayers{numOfPlayers}, currPlayer{initPlayer}, boardSize{(numOfPlayers == 2) ? 8 : 10} {	
 	for (int i = 0; i < boardSize; ++i) {
 		std::vector<char> row_i;
 		for (int j = 0; j < boardSize; ++j) {
@@ -30,9 +28,8 @@ TextDisplay::TextDisplay(vector<string> abilities, vector<string> links, int num
 		}
 		this->board.emplace_back(row_i);
 	}
-	for (int i = 0; i < numOfPlayers; ++i) {
-        players.emplace_back(make_shared<Player>(abilities[i], links[i], i+1));
-    }
+	
+	this->players = players;
 }
 
 void TextDisplay::notify(Subject& whoNotified) {
@@ -91,7 +88,7 @@ std::string TextDisplay::printPlayerStat (shared_ptr<Player> player, char first_
 
 std::ostream & operator<<(std::ostream &out, const TextDisplay &td) {
 	out << td.printPlayerStat(td.players[0], 'a', (td.currPlayer == 1));
-	if (td.numOfPlayers != 2) out << td.printPlayerStat(td.players[1], 'a', (td.currPlayer == 2));
+	if (td.numOfPlayers != 2) out << td.printPlayerStat(td.players[1], 'a', (td.currPlayer == 1));
 	out << "========" << std::endl;
 	for (int i = 0; i < td.boardSize; ++i) {
 		for (int j = 0; j < td.boardSize; ++j) {
