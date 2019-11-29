@@ -5,8 +5,6 @@
 #include "Cell.h"
 #include "Player.h"
 #include "Link.h"
-#include "TextDisplay.h"
-//#include "Graphics.h"
 #include "Subject.h"
 
 using namespace std;
@@ -20,8 +18,6 @@ class Game : public Subject{
     public:
         vector<vector <Cell>> board;
         vector<shared_ptr<Player>> players;
-        TextDisplay* td;
-        //Graphics* graphics;
 
         void battle(int op, Link& link1, Link& link2);
         void applyLinkBoost(char id);

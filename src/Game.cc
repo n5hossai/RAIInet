@@ -9,8 +9,10 @@
 
 using namespace std;
 
-Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers, int initPlayer): 
-numOfPlayers{numOfPlayers}, currPlayer{initPlayer}, boardSize{(numOfPlayers == 2) ? 8: 10} {
+Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers, int initPlayer){
+    this->numOfPlayers = numOfPlayers;
+    this->currPlayer = initPlayer;
+    this->boardSize = (numOfPlayers == 2) ? 8 : 10 ;
 
     for (int i = 0; i < boardSize; ++i) {
         vector<Cell> row_i;
@@ -23,8 +25,6 @@ numOfPlayers{numOfPlayers}, currPlayer{initPlayer}, boardSize{(numOfPlayers == 2
         players.emplace_back(make_shared<Player>(abilities[i], links[i], i+1));
     }
     setIsGraphics(hasGraphics);
-    this->attach(td);
-    //this->attach(graphics);
 }
 
 Game::~Game(){}
@@ -169,6 +169,7 @@ void Game::setIsGraphics(bool boolean_)
 void Game::togglePlayer(){
     if (currPlayer == 1) currPlayer = 2;
     else currPlayer = 1;
+    this->notifyObservers();
 }
 
 string Game::getAbilityStatus(){

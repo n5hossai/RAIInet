@@ -3,12 +3,14 @@
 #include <sstream>
 #include <string>
 #include "Game.h"
+#include "TextDisplay.h"
+//#include "Graphics.h"
 
 using namespace std;
 
 int main(int argc, const char* argv[]){
     int numOfPlayers = 2; //Only support 2 player from command line rn
-    int initPlayer = 2; // Begin with player 1
+    int initPlayer = 1; // Begin with player 1
 
     //Start Game
     //Initialize Game players default abilities LFDPS
@@ -76,10 +78,12 @@ int main(int argc, const char* argv[]){
     Game* game = new Game(abilities, links, hasGraphics, numOfPlayers, initPlayer);
 
     // start the diaplays
-    game->td = new TextDisplay(game->players, numOfPlayers, initPlayer);
-    //game->graphics = new Graphics(game->players, numOfPlayers, initPlayer);
+    TextDisplay* td = new TextDisplay( numOfPlayers, initPlayer, game->players);
+    //Graphics* graphics = new Graphics(numOfPlayers, initPlayer, game->players);
+    game->attach(td);
+    //game->attach(graphics);
 
-    cout << *(game->td);
+    cout << *td;
     string command;
     while(cin >> command){
       if(command == "ability"){
@@ -87,14 +91,14 @@ int main(int argc, const char* argv[]){
        continue;
       }
       else if(command == "board"){
-       cout << *(game->td);
+       cout << *td;
        continue;
       }
       else if(command == "move"){
         //executemove
-        cout << *(game->td);
+        //cout << *(game->td);
         game->togglePlayer();
-        cout << *(game->td);
+        cout << *td;
       }
       else if(command == "quit"){
         cout<<"GAME TERMINATED";
