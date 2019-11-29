@@ -14,7 +14,7 @@ class TextDisplay : public Observer {
 	std::vector<shared_ptr<Player>> players;
 	std::string printPlayerStat (shared_ptr<Player> player, char first_link_name, bool is_curr) const;
 public:
-	TextDisplay(std::vector<shared_ptr<Player>> players, int numOfPlayers, int initPlayer);
+	TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Player>> players);
 	void notify(Subject& whoNotified);
 	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
 };

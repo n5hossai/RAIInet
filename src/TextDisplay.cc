@@ -4,8 +4,10 @@
 #include <iostream>
 #include "Subject.h"
 
-TextDisplay::TextDisplay(std::vector<shared_ptr<Player>> players, int numOfPlayers, int initPlayer) : 
-numOfPlayers{numOfPlayers}, currPlayer{initPlayer}, boardSize{(numOfPlayers == 2) ? 8 : 10} {	
+TextDisplay::TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Player>> players) {
+	this->numOfPlayers = numOfPlayers;
+	this->currPlayer = initPlayer;
+	this->boardSize = (numOfPlayers == 2) ? 8 : 10;	
 	for (int i = 0; i < boardSize; ++i) {
 		std::vector<char> row_i;
 		for (int j = 0; j < boardSize; ++j) {
@@ -88,7 +90,6 @@ std::string TextDisplay::printPlayerStat (shared_ptr<Player> player, char first_
 
 std::ostream & operator<<(std::ostream &out, const TextDisplay &td) {
 	out << td.printPlayerStat(td.players[0], 'a', (td.currPlayer == 1));
-	if (td.numOfPlayers != 2) out << td.printPlayerStat(td.players[1], 'a', (td.currPlayer == 1));
 	out << "========" << std::endl;
 	for (int i = 0; i < td.boardSize; ++i) {
 		for (int j = 0; j < td.boardSize; ++j) {
@@ -97,10 +98,8 @@ std::ostream & operator<<(std::ostream &out, const TextDisplay &td) {
 		out << std::endl;
 	}
 	out << "========" << std::endl;
-
-	if (td.numOfPlayers == 2){
-		out << td.printPlayerStat(td.players[1], 'A', (td.currPlayer == 2));
-	}
+	out << td.printPlayerStat(td.players[1], 'A', (td.currPlayer == 2));
+	
 	//not sure how to print 4 players yet
 	// else {
 	// 	out << td.printPlayerStat(td.players[2], 'A', (td.currPlayer == 3));
