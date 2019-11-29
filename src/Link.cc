@@ -83,9 +83,9 @@ void Link::setIsDownloaded(bool boolean_)
 // functions:
 std::string Link::linkDescription(){
     std::string s = "";
-    std::istringstream ss{s};
+    std::stringstream ss{s};
     s += (this->type) ? "V" : "D";
-    ss >> this->strength;
+    ss << this->strength;
     s += ss.str();
     return s;
 }
