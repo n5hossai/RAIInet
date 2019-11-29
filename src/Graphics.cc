@@ -1,12 +1,12 @@
 #include "Graphics.h"
 
-Graphics::Graphics(std::vector<shared_ptr<Player>> players, int numOfPlayers, int initPlayer){
+Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Player>> players){
 	this->numOfPlayers = numOfPlayers;
 	this->currPlayer = initPlayer;
 	this->boardSize = (numOfPlayers == 2) ? 8 : 10 ;
 	this->players = players;
 
-	int scoreBoard
+	int scoreBoard;
 	// pasted from Naymul's graphicsdemo
 	int i = Xwindow::Black;
     w.fillRectangle(180, 255, 490, 490, i);

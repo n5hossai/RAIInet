@@ -7,13 +7,13 @@
 #include <memory>
 
 class Graphics : public Observer {
-	Xwindow theDisplay;
+	Xwindow w;
 	int numOfPlayers;
 	int boardSize;
 	int currPlayer;
 	std::vector<shared_ptr<Player>> players;
 public:
-    Graphics(std::vector<shared_ptr<Player>> players, int numOfPlayers, int initPlayer);
+    Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Player>> players);
     ~Graphics() = default;
     void notify(Subject &whoNotified) override;
 };
