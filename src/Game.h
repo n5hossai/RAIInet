@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "Link.h"
 #include "TextDisplay.h"
-#include "Graphics.h"
+//#include "Graphics.h"
 #include "Subject.h"
 
 using namespace std;
@@ -16,12 +16,12 @@ class Game : public Subject{
         int boardSize;
         bool isGraphics;
         int numOfPlayers;
-        int currPlay;
+        int currPlayer;
     public:
         vector<vector <Cell>> board;
         vector<shared_ptr<Player>> players;
         TextDisplay* td;
-        Graphics* graphics;
+        //Graphics* graphics;
 
         void battle(int op, Link& link1, Link& link2);
         void applyLinkBoost(char id);
@@ -32,7 +32,7 @@ class Game : public Subject{
         void applyFirewall(int r, int c, int p); // returning 0 means ability cast failed, 1 means successful
         void applyPolarize(char id);
         void applyScan(char id);
-        Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers = 2);
+        Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers, int currPlayer);
         ~Game();
         void move(char id, string direction);
 
