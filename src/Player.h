@@ -14,10 +14,10 @@ class Player{
     private:
         int numOfDataDld = 0;
         int numOfVirusDld = 0;
-        vector <Cell*> fwCells;
         int playerNumber; // actualy player number, starting from 1
         int unusedAbilities;
     public:
+        vector <Cell*> fwCells;
         vector <Cell*> SSCells;
         vector<shared_ptr<Ability>> abilities;
         vector<shared_ptr<Link>> links; 

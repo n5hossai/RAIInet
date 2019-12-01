@@ -81,19 +81,7 @@ void Xwindow::drawRectangle(int x, int y, int width, int height, int colour) {
 	XFlush(d);
 }
 
-void Xwindow::drawString(int x, int y,  string msg, int colour) {
-	// WILL COME BACK TO CHANGE FONT LATER
-	// /* this pointer will hold the returned font structure. */
-	// XFontStruct* font_info;
-
-	// /* try to load the given font. */
-	// //char* font_name = "*-helvetica-*-12-*";
-	// font_info = XLoadQueryFont(d, font_name);
-	// if (!font_info) {
-	//     fprintf(stderr, "XLoadQueryFont: failed loading font '%s'\n", font_name);
-	// }
-	// XSetFont(d, gc, font_info->fid);
-	XSetForeground(d, gc, colours[colour]);
+void Xwindow::drawString(int x, int y,  string msg) {
 	XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 	XFlush(d);
 }

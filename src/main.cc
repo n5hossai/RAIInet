@@ -81,8 +81,8 @@ int main(int argc, const char* argv[]){
     TextDisplay* td = new TextDisplay( numOfPlayers, initPlayer, game->players);
     game->attach(td);
     if (hasGraphics){
-      Graphics* graphics = new Graphics(numOfPlayers, initPlayer, game->players);
-      game->attach(graphics);
+      Graphics* graphics = new Graphics(numOfPlayers, initPlayer, td->players);
+      td->attach(graphics);
     }
 
     cout << *td;
@@ -97,12 +97,18 @@ int main(int argc, const char* argv[]){
        cout << *td;
        continue;
       }
-      else if(command == "ability" && !usedAbilityOnTurn){
-       int ab;
-       cin>>ab;
-       game->applyAbility(ab);
-       usedAbilityOnTurn = true;
-       continue;
+      else if(command == "ability" ){
+        if (usedAbilityOnTurn) {
+          cout<< "no more ability allowed";
+        }
+        else {
+          int ab;
+          cin>>ab;
+          game->applyAbility(ab);
+          usedAbilityOnTurn = true;
+          cout << *td;
+       }
+         continue;
       }
       else if(command == "move"){
         char id;

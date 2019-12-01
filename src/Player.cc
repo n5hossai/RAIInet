@@ -43,8 +43,10 @@ void Player::setLinks(string order){
         throw "Invalid Links List";
     }
     char a = (playerNumber == 1)?'a':'A';
+    unsigned int j = 0;
     for (unsigned int i = 0; i<order.size(); i=i+2) {
-        links.push_back(make_shared<Link>((char)(a + i),(order[i] == 'V') ? 1 : 0,order[i+1]-'0'));
+        links.push_back(make_shared<Link>((char)(a + j),(order[i] == 'V') ? 1 : 0,order[i+1]-'0'));
+        ++j;
     }
 
     // set up row and col numbers for each link

@@ -127,6 +127,7 @@ void Game::applyFirewall(int r, int c)
         {
             board[r][c].isFireWall = true; //NOTE: i did not change the text as that would be handled in textdisplay
             board[r][c].fireWallOwner = currPlayer; //      to check if the cell is a firewall.
+            players[currPlayer-1]->fwCells.push_back(&board[r][c]);
         }
     }
     catch (string err_statement)
@@ -148,6 +149,13 @@ void Game::applySand(int r, int c)
         else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner != currPlayer))
         {
             board[r][c].isFireWall = false;
+            int numOfFW = players[board[r][c].fireWallOwner - 1]->fwCells.size();
+            for (int i = 0; i < numOfFW; ++i) {
+                if ((players[board[r][c].fireWallOwner - 1]->fwCells[i]->row == r) && (players[board[r][c].fireWallOwner - 1]->fwCells[i]->col == c))  {
+                    players[board[r][c].fireWallOwner - 1]->fwCells.erase(players[board[r][c].fireWallOwner - 1]->fwCells.begin()+ i);
+                }
+            }
+
             board[r][c].fireWallOwner = 0;
         }
         else throw "you cannot sand your own firewall";
