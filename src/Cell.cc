@@ -24,15 +24,6 @@ Cell::Cell(int row, int col) : row(row), col(col)
     {
     	this->text = (char)('A' + col);
     	this->isEmpty = false;
-//     }
-// <<<<<<< HEAD
-//     else if ((row == 7) && (col > 4))
-//     {
-//     	this->text = (char)('A' + col - 2);
-//     	this->isEmpty = false;
-     }
-// =======
-// >>>>>>> 8f1eedcd721e52fbc352095abcf67b68acd66bb3
     else
     {
         this->text = '.';

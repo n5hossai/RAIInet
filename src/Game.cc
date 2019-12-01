@@ -171,30 +171,16 @@ void Game::applyDownload(char id){
 
 void Game::applyPolarize(char id)
 {
-    if ((id >= 'a') && (id <= 'h'))
-    {
-        bool tmp= players[0]->links[id - 'a']->getType();
-        players[0]->links[id - 'a']->setType(!tmp);
-    }
-    else if ((id >= 'A') && (id <= 'H'))
-    {
-        bool tmp= players[1]->links[id - 'A']->getType();
-        players[1]->links[id - 'A']->setType(!tmp);
-    }
+    int whoseLink = whoseLink(id);
+    bool tmp= players[whoseLink-1]->links[id - players[whoseLink - 1]->getFirstId()]->getType();
+    players[whoseLink-1]->links[id - players[whoseLink - 1]->getFirstId()]->setType(!tmp);
 }
 
 void Game::applyScan(char id)
 {   
-    if ((id >= 'a') && (id <= 'h'))
-    {
-        if(players[0]->links[id - 'a']->getIsVisible()) return;
-        players[0]->links[id - 'a']->setIsVisible(true);
-    }
-    else if ((id >= 'A') && (id <= 'H'))
-    {
-        if(players[1]->links[id - 'A']->getIsVisible()) return;
-        players[1]->links[id - 'A']->setIsVisible(true);
-    };
+    int whoseLink = whoseLink(id);
+    if(players[whoseLink-1]->links[id - players[whoseLink - 1]->getFirstId()]->getIsVisible()) return;
+    players[whoseLink-1]->links[id - players[whoseLink - 1]->getFirstId()]->setIsVisible(true);
 }
 
 
@@ -301,8 +287,6 @@ void Game::generalDownload(int linkOwner, char toDownloadLink, int toDownloadPla
     int col = players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getCol();
     board[row][col].text = '.';
     board[row][col].isEmpty =true;
-    // players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setRow(-1);
-    // players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setCol(-1);
     notifyObservers();
 }
 
