@@ -17,9 +17,6 @@ TextDisplay::TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_pt
 			else if (((i == 0) && (j < 3)) || ((i == 1) && (j > 2) && (j < 5)) || (i ==0) && (j > 4)) {
 				row_i.emplace_back('a' + j);
 			}
-			else if ((i == 0) && (j > 4)) {
-				row_i.emplace_back('a' + j);
-			} 
 			else if (((i == boardSize - 1) && (j < 3)) || ((i == 6) && (j > 2) && (j < 5)) || (i == boardSize - 1) && (j > 4)) {
 				row_i.emplace_back('A' + j);
 			}
