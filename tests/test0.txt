@@ -1,0 +1,16 @@
+move h down
+move H up
+move h down
+move H up
+move h down
+move H up
+move h left
+move H up
+move h left 
+move H up
+move h right
+move H up
+move h left
+move H up
+move h right
+move H up

@@ -26,11 +26,13 @@ class Player{
         bool hasAbility(string name);
         void setAbilities(string order);
         void setLinks(string order);
-        void useAbility(string name);
+        void useAbility(int i);
         int numOfUnusedAbilities() ;
         int getPlayerNum() ;
         int getNumOfData() ;
         int getNumOfVirus() ;
+        void dataDownload() ;
+        void virusDownload() ;
 };
 
 

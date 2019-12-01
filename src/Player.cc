@@ -65,19 +65,9 @@ bool Player::hasAbility(string name) {
     return false;
 }
 
-void Player::useAbility(string name) {
-    int index_to_use = -1;
-    for (int i = 0; i < unusedAbilities; ++i) {
-        if (abilities[i]->getAbilityName() == name) {
-            index_to_use = i;
-            break;
-        }
-    }
-    if (index_to_use != -1) {
-        abilities[index_to_use]->useAbility();
+void Player::useAbility(int i) {
+        abilities[i]->useAbility();
         unusedAbilities -= 1;
-    }  
-    else throw "cannot use this ability";
 }
 
 int Player::numOfUnusedAbilities() {
@@ -94,4 +84,12 @@ int Player::getNumOfData() {
 
 int Player::getNumOfVirus() {
     return this->numOfVirusDld;
+}
+
+void Player::dataDownload() {
+    numOfDataDld++;
+}
+
+void Player::virusDownload() {
+    numOfVirusDld++;
 }
