@@ -80,6 +80,7 @@ void Game::applyAbility(int ab){
         applyStrengthen(id);
     }
     players[currPlayer-1]->useAbility(ab-1);
+    notifyObservers();
 }
 void Game::applyLinkBoost(char id)
 {   
