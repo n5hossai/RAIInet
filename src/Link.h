@@ -26,6 +26,7 @@ class Link{
         bool getIsVisible()const;
         bool getIsDownloaded()const;
         int getMoveFactor() const;
+        std::string linkDescription(); // ex returns "a: D1" or "D1"
 
         //setters:
         void setRow(int row_);
@@ -37,13 +38,6 @@ class Link{
         void setIsVisible(bool boolean_);
         void setIsDownloaded(bool boolean_);
 
-        //functions:
-        std::string linkDescription(); // ex returns "a: D1" or "D1"
-        void toggleType();
-        void polarize();
-        void scan();
-        void linkBoost();
-        void strengthen();
 };
 
 #endif
