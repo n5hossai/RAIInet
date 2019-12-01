@@ -18,6 +18,7 @@ class Player{
         int playerNumber; // actualy player number, starting from 1
         int unusedAbilities;
     public:
+        vector <Cell*> SSCells;
         vector<shared_ptr<Ability>> abilities;
         vector<shared_ptr<Link>> links; 
         Player(std::string abilityOrder, std::string linkOrder, int number);
@@ -26,11 +27,13 @@ class Player{
         bool hasAbility(string name);
         void setAbilities(string order);
         void setLinks(string order);
-        void useAbility(string name);
+        void useAbility(int i);
         int numOfUnusedAbilities() ;
         int getPlayerNum() ;
         int getNumOfData() ;
         int getNumOfVirus() ;
+        void dataDownload() ;
+        void virusDownload() ;
 };
 
 

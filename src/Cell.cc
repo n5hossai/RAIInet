@@ -15,26 +15,24 @@ Cell::Cell(int row, int col) : row(row), col(col)
         this->isServerPort = true;
         this->whoseServerPort = 2; // for player 2
     }
-    else if (((row == 0) && (col < 3)) || ((row == 1) && (col > 2) && (col < 5))) 
+    else if (((row == 0) && (col < 3)) || ((row == 1) && (col > 2) && (col < 5)) || ((row == 0) && (col > 4))) 
     {
     	this->text = (char)('a' + col);
     	this->isEmpty = false;
     } 
-    else if ((row == 0) && (col > 4))
-    {
-    	this->text = (char)('a' + col - 2);
-    	this->isEmpty = false;
-    }
-    else if (((row == 7) && (col < 3)) || ((row == 6) && (col > 2) && (col < 5)))
+    else if (((row == 7) && (col < 3)) || ((row == 6) && (col > 2) && (col < 5)) || ((row == 7) && (col > 4)))
     {
     	this->text = (char)('A' + col);
     	this->isEmpty = false;
-    }
-    else if ((row == 7) && (col > 4))
-    {
-    	this->text = (char)('A' + col - 2);
-    	this->isEmpty = false;
-    }
+//     }
+// <<<<<<< HEAD
+//     else if ((row == 7) && (col > 4))
+//     {
+//     	this->text = (char)('A' + col - 2);
+//     	this->isEmpty = false;
+     }
+// =======
+// >>>>>>> 8f1eedcd721e52fbc352095abcf67b68acd66bb3
     else
     {
         this->text = '.';

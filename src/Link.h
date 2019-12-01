@@ -12,6 +12,7 @@ class Link{
         bool isLinkBoosted = 0;
         bool isVisible = 0;
         bool isDownloaded = 0;
+        int moveFactor = 1;
     public:
         Link(char id, int type, int strength);
         ~Link();
@@ -24,6 +25,7 @@ class Link{
         bool getIsLinkBoosted() const;
         bool getIsVisible()const;
         bool getIsDownloaded()const;
+        int getMoveFactor() const;
 
         //setters:
         void setRow(int row_);
