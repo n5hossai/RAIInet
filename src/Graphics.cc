@@ -111,6 +111,28 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 void Graphics::notify(Subject& whoNotified){
 	this->currPlayer = whoNotified.getCurrPlayer();
 	this->players = whoNotified.getPlayers();
+	//draw the scoreboard
+	w.fillRectangle(padding-thickness, padding - thickness, scoreWidth + thickness*2, scoreHeight + thickness*2, Xwindow::Black);
+	w.fillRectangle(padding + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+	w.fillRectangle(padding + scoreWidth/2 + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+	//display score in the scoreboard:  (STRING COLOR IS NOT WORKING)
+	for (int i = 0; i < numOfPlayers; ++i) {
+		std::stringstream ss;
+		ss << players[i]->getPlayerNum();
+		std::string score = "Player " + ss.str();
+		ss.str(std::string());
+		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 30 + thickness, score, Xwindow::Black);
+
+		ss << players[i]->getNumOfData();
+		score = "Number Of Data Downloaded: " + ss.str();
+		ss.str(std::string());
+		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 50 + thickness, score, Xwindow::Black);
+
+		ss << players[i]->getNumOfVirus();
+		score = "Number Of Virus Downloaded: " + ss.str();
+		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 70 + thickness, score, Xwindow::Black);
+	}
+
 	for (int i = 0; i < boardSize; ++i) {  //row
 		for (int j = 0; j < boardSize; ++j) {  //col
 			if (((i == 0) || (i == boardSize - 1)) && ((j == 3) || (j == 4))) continue;
@@ -120,7 +142,7 @@ void Graphics::notify(Subject& whoNotified){
 					int row = players[k]->links[t]->getRow();
 					int col = players[k]->links[t]->getCol();
 					if ((row == i) && (col == j)) {
-						foundLink = true;
+						if (players[k]->links[t]->getIsDownloaded()) break;
 						if (k == 0) {
 							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::Green);
 						}
@@ -136,6 +158,7 @@ void Graphics::notify(Subject& whoNotified){
 						else {
 							w.drawString(25+padding+col*cellSize+thickness, 40+scoreHeight+padding*2+row*cellSize+thickness, "?"); 
 						}
+						foundLink = true;
 						break;
 					}
 				}
