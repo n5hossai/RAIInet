@@ -7,6 +7,7 @@ Player::Player(string abilityOrder, string linkOrder, int number) :
 playerNumber{number} {
     setAbilities(abilityOrder);
     setLinks(linkOrder);
+    unusedAbilities = abilities.size();
 }
 
 Player::~Player(){
@@ -27,7 +28,7 @@ void Player::setAbilities(string order){
         throw "Invalid Abilities List";
     }
     for (unsigned int i = 0; i<order.size(); i++) {
-        abilities.emplace_back(make_unique<Ability>(order[i],i+1));
+        abilities.push_back(make_shared<Ability>(order[i],i+1));
     }
    //We Shall assume invalid arguments not allowed, I am not checking for >2 Abilities
 }
@@ -39,7 +40,7 @@ void Player::setLinks(string order){
     }
     char a = (playerNumber == 1)?'a':'A';
     for (unsigned int i = 0; i<order.size(); i=i+2) {
-        links.emplace_back(make_unique<Link>((char)(a + i),(order[i] == 'V') ? 1 : 0,order[i+1]-'0'));
+        links.push_back(make_shared<Link>((char)(a + i),(order[i] == 'V') ? 1 : 0,order[i+1]-'0'));
     }
 
     // set up row and col numbers for each link

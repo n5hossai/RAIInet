@@ -22,7 +22,7 @@ Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int
         board.emplace_back(row_i);
     }
     for (int i = 0; i < numOfPlayers; ++i) {
-        players.emplace_back(make_shared<Player>(abilities[i], links[i], i+1));
+        players.push_back(make_shared<Player>(abilities[i], links[i], i+1));
     }
     setIsGraphics(hasGraphics);
 }
@@ -41,6 +41,7 @@ void Game::applyLinkBoost(char id)
     if (players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsLinkBoosted()) return;
     players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsLinkBoosted(true);
     players[currPlayer - 1]->useAbility("LinkBoost");
+    this->notifyObservers();
 }
 
 void Game::applyPortal(char id, int r, int c){
@@ -58,9 +59,10 @@ void Game::applyStrengthen(char id)
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setStrength(tmp_strength + 1);
         players[currPlayer - 1]->useAbility("Strengthen");
     }
+    this->notifyObservers();
 }
 
-void Game::applyFirewall(int r, int c, int p)
+void Game::applyFirewall(int r, int c)
 {
     if (!players[currPlayer - 1]->hasAbility("Firewall")) return;
     try
@@ -85,7 +87,7 @@ void Game::applyFirewall(int r, int c, int p)
         else if ((!board[r][c].isFireWall) && (board[r][c].isEmpty))
         {
             board[r][c].isFireWall = true; //NOTE: i did not change the text as that would be handled in textdisplay
-            board[r][c].fireWallOwner = p; //      to check if the cell is a firewall.
+            board[r][c].fireWallOwner = currPlayer; //      to check if the cell is a firewall.
             players[currPlayer - 1]->useAbility("Firewall");
         }
     }
@@ -94,9 +96,10 @@ void Game::applyFirewall(int r, int c, int p)
         cout << err_statement << endl;
         return;
     }
+    this->notifyObservers();
 }
 
-void Game::applySand(int r, int c, int p)
+void Game::applySand(int r, int c)
 {
     if (!players[currPlayer - 1]->hasAbility("Sand")) return;
     try
@@ -106,18 +109,20 @@ void Game::applySand(int r, int c, int p)
             string err_st = "There is no firewall to be sanded";
             throw err_st;
         }
-        else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner != p))
+        else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner != currPlayer))
         {
             board[r][c].isFireWall = false;
             board[r][c].fireWallOwner = 0;
             players[currPlayer - 1]->useAbility("Sand");
         }
+        else throw "you cannot sand your own firewall";
     }
     catch (string err_statement)
     {
         cout << err_statement << endl;
         return;
     }
+    this->notifyObservers();
 }
 
 void Game::applyDownload(char id){
@@ -129,17 +134,36 @@ void Game::applyDownload(char id){
 void Game::applyPolarize(char id)
 {
     if (!players[currPlayer - 1]->hasAbility("Polarize")) return;
-    bool tmp= players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getType();
-    players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setType(!tmp);
+    if ((id >= 'a') && (id <= 'h'))
+    {
+        bool tmp= players[0]->links[id - 'a']->getType();
+        players[0]->links[id - 'a']->setType(!tmp);
+    }
+    else if ((id >= 'A') && (id <= 'H'))
+    {
+        bool tmp= players[1]->links[id - 'A']->getType();
+        players[1]->links[id - 'A']->setType(!tmp);
+    }
     players[currPlayer - 1]->useAbility("Polarize");
+    this->notifyObservers();
 }
 
 void Game::applyScan(char id)
 {   
     if (!players[currPlayer - 1]->hasAbility("Scan")) return;
-    (players[currPlayer - 1])->links[id - players[currPlayer - 1]->getFirstId()]->setIsVisible(true);
-    players[currPlayer - 1]->useAbility("Scan");
+    if ((id >= 'a') && (id <= 'h'))
+    {
+        if(players[0]->links[id - 'a']->getIsVisible()) return;
+        players[0]->links[id - 'a']->setIsVisible(true);
+    }
 
+    else if ((id >= 'A') && (id <= 'H'))
+    {
+        if(players[1]->links[id - 'A']->getIsVisible()) return;
+        players[1]->links[id - 'A']->setIsVisible(true);
+    };
+    players[currPlayer - 1]->useAbility("Scan");
+    this->notifyObservers();
 }
 
 void Game::move(char id, string direction){

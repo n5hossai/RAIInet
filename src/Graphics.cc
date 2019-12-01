@@ -23,8 +23,8 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 
 	//draw the scoreboard
 	w.fillRectangle(padding-thickness, padding - thickness, scoreWidth + thickness*2, scoreHeight + thickness*2, Xwindow::Black);
-	w.fillRectangle(padding + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::Green);
-	w.fillRectangle(padding + scoreWidth/2 + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::Blue);
+	w.fillRectangle(padding + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+	w.fillRectangle(padding + scoreWidth/2 + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
 
 	//display score in the scoreboard:  (STRING COLOR IS NOT WORKING)
 	for (int i = 0; i < numOfPlayers; ++i) {
@@ -32,16 +32,16 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 		ss << players[i]->getPlayerNum();
 		std::string score = "Player " + ss.str();
 		ss.str(std::string());
-		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 30 + thickness, score, (i == 1) ? Xwindow::White : Xwindow::Black);
+		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 30 + thickness, score, Xwindow::Black);
 
 		ss << players[i]->getNumOfData();
 		score = "Number Of Data Downloaded: " + ss.str();
 		ss.str(std::string());
-		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 50 + thickness, score,(i == 1) ? Xwindow::White : Xwindow::Black);
+		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 50 + thickness, score, Xwindow::Black);
 
 		ss << players[i]->getNumOfVirus();
 		score = "Number Of Virus Downloaded: " + ss.str();
-		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 70 + thickness, score,(i == 1) ? Xwindow::White : Xwindow::Black);
+		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 70 + thickness, score, Xwindow::Black);
 	}
 
 	//draw the play board and server port
@@ -86,7 +86,7 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::Green);
 						}
 						else if (k == 1) {
-							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::Blue);
+							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::Yellow);
 						}
 						std::string description = players[k]->links[t]->linkDescription();
 						std::string name = string(1, players[k]->getFirstId() + t) + ":";
@@ -115,7 +115,7 @@ void Graphics::notify(Subject& whoNotified){
 		for (int j = 0; j < boardSize; ++j) {  //col
 			if (((i == 0) || (i == boardSize - 1)) && ((j == 3) || (j == 4))) continue;
 			bool foundLink= false;
-			for (int k = 0; k < numOfPlayers; ++k) { //players look
+			for (int k = 0; k < numOfPlayers; ++k) { //players loop
 				for (int t = 0; t < 8; ++t) { //links loop
 					int row = players[k]->links[t]->getRow();
 					int col = players[k]->links[t]->getCol();
@@ -125,7 +125,7 @@ void Graphics::notify(Subject& whoNotified){
 							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::Green);
 						}
 						else if (k == 1) {
-							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::Blue);
+							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::Yellow);
 						}
 						std::string description = players[k]->links[t]->linkDescription();
 						std::string name = string(1, players[k]->getFirstId() + t) + ":";
@@ -143,6 +143,24 @@ void Graphics::notify(Subject& whoNotified){
 			if (!foundLink) {
 				w.fillRectangle(padding+j*cellSize+thickness, scoreHeight+padding*2+i*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::White);
 			};
+			if (whoNotified.getBoard()[i][j].isFireWall){
+				w.fillRectangle(padding+i*cellSize+thickness, scoreHeight+padding*2+j*cellSize+thickness, cellSize-thickness*2, cellSize-thickness*2,Xwindow::Red);
+				stringstream ss;
+				ss << whoNotified.getBoard()[i][j].fireWallOwner;
+				w.drawString(15+padding+i*cellSize+thickness, 30+scoreHeight+padding*2+j*cellSize+thickness, +"FW: " +ss.str());
+
+			}
 		}
+	}
+
+	//highlight the opponent edge for curr player
+	if (currPlayer == 1) {
+		w.fillRectangle(padding - thickness, scoreHeight + padding*2 - thickness, boardLength + thickness*2, thickness*2, Xwindow::Black);
+		w.fillRectangle(padding - thickness, scoreHeight + padding*2 + boardLength - thickness, boardLength + thickness*2, thickness*2, Xwindow::Red);
+	}
+	else if (currPlayer == 2) {
+		w.fillRectangle(padding - thickness, scoreHeight + padding*2 + boardLength - thickness, boardLength + thickness*2, thickness*2, Xwindow::Black);
+		w.fillRectangle(padding - thickness, scoreHeight + padding*2 - thickness, boardLength + thickness*2, thickness*2, Xwindow::Red);
+
 	}
 }

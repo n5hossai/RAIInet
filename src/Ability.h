@@ -2,7 +2,7 @@
 #define ABILITY_H
 #include <string>
 
-enum Abilities {LinkBoost = 'L', Firewall = 'F', Download = 'D', Polarize = 'P', Scan = 'S', Sand = 'N', Portal = 'O', Strengthen = 'R'} ;
+enum Abilities {LinkBoost = 0, Firewall, Download, Polarize , Scan , Sand , Portal , Strengthen } ;
 class Ability{
     private:
     	int ID;

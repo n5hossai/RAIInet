@@ -23,9 +23,9 @@ class Game : public Subject{
         void applyLinkBoost(char id);
         void applyPortal(char id, int r, int c);
         void applyStrengthen(char id);
-        void applySand(int r, int c, int p); // returning 0 means ability cast failed, 1 means successful
+        void applySand(int r, int c); // returning 0 means ability cast failed, 1 means successful
         void applyDownload(char id);
-        void applyFirewall(int r, int c, int p); // returning 0 means ability cast failed, 1 means successful
+        void applyFirewall(int r, int c); // returning 0 means ability cast failed, 1 means successful
         void applyPolarize(char id);
         void applyScan(char id);
         Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers, int currPlayer);

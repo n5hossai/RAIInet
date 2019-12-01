@@ -8,6 +8,7 @@ TextDisplay::TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_pt
 	this->numOfPlayers = numOfPlayers;
 	this->currPlayer = initPlayer;
 	this->boardSize = (numOfPlayers == 2) ? 8 : 10;	
+	this->players = players;
 	for (int i = 0; i < boardSize; ++i) {
 		std::vector<char> row_i;
 		for (int j = 0; j < boardSize; ++j) {
@@ -30,8 +31,6 @@ TextDisplay::TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_pt
 		}
 		this->board.emplace_back(row_i);
 	}
-	
-	this->players = players;
 }
 
 void TextDisplay::notify(Subject& whoNotified) {

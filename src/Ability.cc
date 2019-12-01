@@ -6,28 +6,28 @@ Ability::Ability(char code, int id) : ID{id} {
     switch (code)
         {
             case 'L':   
-                name = LinkBoost;
+                name = Abilities::LinkBoost;
                 break;
             case 'F':   
-                name = Firewall;
+                name = Abilities::Firewall;
                 break;
             case 'D':   
-                name = Download;
+                name = Abilities::Download;
                 break;
             case 'P':   
-                name = Polarize;
+                name = Abilities::Polarize;
                 break;
             case 'S':   
-                name = Scan;
+                name = Abilities::Scan;
                 break;
             case 'N':   
-                name = Sand;
+                name = Abilities::Sand;
                 break;
             case 'O':   
-                name = Portal;
+                name = Abilities::Portal;
                 break;
             case 'R':   
-                name = Strengthen;
+                name = Abilities::Strengthen;
                 break;
             default:    throw(code);
         }

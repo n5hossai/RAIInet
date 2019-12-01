@@ -79,9 +79,11 @@ int main(int argc, const char* argv[]){
 
     // start the diaplays
     TextDisplay* td = new TextDisplay( numOfPlayers, initPlayer, game->players);
-    Graphics* graphics = new Graphics(numOfPlayers, initPlayer, game->players);
     game->attach(td);
-    game->attach(graphics);
+    if (hasGraphics){
+      Graphics* graphics = new Graphics(numOfPlayers, initPlayer, game->players);
+      game->attach(graphics);
+    }
 
     cout << *td;
     string command;
@@ -99,6 +101,18 @@ int main(int argc, const char* argv[]){
         //cout << *(game->td);
         game->togglePlayer();
         cout << *td;
+      }
+      else if (command == "firewall"){
+        int c,r;
+        cin>>r>>c;
+        game->applyFirewall(r,c);
+        cout<<*td;
+      }
+      else if (command == "sand") {
+        int r,c;
+        cin >>r>>c;
+        game->applySand(r,c);
+        cout<<*td;
       }
       else if(command == "quit"){
         cout<<"GAME TERMINATED";
