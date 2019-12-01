@@ -29,6 +29,14 @@ Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int
 
 Game::~Game(){}
 
+int whoseLink(char id){
+    if(id>='a'&& id<='h'){
+        return 1;
+    }else if(id>='A'&& id<='H'){
+        return 2;
+    }
+}
+
 void Game::battle(int op, Link& link1, Link& link2){
     
 }
@@ -53,7 +61,7 @@ void Game::applyAbility(int ab){
     }else if(ability == "Polarize"){
         char id;
         cin >> id;
-        applyDownload(id);
+        applyPolarize(id);
     }else if(ability == "Scan"){
         char id;
         cin >> id;
@@ -77,13 +85,14 @@ void Game::applyAbility(int ab){
 void Game::applyLinkBoost(char id)
 {   
     if (!players[currPlayer - 1]->hasAbility("LinkBoost")) return;
-    if (players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsLinkBoosted()) return;
     players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsLinkBoosted(true);
 }
 
 void Game::applyPortal(char id, int r, int c){
     if (!players[currPlayer - 1]->hasAbility("Portal")) return;
-    //...
+    int curRow = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getRow();
+    int curCol = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getCol();
+    //still coding
 }
 
 void Game::applyStrengthen(char id)
@@ -156,7 +165,13 @@ void Game::applySand(int r, int c, int p)
 
 void Game::applyDownload(char id){
     if (!players[currPlayer - 1]->hasAbility("Download")) return;
-    //...
+    //check is opponents piece
+    if(whoseLink(id)!= currPlayer){
+        generalDownload(whoseLink(id),id,currPlayer);
+
+    }else{
+        //error cannot download own link;
+    }
 }
 
 void Game::applyPolarize(char id)
@@ -173,88 +188,47 @@ void Game::applyScan(char id)
 
 }
 
-void Game::move(char id, string direction){
-    
-    int moveFactor = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsLinkBoosted() ? 2 : 1;
-    //move on ur own link not allowed
-    //INVALID MOVE is link downloaded
-    int curRow = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getRow();
-    int curCol = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getCol();
-    int newRow = curRow;
-    int newCol = curCol;
-    if(direction=="up"){
-        newRow=curRow-moveFactor;
-    }else if(direction =="right"){
-        newCol = curCol+moveFactor;
-    }else if(direction =="down"){
-        newRow = curRow +moveFactor;
-    }else if(direction =="left"){
-        newCol = curCol-moveFactor;
+
+void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, bool ignoreFirewall){
+    //Moves into opponents server port
+    if(board[newRow][newCol].isServerPort && board[newRow][newCol].whoseServerPort!=currPlayer){
+        generalDownload(currPlayer, id, board[newRow][newCol].whoseServerPort);
     }
 
-    if(board[newRow][newCol].isServerPort && board[newRow][newCol].whoseServerPort!=currPlayer){
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsVisible(true);
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsDownloaded(true);
-        int linkType = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getType();
-        linkType == 0 ? players[board[newRow][newCol].whoseServerPort - 1]->dataDownload() : players[board[newRow][newCol].whoseServerPort - 1]->virusDownload();
-        
-            board[curRow][curCol].text = '.';
-            
-        
-        board[curRow][curCol].isEmpty =true;
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(-1);
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(-1);
-    }else if(board[newRow][newCol].isFireWall && board[newRow][newCol].fireWallOwner!=currPlayer){
+    //Moves onto a fireWall
+    else if(board[newRow][newCol].isFireWall && board[newRow][newCol].fireWallOwner!=currPlayer && ignoreFirewall == false){
         
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsVisible(true);
-        
         int linkType = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getType();
-        
         if(linkType == 1){
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsDownloaded(true);
-        players[currPlayer - 1]->virusDownload();
+            generalDownload(currPlayer,id,currPlayer);
         }
-        
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(-1);
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(-1);
-            
-        
-    //Move onto firewall remember to handle if someone already there
-    }else if((currPlayer==2 && newRow<0) || (currPlayer==1 && newRow>7)){
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsVisible(true);
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsDownloaded(true);
-        int linkType = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getType();
-        linkType == 0 ? players[currPlayer - 1]->dataDownload() : players[currPlayer - 1]->virusDownload();
-      
-            board[curRow][curCol].text = '.';
-            
-        
-        board[curRow][curCol].isEmpty =true;
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(-1);
-        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(-1);
-    }else if(board[newRow][newCol].isEmpty && board[newRow][newCol].text == '.'){
-        
-       
-            board[curRow][curCol].text = '.';
-        
-        
-            board[curRow][curCol].isEmpty =true;
 
-        if(board[newRow][newCol].text == '.'){
-            board[newRow][newCol].text = id;
-            
-        }
+        generalMove(id, curRow, curCol, newRow, newCol, true);
+     
+    //Move onto firewall remember to handle if someone already there
+    }
+
+    //Moves off opponents edge
+    else if((currPlayer==2 && newRow<0) || (currPlayer==1 && newRow>7)){
+        generalDownload(currPlayer,id,currPlayer);
+    }
+
+    //Move onto empty space
+    else if(board[newRow][newCol].isEmpty && board[newRow][newCol].text == '.'){
+        board[curRow][curCol].text = '.';
+        board[curRow][curCol].isEmpty =true;
+        board[newRow][newCol].text = id;
         board[newRow][newCol].isEmpty =false;
-        
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(newRow);
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(newCol);
+    }
 
-    }else if(!board[newRow][newCol].isEmpty && isalpha(board[newRow][newCol].text) 
-                && !(board[newRow][newCol].text >= players[currPlayer - 1]->getFirstId()
-                && board[newRow][newCol].text <= players[currPlayer - 1]->links[boardSize - 1]->getId())){
-        //wont work for 4 player
-        int otherPlayer = currPlayer ==1?2:1;
+    //Move onto another player
+    else if(!board[newRow][newCol].isEmpty && whoseLink(board[newRow][newCol].text)!=currPlayer){
+        //Initiate Battle
         char otherId = board[newRow][newCol].text;
+        int otherPlayer =whoseLink(otherId);
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsVisible(true);
         players[otherPlayer - 1]->links[otherId - players[otherPlayer - 1]->getFirstId()]->setIsVisible(true);
         int myStrength = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getStrength();
@@ -265,24 +239,63 @@ void Game::move(char id, string direction){
         loser = myStrength<yourStrength ? currPlayer : otherPlayer;
         int winnerID = myStrength>=yourStrength ? id : otherId;
         int loserID = myStrength<yourStrength ? id : otherId;
-        players[loser - 1]->links[loserID - players[loser - 1]->getFirstId()]->setIsDownloaded(true);
-        int linkType = players[loser - 1]->links[loserID - players[loser - 1]->getFirstId()]->getType();
-        linkType == 0 ? players[winner - 1]->dataDownload() : players[winner - 1]->virusDownload();
+
+        generalDownload(loser, loserID, winner);
         
-            board[curRow][curCol].text = '.';
-            
-        
+        board[curRow][curCol].text = '.';
         board[curRow][curCol].isEmpty =true;
         board[newRow][newCol].text = winnerID;
         board[newRow][newCol].isEmpty =false;
         players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setRow(newRow);
         players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setCol(newCol);
-
     }
+    else{
+        return;
+    }
+    
+    
+
     notifyObservers();
+}
+
+void Game::applyMove(char id, string direction){
+    if(whoseLink(id)!= currPlayer) return;
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) return;
+
+    int moveFactor = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getMoveFactor();
+
+    int curRow = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getRow();
+    int curCol = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getCol();
+    int newRow = curRow;
+    int newCol = curCol;
+
+    if(direction=="up"){
+        newRow=curRow-moveFactor;
+    }else if(direction =="right"){
+        newCol = curCol+moveFactor;
+    }else if(direction =="down"){
+        newRow = curRow +moveFactor;
+    }else if(direction =="left"){
+        newCol = curCol-moveFactor;
+    }
+
+    generalMove(id,curRow,curCol,newRow,newCol);
 
 }
 
+void Game::generalDownload(int linkOwner, char toDownloadLink, int toDownloadPlayer){
+    players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setIsVisible(true);
+    players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setIsDownloaded(true);
+    int linkType = players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getType();
+    linkType == 0 ? players[toDownloadPlayer - 1]->dataDownload() : players[toDownloadPlayer - 1]->virusDownload();
+    int row = players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getRow();
+    int col = players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getCol();
+    board[row][col].text = '.';
+    board[row][col].isEmpty =true;
+    players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setRow(-1);
+    players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setCol(-1);
+    notifyObservers();
+}
 
 //getters
 int Game::getBoardSize() const
@@ -337,3 +350,4 @@ vector<vector<Cell>> Game::getBoard() {
 	return this->board;
 
 } 
+

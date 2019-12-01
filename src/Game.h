@@ -15,6 +15,8 @@ class Game : public Subject{
         bool isGraphics;
         int numOfPlayers;
         int currPlayer;
+        void generalMove(char id, int curRow, int curCol, int newRow, int newCol,bool ignoreFirewall = false);
+        void generalDownload(int linkOwner, char toDownloadLink, int toDownloadPlayer);
     public:
         vector<vector <Cell>> board;
         vector<shared_ptr<Player>> players;
@@ -31,7 +33,8 @@ class Game : public Subject{
         void applyScan(char id);
         Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers, int currPlayer);
         ~Game();
-        void move(char id, string direction);
+        void applyMove(char id, string direction);
+        
 
         //getters
         int getCurrPlayer() const;

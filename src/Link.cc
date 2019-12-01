@@ -46,6 +46,11 @@ bool Link::getIsDownloaded() const
     return this->isDownloaded;
 }
 
+int Link::getMoveFactor() const
+{
+return this->moveFactor;
+}
+
 //setters:
 void Link::setRow(int row_)
 {
@@ -70,6 +75,7 @@ void Link::setStrength(int strength_)
 void Link::setIsLinkBoosted(bool boolean_)
 {
     this->isLinkBoosted = boolean_;
+    this->moveFactor++;
 }
 void Link::setIsVisible(bool boolean_)
 {
