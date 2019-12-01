@@ -24,6 +24,7 @@ Cell::Cell(int row, int col) : row(row), col(col)
     {
     	this->text = (char)('A' + col);
     	this->isEmpty = false;
+    }
     else
     {
         this->text = '.';

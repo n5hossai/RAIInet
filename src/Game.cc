@@ -171,16 +171,14 @@ void Game::applyDownload(char id){
 
 void Game::applyPolarize(char id)
 {
-    int whoseLink = whoseLink(id);
-    bool tmp= players[whoseLink-1]->links[id - players[whoseLink - 1]->getFirstId()]->getType();
-    players[whoseLink-1]->links[id - players[whoseLink - 1]->getFirstId()]->setType(!tmp);
+    bool tmp= players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getType();
+    players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setType(!tmp);
 }
 
 void Game::applyScan(char id)
 {   
-    int whoseLink = whoseLink(id);
-    if(players[whoseLink-1]->links[id - players[whoseLink - 1]->getFirstId()]->getIsVisible()) return;
-    players[whoseLink-1]->links[id - players[whoseLink - 1]->getFirstId()]->setIsVisible(true);
+    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) return;
+    players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setIsVisible(true);
 }
 
 
