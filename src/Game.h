@@ -17,6 +17,9 @@ class Game : public Subject{
         int currPlayer;
         void generalMove(char id, int curRow, int curCol, int newRow, int newCol,bool ignoreFirewall = false);
         void generalDownload(int linkOwner, char toDownloadLink, int toDownloadPlayer);
+        bool gameWon;
+        int gameWinner;
+        void wonGame();
     public:
         vector<vector <Cell>> board;
         vector<shared_ptr<Player>> players;
@@ -40,6 +43,8 @@ class Game : public Subject{
         int getNumOfPlayers() const;
         int getBoardSize() const;
         bool getIsGraphics() const;
+        int getWinner() const;
+        bool getGameWon() const;
         //setters
         void setBoardSize(int size);
         void setIsGraphics(bool boolean_);

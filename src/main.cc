@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <stdexcept>
 #include "Game.h"
 #include "TextDisplay.h"
 #include "Graphics.h"
@@ -99,32 +100,50 @@ int main(int argc, const char* argv[]){
       }
       else if(command == "ability" ){
         if (usedAbilityOnTurn) {
-          cout<< "no more ability allowed";
+          cout<< "ONLY 1 ABILITY ALLOWED PER TURN: PLEASE EXECUTE A MOVE"<<endl;
         }
         else {
-          int ab;
-          cin>>ab;
-          game->applyAbility(ab);
-          usedAbilityOnTurn = true;
-          cout << *td;
+          try{
+            int ab;
+            cin>>ab;
+            game->applyAbility(ab);
+            usedAbilityOnTurn = true;
+            cout << *td;
+            if(game->getGameWon()){
+              break;
+            }
+          }catch(const exception& ex){
+            cout<<ex.what()<<" PLEASE TRY AGAIN"<<endl;
+          }
        }
          continue;
       }
       else if(command == "move"){
-        char id;
-        string dir;
-        cin >> id >> dir;
-        game->applyMove(id,dir);
-        //executemove
-        //cout << *(game->td);
-        game->togglePlayer();
-        usedAbilityOnTurn = false;
-        cout << *td;
+        try{
+          char id;
+          string dir;
+          cin >> id >> dir;
+          game->applyMove(id,dir);
+          game->togglePlayer();
+          usedAbilityOnTurn = false;
+          cout << *td;
+          if(game->getGameWon()){
+              break;
+            }
+        }
+        catch(const exception& ex){
+            cout<<ex.what()<<" PLEASE TRY AGAIN"<<endl;
+            continue;
+          }
       }
       else if(command == "quit"){
         cout<<"GAME TERMINATED";
        break;
       }
 
+    }
+
+    if(game->getGameWon()){
+      cout<<"CONGRATUALTIONS PLAYER "<< game->getWinner()<< ": YOU ARE THE RAIINET CHAMPION!!!";
     }
 }

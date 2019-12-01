@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -13,6 +14,8 @@ Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int
     this->numOfPlayers = numOfPlayers;
     this->currPlayer = initPlayer;
     this->boardSize = (numOfPlayers == 2) ? 8 : 10 ;
+    this->gameWon = false;
+    this->gameWinner = 0;
     for (int i = 0; i < boardSize; ++i) {
         vector<Cell> row_i;
         for (int j = 0; j < boardSize; ++j) {
@@ -43,58 +46,74 @@ int whoseLink(char id){
 //TODO:check if ability is available FOR ALL ABILITIES
 //TODO:check if meets the condition of using abilities
 void Game::applyAbility(int ab){
-    if(players[currPlayer-1]->abilities[ab-1]->getIsUsed()) return;
+    if(players[currPlayer-1]->abilities[ab-1]->getIsUsed()) throw runtime_error("CHECK YOUR ABILITY STATUS AND TRY AGAIN, cANNOT USE ABILITY");
     string ability = players[currPlayer-1]->abilities[ab-1]->getAbilityName();
-    if(ability == "LinkBoost"){
-        char id;
-        cin >> id;
-        applyLinkBoost(id);
-    }else if(ability == "Firewall"){
-        int r,c;
-        cin >> r >> c;
-        applyFirewall(r,c);
-    }else if(ability == "Download"){
-        char id;
-        cin >> id;
-        applyDownload(id);
-    }else if(ability == "Polarize"){
-        char id;
-        cin >> id;
-        applyPolarize(id);
-    }else if(ability == "Scan"){
-        char id;
-        cin >> id;
-        applyScan(id);
-    }else if(ability == "Sand"){
-        int r,c;
-        cin >> r >> c;
-        applySand(r,c);
-    }else if(ability == "Portal"){
-        char id;
-        int r,c;
-        cin >> id >> r >> c;
-        applyPortal(id,r,c);
-    }else if(ability == "Strengthen"){
-        char id;
-        cin >> id;
-        applyStrengthen(id);
+    try{
+        if(ability == "LinkBoost"){
+            char id;
+            cin >> id;
+            applyLinkBoost(id);
+        }else if(ability == "Firewall"){
+            int r,c;
+            cin >> r >> c;
+            applyFirewall(r,c);
+        }else if(ability == "Download"){
+            char id;
+            cin >> id;
+            applyDownload(id);
+        }else if(ability == "Polarize"){
+            char id;
+            cin >> id;
+            applyPolarize(id);
+        }else if(ability == "Scan"){
+            char id;
+            cin >> id;
+            applyScan(id);
+        }else if(ability == "Sand"){
+            int r,c;
+            cin >> r >> c;
+            applySand(r,c);
+        }else if(ability == "Portal"){
+            char id;
+            int r,c;
+            cin >> id >> r >> c;
+            applyPortal(id,r,c);
+        }else if(ability == "Strengthen"){
+            char id;
+            cin >> id;
+            applyStrengthen(id);
+        }
+        players[currPlayer-1]->useAbility(ab-1);
+        notifyObservers();
     }
-    players[currPlayer-1]->useAbility(ab-1);
-    notifyObservers();
+    catch(const exception& ex){
+        throw ex;
+    }
 }
 void Game::applyLinkBoost(char id)
 {   
+    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF LINKBOOST ABILITY: NOT YOUR LINK");
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF PORTAL ABILITY: LINK NOT IN PLAY");
     players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsLinkBoosted(true);
 }
 
 void Game::applyPortal(char id, int r, int c){
+    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF PORTAL ABILITY: NOT YOUR LINK");
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF PORTAL ABILITY: LINK NOT IN PLAY");
     int curRow = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getRow();
     int curCol = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getCol();
-    //still coding
+    int half= boardSize/2;
+    if ((curRow<half && r < half) || (curRow>=half && r>=half)){
+        generalMove(id, curRow, curCol, r, c);
+    }else{
+        throw runtime_error("INVALID USE OF PORTAL ABILITY: PORTAL CAN ONLY BE USED ON WITHIN LINKS CURRENT SIDE");
+    }
 }
 
 void Game::applyStrengthen(char id)
 {
+    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF STRENGTHEN ABILITY: NOT YOUR LINK");
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF STRENGTHEN ABILITY: LINK NOT IN PLAY");
     int tmp_strength = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getStrength();
     if (tmp_strength <=3)
     {
@@ -104,93 +123,82 @@ void Game::applyStrengthen(char id)
 
 void Game::applyFirewall(int r, int c)
 {
-    try
+    
+    if (((r == 0) || (r == 7)) && ((c == 3) || (c == 4)))
     {
-        if (((r == 0) || (r == 7)) && ((c == 3) || (c == 4)))
-        {
-            string err_st = "Cannot apply Firewall on top of Server Port";
-            throw err_st;
-        }
-        else if (board[r][c].isFireWall)
-        {
-
-            string err_st = "Player" + to_string(board[r][c].fireWallOwner) + " already owns a firewall here";
-
-            throw err_st;
-        }
-        else if ((!board[r][c].isFireWall) && (!board[r][c].isEmpty))
-        {
-            string err_st = "Place firewall on an empty cell";
-            throw err_st;
-        }
-        else if ((!board[r][c].isFireWall) && (board[r][c].isEmpty))
-        {
-            board[r][c].isFireWall = true; //NOTE: i did not change the text as that would be handled in textdisplay
-            board[r][c].fireWallOwner = currPlayer; //      to check if the cell is a firewall.
-            players[currPlayer-1]->fwCells.push_back(&board[r][c]);
-        }
+        throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED ON SERVERPORT");
     }
-    catch (string err_statement)
+    else if (board[r][c].isFireWall)
     {
-        cout << err_statement << endl;
-        return;
+
+        throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED ON ANOTHER FIREWALL");
+    }
+    else if ((!board[r][c].isFireWall) && (!board[r][c].isEmpty))
+    {
+        throw runtime_error("INVALID USE OF FIREWALL ABILITY: PLACE FIREWALL ON EMPTY CELL");
+    }
+    else if ((!board[r][c].isFireWall) && (board[r][c].isEmpty))
+    {
+        board[r][c].isFireWall = true; 
+        board[r][c].fireWallOwner = currPlayer; 
+        players[currPlayer-1]->fwCells.push_back(&board[r][c]);
+    }
+    else{
+        throw runtime_error("INVALID USE OF FIREWALL ABILITY");
     }
 }
+    
 
 void Game::applySand(int r, int c)
 {
-    try
+    if (!board[r][c].isFireWall)
     {
-        if (!board[r][c].isFireWall)
-        {
-            string err_st = "There is no firewall to be sanded";
-            throw err_st;
-        }
-        else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner != currPlayer))
-        {
-            board[r][c].isFireWall = false;
-            int numOfFW = players[board[r][c].fireWallOwner - 1]->fwCells.size();
-            for (int i = 0; i < numOfFW; ++i) {
-                if ((players[board[r][c].fireWallOwner - 1]->fwCells[i]->row == r) && (players[board[r][c].fireWallOwner - 1]->fwCells[i]->col == c))  {
-                    players[board[r][c].fireWallOwner - 1]->fwCells.erase(players[board[r][c].fireWallOwner - 1]->fwCells.begin()+ i);
-                }
+        throw runtime_error("INVALID USE OF SAND ABILITY: NO FIREWALL TO BE SANDED");
+    }
+    else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner != currPlayer))
+    {
+        board[r][c].isFireWall = false;
+        int numOfFW = players[board[r][c].fireWallOwner - 1]->fwCells.size();
+        for (int i = 0; i < numOfFW; ++i) {
+            if ((players[board[r][c].fireWallOwner - 1]->fwCells[i]->row == r) && (players[board[r][c].fireWallOwner - 1]->fwCells[i]->col == c))  {
+                players[board[r][c].fireWallOwner - 1]->fwCells.erase(players[board[r][c].fireWallOwner - 1]->fwCells.begin()+ i);
             }
-
-            board[r][c].fireWallOwner = 0;
         }
-        else throw "you cannot sand your own firewall";
+
+        board[r][c].fireWallOwner = 0;
     }
-    catch (string err_statement)
-    {
-        cout << err_statement << endl;
-        return;
-    }
+    else throw runtime_error("INVALID USE OF SAND ABILITY: SAND OPPONENTS FIREWALL");
 }
+    
+
 
 void Game::applyDownload(char id){
-    //check is opponents piece
+    
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF DOWNLOAD ABILITY: LINK NOT IN PLAY");
     if(whoseLink(id)!= currPlayer){
         generalDownload(whoseLink(id),id,currPlayer);
 
-    }else{
-        //error cannot download own link;
-    }
+    }else throw runtime_error("INVALID USE OF DOWNLOAD ABILITY: CAN'T DOWNLOAD YOUR OWN LINK");
+
 }
 
 void Game::applyPolarize(char id)
 {
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY");
     bool tmp= players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getType();
     players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setType(!tmp);
 }
 
 void Game::applyScan(char id)
 {   
-    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) return;
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY");
+    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK ALREADY VISIBLE");
     players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setIsVisible(true);
 }
 
 
 void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, bool ignoreFirewall){
+    if(curRow<0 || curRow >=boardSize || curCol < 0 || curCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: LINK NOT ON BOARD");
     //Moves into opponents server port
     if(board[newRow][newCol].isServerPort && board[newRow][newCol].whoseServerPort!=currPlayer){
         generalDownload(currPlayer, id, board[newRow][newCol].whoseServerPort);
@@ -250,18 +258,13 @@ void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, 
         players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setRow(newRow);
         players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setCol(newCol);
     }
-    else{
-        return;
-    }
-    
-    
-
+    else throw runtime_error("INVALID USE OF MOVE");   
     notifyObservers();
 }
 
 void Game::applyMove(char id, string direction){
-    if(whoseLink(id)!= currPlayer) return;
-    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) return;
+    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF MOVE: MUST MOVE YOUR OWN LINK");
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF MOVE: LINK NOT IN PLAY");
 
     int moveFactor = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getMoveFactor();
 
@@ -285,6 +288,7 @@ void Game::applyMove(char id, string direction){
 }
 
 void Game::generalDownload(int linkOwner, char toDownloadLink, int toDownloadPlayer){
+    if(players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF DOWNLOAD: LINK NOT IN PLAY");;
     players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setIsVisible(true);
     players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setIsDownloaded(true);
     int linkType = players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getType();
@@ -293,10 +297,31 @@ void Game::generalDownload(int linkOwner, char toDownloadLink, int toDownloadPla
     int col = players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getCol();
     board[row][col].text = '.';
     board[row][col].isEmpty =true;
+    wonGame();
     notifyObservers();
 }
 
+void Game::wonGame(){
+    for (unsigned int i=0;i< numOfPlayers; i++){
+        if(players[i]->getNumOfData() == 4){
+            gameWon=true;
+            gameWinner = i+1;
+        }
+        if(players[i]->getNumOfVirus() == 4){
+            gameWon=true;
+            gameWinner = (i+1)==1 ? 2 :1;//WILL NOT WORK FOR 4 PLAYER
+        }
+    }
+}
+
 //getters
+
+int Game::getWinner() const{
+    return gameWinner;
+}
+bool Game::getGameWon() const{
+    return gameWon;
+}
 int Game::getBoardSize() const
 {
     return this->boardSize;
