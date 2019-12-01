@@ -21,14 +21,13 @@ class Game : public Subject{
         vector<vector <Cell>> board;
         vector<shared_ptr<Player>> players;
 
-        void battle(int op, Link& link1, Link& link2);
         void applyAbility(int ab);
         void applyLinkBoost(char id);
         void applyPortal(char id, int r, int c);
         void applyStrengthen(char id);
-        void applySand(int r, int c, int p); // returning 0 means ability cast failed, 1 means successful
+        void applySand(int r, int c); // returning 0 means ability cast failed, 1 means successful
         void applyDownload(char id);
-        void applyFirewall(int r, int c, int p); // returning 0 means ability cast failed, 1 means successful
+        void applyFirewall(int r, int c); // returning 0 means ability cast failed, 1 means successful
         void applyPolarize(char id);
         void applyScan(char id);
         Game(vector<string> abilities, vector<string> links, bool hasGraphics, int numOfPlayers, int currPlayer);
@@ -50,7 +49,7 @@ class Game : public Subject{
         //override Subject class public methods
         int getCurrPlayer() override;
         vector<shared_ptr<Player>> getPlayers() override;
-        vector<vector<Cell>> getBoard() override;
+        vector<vector<Cell>> getBoard();
 };
 
 #endif

@@ -13,7 +13,6 @@ Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int
     this->numOfPlayers = numOfPlayers;
     this->currPlayer = initPlayer;
     this->boardSize = (numOfPlayers == 2) ? 8 : 10 ;
-
     for (int i = 0; i < boardSize; ++i) {
         vector<Cell> row_i;
         for (int j = 0; j < boardSize; ++j) {
@@ -22,8 +21,12 @@ Game::Game(vector<string> abilities, vector<string> links, bool hasGraphics, int
         board.emplace_back(row_i);
     }
     for (int i = 0; i < numOfPlayers; ++i) {
-        players.emplace_back(make_shared<Player>(abilities[i], links[i], i+1));
+        players.push_back(make_shared<Player>(abilities[i], links[i], i+1));
     }
+    players[0]->SSCells.push_back(&board[0][3]);
+    players[0]->SSCells.push_back(&board[0][4]);
+    players[1]->SSCells.push_back(&board[7][3]);
+    players[1]->SSCells.push_back(&board[7][4]);
     setIsGraphics(hasGraphics);
 }
 
@@ -35,10 +38,6 @@ int whoseLink(char id){
     }else if(id>='A'&& id<='H'){
         return 2;
     }
-}
-
-void Game::battle(int op, Link& link1, Link& link2){
-    
 }
 
 //TODO:check if ability is available FOR ALL ABILITIES
@@ -53,7 +52,7 @@ void Game::applyAbility(int ab){
     }else if(ability == "Firewall"){
         int r,c;
         cin >> r >> c;
-        applyFirewall(r,c,currPlayer);
+        applyFirewall(r,c);
     }else if(ability == "Download"){
         char id;
         cin >> id;
@@ -69,7 +68,7 @@ void Game::applyAbility(int ab){
     }else if(ability == "Sand"){
         int r,c;
         cin >> r >> c;
-        applySand(r,c,currPlayer);
+        applySand(r,c);
     }else if(ability == "Portal"){
         char id;
         int r,c;
@@ -81,15 +80,14 @@ void Game::applyAbility(int ab){
         applyStrengthen(id);
     }
     players[currPlayer-1]->useAbility(ab-1);
+    notifyObservers();
 }
 void Game::applyLinkBoost(char id)
 {   
-    if (!players[currPlayer - 1]->hasAbility("LinkBoost")) return;
     players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsLinkBoosted(true);
 }
 
 void Game::applyPortal(char id, int r, int c){
-    if (!players[currPlayer - 1]->hasAbility("Portal")) return;
     int curRow = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getRow();
     int curCol = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getCol();
     //still coding
@@ -97,7 +95,6 @@ void Game::applyPortal(char id, int r, int c){
 
 void Game::applyStrengthen(char id)
 {
-    if (!players[currPlayer - 1]->hasAbility("Strengthen")) return;
     int tmp_strength = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getStrength();
     if (tmp_strength <=3)
     {
@@ -105,9 +102,8 @@ void Game::applyStrengthen(char id)
     }
 }
 
-void Game::applyFirewall(int r, int c, int p)
+void Game::applyFirewall(int r, int c)
 {
-    if (!players[currPlayer - 1]->hasAbility("Firewall")) return;
     try
     {
         if (((r == 0) || (r == 7)) && ((c == 3) || (c == 4)))
@@ -130,7 +126,8 @@ void Game::applyFirewall(int r, int c, int p)
         else if ((!board[r][c].isFireWall) && (board[r][c].isEmpty))
         {
             board[r][c].isFireWall = true; //NOTE: i did not change the text as that would be handled in textdisplay
-            board[r][c].fireWallOwner = p; //      to check if the cell is a firewall.
+            board[r][c].fireWallOwner = currPlayer; //      to check if the cell is a firewall.
+            players[currPlayer-1]->fwCells.push_back(&board[r][c]);
         }
     }
     catch (string err_statement)
@@ -140,9 +137,8 @@ void Game::applyFirewall(int r, int c, int p)
     }
 }
 
-void Game::applySand(int r, int c, int p)
+void Game::applySand(int r, int c)
 {
-    if (!players[currPlayer - 1]->hasAbility("Sand")) return;
     try
     {
         if (!board[r][c].isFireWall)
@@ -150,11 +146,19 @@ void Game::applySand(int r, int c, int p)
             string err_st = "There is no firewall to be sanded";
             throw err_st;
         }
-        else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner != p))
+        else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner != currPlayer))
         {
             board[r][c].isFireWall = false;
+            int numOfFW = players[board[r][c].fireWallOwner - 1]->fwCells.size();
+            for (int i = 0; i < numOfFW; ++i) {
+                if ((players[board[r][c].fireWallOwner - 1]->fwCells[i]->row == r) && (players[board[r][c].fireWallOwner - 1]->fwCells[i]->col == c))  {
+                    players[board[r][c].fireWallOwner - 1]->fwCells.erase(players[board[r][c].fireWallOwner - 1]->fwCells.begin()+ i);
+                }
+            }
+
             board[r][c].fireWallOwner = 0;
         }
+        else throw "you cannot sand your own firewall";
     }
     catch (string err_statement)
     {
@@ -164,7 +168,6 @@ void Game::applySand(int r, int c, int p)
 }
 
 void Game::applyDownload(char id){
-    if (!players[currPlayer - 1]->hasAbility("Download")) return;
     //check is opponents piece
     if(whoseLink(id)!= currPlayer){
         generalDownload(whoseLink(id),id,currPlayer);
@@ -176,16 +179,14 @@ void Game::applyDownload(char id){
 
 void Game::applyPolarize(char id)
 {
-    if (!players[currPlayer - 1]->hasAbility("Polarize")) return;
-    bool tmp= players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getType();
-    players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setType(!tmp);
+    bool tmp= players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getType();
+    players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setType(!tmp);
 }
 
 void Game::applyScan(char id)
 {   
-    if (!players[currPlayer - 1]->hasAbility("Scan")) return;
-    (players[currPlayer - 1])->links[id - players[currPlayer - 1]->getFirstId()]->setIsVisible(true);
-
+    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) return;
+    players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setIsVisible(true);
 }
 
 
@@ -292,8 +293,6 @@ void Game::generalDownload(int linkOwner, char toDownloadLink, int toDownloadPla
     int col = players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getCol();
     board[row][col].text = '.';
     board[row][col].isEmpty =true;
-    players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setRow(-1);
-    players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setCol(-1);
     notifyObservers();
 }
 

@@ -54,35 +54,43 @@ return this->moveFactor;
 //setters:
 void Link::setRow(int row_)
 {
+    if (getIsDownloaded()) return;
     this->row = row_;
 }
 void Link::setCol(int col_)
 {
+    if (getIsDownloaded()) return;
     this->col = col_;
 }
 void Link::setId(char id_)
 {
+    if (getIsDownloaded()) return;
     this->id = id_;
 }
 void Link::setType(int type_)
 {
+    if (getIsDownloaded()) return;
     this->type = type_;
 }
 void Link::setStrength(int strength_)
 {
+    if (getIsDownloaded()) return;
     this->strength = strength_;
 }
 void Link::setIsLinkBoosted(bool boolean_)
 {
+    if (getIsDownloaded()) return;
     this->isLinkBoosted = boolean_;
     this->moveFactor++;
 }
 void Link::setIsVisible(bool boolean_)
 {
+    if (getIsDownloaded()) return;
     this->isVisible = boolean_;
 }
 void Link::setIsDownloaded(bool boolean_)
 {
+    if (getIsDownloaded()) return;
     this->isDownloaded = boolean_;
 }
 
@@ -94,24 +102,4 @@ std::string Link::linkDescription(){
     ss << this->strength;
     s += ss.str();
     return s;
-}
-
-void Link::toggleType(){
-    this->type = !this->type;
-}
-
-void Link::polarize(){
-    this->toggleType();
-}
-
-void Link::scan(){
-    this->isVisible = true;
-}
-
-void Link::linkBoost(){
-    this->isLinkBoosted = true;
-}
-
-void Link::strengthen(){
-    this->strength += (this->strength <= 4) ? 1 : 0;
 }

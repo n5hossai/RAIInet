@@ -14,12 +14,13 @@ class Player{
     private:
         int numOfDataDld = 0;
         int numOfVirusDld = 0;
-        vector <Cell*> fwCells;
         int playerNumber; // actualy player number, starting from 1
-        int unusedAbilities = 5;
+        int unusedAbilities;
     public:
-        vector<unique_ptr<Ability>> abilities;
-        vector<unique_ptr<Link>> links; 
+        vector <Cell*> fwCells;
+        vector <Cell*> SSCells;
+        vector<shared_ptr<Ability>> abilities;
+        vector<shared_ptr<Link>> links; 
         Player(std::string abilityOrder, std::string linkOrder, int number);
         ~Player();
         char getFirstId();

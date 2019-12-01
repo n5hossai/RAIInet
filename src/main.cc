@@ -4,7 +4,7 @@
 #include <string>
 #include "Game.h"
 #include "TextDisplay.h"
-//#include "Graphics.h"
+#include "Graphics.h"
 
 using namespace std;
 
@@ -79,9 +79,11 @@ int main(int argc, const char* argv[]){
 
     // start the diaplays
     TextDisplay* td = new TextDisplay( numOfPlayers, initPlayer, game->players);
-    //Graphics* graphics = new Graphics(numOfPlayers, initPlayer, game->players);
     game->attach(td);
-    //game->attach(graphics);
+    if (hasGraphics){
+      Graphics* graphics = new Graphics(numOfPlayers, initPlayer, td->players);
+      td->attach(graphics);
+    }
 
     cout << *td;
     string command;
@@ -95,12 +97,18 @@ int main(int argc, const char* argv[]){
        cout << *td;
        continue;
       }
-      else if(command == "ability" && !usedAbilityOnTurn){
-       int ab;
-       cin>>ab;
-       game->applyAbility(ab);
-       usedAbilityOnTurn = true;
-       continue;
+      else if(command == "ability" ){
+        if (usedAbilityOnTurn) {
+          cout<< "no more ability allowed";
+        }
+        else {
+          int ab;
+          cin>>ab;
+          game->applyAbility(ab);
+          usedAbilityOnTurn = true;
+          cout << *td;
+       }
+         continue;
       }
       else if(command == "move"){
         char id;

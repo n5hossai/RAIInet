@@ -34,10 +34,10 @@ Xwindow::Xwindow(int width, int height) {
 	XColor xcolour;
 	Colormap cmap;
 
-	const size_t numColours = 5;
+	const size_t numColours = 6;
 	char color_vals[numColours][10] = {
 		"white", "black", "red", 
-		"green", "blue"
+		"green", "blue", "yellow"
 	};
 
 	cmap = DefaultColormap(d, DefaultScreen(d));
@@ -75,8 +75,13 @@ void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
 	XFillRectangle(d, w, gc, x, y, width, height);
 	XFlush(d);
 }
+void Xwindow::drawRectangle(int x, int y, int width, int height, int colour) {
+	XSetForeground(d, gc, colours[colour]);
+	XDrawRectangle(d, w, gc, x, y, width, height);
+	XFlush(d);
+}
 
-void Xwindow::drawString(int x, int y, string msg) {
+void Xwindow::drawString(int x, int y,  string msg) {
 	XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 	XFlush(d);
 }

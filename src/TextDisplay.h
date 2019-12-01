@@ -4,19 +4,24 @@
 #include <iostream>
 #include <memory>
 #include "Observer.h"
+#include "Subject.h"
 #include "Player.h"
 
-class TextDisplay : public Observer {
+class TextDisplay : public Observer, public Subject{
 	int numOfPlayers;
 	int boardSize;
 	int currPlayer;
 	std::vector<std::vector<char>> board;
-	std::vector<shared_ptr<Player>> players;
 	std::string printPlayerStat (shared_ptr<Player> player, char first_link_name, bool is_curr) const;
 public:
+	std::vector<shared_ptr<Player>> players;
 	TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Player>> players);
 	void notify(Subject& whoNotified);
 	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
+
+    int getCurrPlayer() override;
+    std::vector<shared_ptr<Player>> getPlayers() override;
+    std::vector<std::vector<Cell>> getBoard() override {};
 };
 
 #endif

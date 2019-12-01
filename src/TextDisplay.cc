@@ -8,24 +8,51 @@ TextDisplay::TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_pt
 	this->numOfPlayers = numOfPlayers;
 	this->currPlayer = initPlayer;
 	this->boardSize = (numOfPlayers == 2) ? 8 : 10;	
+	this->players = players;
+
 	for (int i = 0; i < boardSize; ++i) {
 		std::vector<char> row_i;
 		for (int j = 0; j < boardSize; ++j) {
-			if (((i == 0) || (i == boardSize - 1)) && ((j == 3) || (j == 4))) {
-				row_i.emplace_back('S');
+			bool empty= true;
+			for (int k = 0; k < numOfPlayers; ++k) { 
+				if (((players[k]->SSCells[0]->row == i) && (players[k]->SSCells[0]->col == j)) 
+					|| ((players[k]->SSCells[1]->row == i) && (players[k]->SSCells[1]->col == j))) {
+					empty = false;
+					row_i.emplace_back('S');
+					break;
+				}
+				for (int t = 0; t < 8; ++t) {
+					int row = players[k]->links[t]->getRow();
+					int col = players[k]->links[t]->getCol();
+					if ((row == i) && (col == j)) {
+						empty = false;
+						row_i.emplace_back(players[k]->links[t]->getId());
+						break;
+					}
+				}
 			}
-			else if (((i == 0) && (j < 3)) || ((i == 1) && (j > 2) && (j < 5)) || (i ==0) && (j > 4)) {
-				row_i.emplace_back('a' + j);
-			}
-			else if (((i == boardSize - 1) && (j < 3)) || ((i == 6) && (j > 2) && (j < 5)) || (i == boardSize - 1) && (j > 4)) {
-				row_i.emplace_back('A' + j);
-			}
-			else row_i.emplace_back('.');
+			if (empty) {
+				row_i.emplace_back('.');
+			};
 		}
 		this->board.emplace_back(row_i);
 	}
-	
-	this->players = players;
+	// for (int i = 0; i < boardSize; ++i) {
+	// 	std::vector<char> row_i;
+	// 	for (int j = 0; j < boardSize; ++j) {
+	// 		if (((i == 0) || (i == boardSize - 1)) && ((j == 3) || (j == 4))) {
+	// 			row_i.emplace_back('S');
+	// 		}
+	// 		else if (((i == 0) && (j < 3)) || ((i == 1) && (j > 2) && (j < 5)) || ((i ==0) && (j > 4))) {
+	// 			row_i.emplace_back('a' + j);
+	// 		}
+	// 		else if (((i == boardSize - 1) && (j < 3)) || ((i == 6) && (j > 2) && (j < 5)) || ((i == boardSize - 1) && (j > 4))) {
+	// 			row_i.emplace_back('A' + j);
+	// 		}
+	// 		else row_i.emplace_back('.');
+	// 	}
+	// 	this->board.emplace_back(row_i);
+	// }
 }
 
 void TextDisplay::notify(Subject& whoNotified) {
@@ -35,11 +62,12 @@ void TextDisplay::notify(Subject& whoNotified) {
 	for (int i = 0; i < boardSize; ++i) {
 		for (int j = 0; j < boardSize; ++j) {
 			if (board[i][j].isFireWall) {
-				this->board[i][j] = 'w' + board[i][j].fireWallOwner - 1;
+				this->board[i][j] = 'x' + board[i][j].fireWallOwner - 1;  //"w", "x","y","z" represent firewalls
 			}
 			else this->board[i][j] = board[i][j].text;
 		}
 	}
+	notifyObservers();
 }
 
 std::string TextDisplay::printPlayerStat (shared_ptr<Player> player, char first_link_name, bool is_curr) const{
@@ -100,4 +128,13 @@ std::ostream & operator<<(std::ostream &out, const TextDisplay &td) {
 	// 	out << td.printPlayerStat(td.players[3], 'A', (td.currPlayer == 4));
 	// }
 	return out; 
+}
+
+//override Subject class public methods
+int TextDisplay::getCurrPlayer() {
+	return this->currPlayer;
+}
+
+std::vector<shared_ptr<Player>> TextDisplay::getPlayers() {
+	return this->players;
 }

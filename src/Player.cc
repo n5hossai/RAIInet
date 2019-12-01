@@ -7,6 +7,7 @@ Player::Player(string abilityOrder, string linkOrder, int number) :
 playerNumber{number} {
     setAbilities(abilityOrder);
     setLinks(linkOrder);
+    unusedAbilities = abilities.size();
 }
 
 Player::~Player(){
@@ -14,6 +15,10 @@ Player::~Player(){
     for(unsigned int i=0; i< fwCells.size(); ++i){
         fwCells[i]->isFireWall = false;
         fwCells[i]->fireWallOwner = 0;
+    }
+    for (int i = 0; i < 2; ++i) {
+        SSCells[i]->isServerPort = false;
+        SSCells[i]->whoseServerPort = 0;
     }
 }
 
@@ -27,7 +32,7 @@ void Player::setAbilities(string order){
         throw "Invalid Abilities List";
     }
     for (unsigned int i = 0; i<order.size(); i++) {
-        abilities.emplace_back(make_unique<Ability>(order[i],i+1));
+        abilities.push_back(make_shared<Ability>(order[i],i+1));
     }
    //We Shall assume invalid arguments not allowed, I am not checking for >2 Abilities
 }
@@ -38,8 +43,10 @@ void Player::setLinks(string order){
         throw "Invalid Links List";
     }
     char a = (playerNumber == 1)?'a':'A';
+    unsigned int j = 0;
     for (unsigned int i = 0; i<order.size(); i=i+2) {
-        links.emplace_back(make_unique<Link>((char)(a + i),(order[i] == 'V') ? 1 : 0,order[i+1]-'0'));
+        links.push_back(make_shared<Link>((char)(a + j),(order[i] == 'V') ? 1 : 0,order[i+1]-'0'));
+        ++j;
     }
 
     // set up row and col numbers for each link
