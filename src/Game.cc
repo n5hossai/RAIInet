@@ -46,7 +46,7 @@ int whoseLink(char id){
 //TODO:check if ability is available FOR ALL ABILITIES
 //TODO:check if meets the condition of using abilities
 void Game::applyAbility(int ab){
-    if(players[currPlayer-1]->abilities[ab-1]->getIsUsed()) throw runtime_error("CHECK YOUR ABILITY STATUS AND TRY AGAIN, cANNOT USE ABILITY");
+    if(players[currPlayer-1]->abilities[ab-1]->getIsUsed()) throw runtime_error("CHECK YOUR ABILITY STATUS AND TRY AGAIN, CANNOT USE ABILITY");
     string ability = players[currPlayer-1]->abilities[ab-1]->getAbilityName();
     try{
         if(ability == "LinkBoost"){
@@ -191,8 +191,8 @@ void Game::applyPolarize(char id)
 
 void Game::applyScan(char id)
 {   
-    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY");
-    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK ALREADY VISIBLE");
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF SCAN ABILITY: LINK NOT IN PLAY");
+    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) throw runtime_error("INVALID USE OF SCAN ABILITY: LINK ALREADY VISIBLE");
     players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setIsVisible(true);
 }
 
