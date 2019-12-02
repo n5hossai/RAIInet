@@ -256,4 +256,5 @@ void Graphics::notify(Subject& whoNotified){
 			};
 		}
 	}
+	sleep(3);
 }
