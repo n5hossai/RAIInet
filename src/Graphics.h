@@ -13,6 +13,8 @@ class Graphics : public Observer {
 	int currPlayer;
 	std::vector<shared_ptr<Player>> players;
 public:
+	bool hasWonGame = false;
+	int whoWon = 0;
     Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Player>> players);
     ~Graphics() = default;
     void notify(Subject &whoNotified) override;
