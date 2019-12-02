@@ -58,6 +58,7 @@ std::string Ability::getAbilityName(){
             case Portal: return "Portal";
             case Strengthen: return "Strengthen";
         }
+        return "";
     
 }
 

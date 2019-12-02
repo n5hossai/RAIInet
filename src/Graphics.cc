@@ -1,5 +1,6 @@
 #include "Graphics.h"
 #include <sstream>
+#include <vector>
 #include "Subject.h"
 
 //configurations
@@ -12,10 +13,10 @@ int boardLength = 480;
 int padding = 50;
 int thickness = 3;
 
-int player1Color = Xwindow::Green;
-int player2Color = Xwindow::Yellow;
+//define colors used in graphics
+std::vector<int> playersColor {Xwindow::Green, Xwindow::Orange};
 int FirewallColor = Xwindow::Red;
-int highlight = Xwindow::Red;
+int highlight = Xwindow::Yellow;
 
 Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Player>> players){
 	this->numOfPlayers = numOfPlayers;
@@ -24,7 +25,7 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 	this->players = players;
 
 	//draw the window
-	w.drawRectangle(0, 0, windowWidth, windowHeight);
+	w.fillRectangle(0, 0, windowWidth, windowHeight, Xwindow::White);
 
 	//draw the scoreboard
 	w.fillRectangle(padding-thickness, padding - thickness, scoreWidth + thickness*2, scoreHeight + thickness*2, Xwindow::Black);
@@ -49,16 +50,25 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 70 + thickness, score);
 	}
 
-	//draw the play board
+	//draw players' headers and highlight the curr player
+	if (currPlayer == 1) {
+		w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + padding + 20, 60,20 ,highlight);
+	}
+	else if (currPlayer == 2) {
+		w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + boardLength + padding*2 + 20, 60,20, highlight);
+
+	}
 	std::string player1 = "Player 1";
 	w.drawString(padding + boardLength/2 - 25, scoreHeight + padding + 30,  player1);
-
-	w.fillRectangle(padding - thickness, scoreHeight + padding*2 - thickness, boardLength + thickness+2, boardLength + thickness*2, Xwindow::Black);
 
 	std::string player2 = "Player 2";
 	w.drawString(padding + boardLength/2 - 25, scoreHeight + boardLength + padding*2 + 30,  player2);
 
-	//fill in the links
+
+
+	//draw the board and fill in the links
+	w.fillRectangle(padding - thickness, scoreHeight + padding*2 - thickness, boardLength + thickness+2, boardLength + thickness*2, Xwindow::Black);
+
 	for (int i = 0; i < boardSize; ++i) {
 		for (int j = 0; j < boardSize; ++j) {
 			bool empty= true;
@@ -76,12 +86,8 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 					int col = players[k]->links[t]->getCol();
 					if ((row == i) && (col == j)) {
 						empty = false;
-						if (k == 0) {
-							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, player1Color);
-						}
-						else if (k == 1) {
-							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, player2Color);
-						}
+						w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::White);
+						w.fillCircle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2,playersColor[k]);
 						std::string description = players[k]->links[t]->linkDescription();
 						std::string name = std::string(1, players[k]->links[t]->getId()) + ":";
 						w.drawString(25+padding+col*cellSize+thickness, 20+scoreHeight+padding*2+row*cellSize+thickness, name);
@@ -99,15 +105,6 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 				w.fillRectangle(padding+j*cellSize+thickness, scoreHeight+padding*2+i*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::White);
 			};
 		}
-	}
-
-	//highlight the opponent edge for curr player
-	if (currPlayer == 1) {
-		w.fillRectangle(padding - thickness, scoreHeight + padding*2 + boardLength - thickness, boardLength + thickness, thickness*2, highlight);
-	}
-	else if (currPlayer == 2) {
-		w.fillRectangle(padding - thickness, scoreHeight + padding*2 - thickness, boardLength + thickness, thickness*2, highlight);
-
 	}
 }
 
@@ -136,11 +133,53 @@ void Graphics::notify(Subject& whoNotified){
 		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 70 + thickness, score);
 	}
 
+	//highlight curr player
+	std::string player1 = "Player 1";
+	std::string player2 = "Player 2";
+	if (currPlayer == 1) {
+		w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + padding + 20, 60,20 ,highlight);
+		w.drawString(padding + boardLength/2 - 25, scoreHeight + padding + 30,  player1);
+		w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + boardLength + padding*2 + 20, 60,20, Xwindow::White);
+		w.drawString(padding + boardLength/2 - 25, scoreHeight + boardLength + padding*2 + 30,  player2);
+	}
+	else if (currPlayer == 2) {
+		w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + boardLength + padding*2 + 20, 60,20, highlight);
+		w.drawString(padding + boardLength/2 - 25, scoreHeight + boardLength + padding*2 + 30,  player2);
+		w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + padding + 20, 60,20 ,Xwindow::White);
+		w.drawString(padding + boardLength/2 - 25, scoreHeight + padding + 30,  player1);
+
+	}
+
+	// draw downloded links for each player:
+	for (int k = 0; k < numOfPlayers; ++k) {
+		int y_data = padding + boardLength/2 - 65;
+		int y_virus = padding + boardLength/2 + 35;
+		for (unsigned int i = 0; i < players[k]->downloaded.size(); ++i) {
+			int x = (k == 0) ? (padding + scoreHeight + thickness + 10) : (padding*2 + scoreHeight + boardLength +thickness + 10); //won't work for 4 players
+			std::string description = players[k]->downloaded[i]->linkDescription();
+			// if the link is data
+			if(!players[k]->downloaded[i]->getType()) {
+				w.fillCircle(y_data,x,cellSize/2,playersColor[players[k]->downloaded[i]->getOwnedBy() - 1]);
+				w.drawString(y_data + 10,x + 20,description);
+				y_data -= cellSize/2 +10;
+				
+			}
+			//if the link is virus
+			else {
+				w.fillCircle(y_virus, x,cellSize/2,playersColor[players[k]->downloaded[i]->getOwnedBy() - 1]);
+				w.drawString(y_virus + 10,x + 20,description);
+				y_virus += cellSize/2 + 10;
+			}
+		}
+	}
 	//update the play board:
 	for (int i = 0; i < boardSize; ++i) {
 		for (int j = 0; j < boardSize; ++j) {
 			bool empty= true;
+			bool hasFW = false;
 			for (int k = 0; k < numOfPlayers; ++k) {
+
+				// find server ports
 				if (((players[k]->SSCells[0]->row == i) && (players[k]->SSCells[0]->col == j)) 
 					|| ((players[k]->SSCells[1]->row == i) && (players[k]->SSCells[1]->col == j))) {
 					empty = false;
@@ -149,26 +188,44 @@ void Graphics::notify(Subject& whoNotified){
 					w.drawString(25 + padding + j * cellSize + thickness, 30 + scoreHeight + padding*2 + i*cellSize + thickness,  server);
 					break;
 				}
+
+				//find firewalls
 				int numOfFW = players[k]->fwCells.size();
 				for (int t = 0; t < numOfFW; ++t) {
 					if ((players[k]->fwCells[t]->row == i) && (players[k]->fwCells[t]->col == j)) {
 						empty = false;
-						w.fillRectangle(padding+j*cellSize+thickness, scoreHeight+padding*2+i*cellSize+thickness, cellSize/2-thickness, cellSize-thickness*2,FirewallColor);
-						w.fillRectangle(padding+j*cellSize+cellSize/2, scoreHeight+padding*2+i*cellSize+thickness, cellSize/2-thickness, cellSize-thickness*2,player1Color); //TOCHANGE
+						w.fillRectangle(padding+j*cellSize+thickness, scoreHeight+padding*2+i*cellSize+thickness, cellSize-thickness*2, cellSize-thickness*2,playersColor[k]);
+						w.fillRectangle(padding+j*cellSize+thickness*2, scoreHeight+padding*2+i*cellSize+thickness*2, cellSize-thickness*4, cellSize-thickness*4,FirewallColor);
 						break;
 					}
 				}
+
+				//find links
 				for (int t = 0; t < 8; ++t) {
 					int row = players[k]->links[t]->getRow();
 					int col = players[k]->links[t]->getCol();
 					if ((row == i) && (col == j)) {
-						if (players[k]->links[t]->getIsDownloaded()) break;
-						if (k == 0) {
-							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, player1Color);
+
+						//skip downloaded links
+						if (players[k]->links[t]->getIsDownloaded()) {
+							break;
 						}
-						else if (k == 1) {
-							w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, player2Color);
+
+						// found un-downloaded links, looking for firewall on this cell
+						empty = false;
+						for (int kk = 0; kk < numOfPlayers; ++kk) {
+							int numOfFW = players[kk]->fwCells.size();
+							for (int f = 0; f < numOfFW; ++f) {
+								if ((players[kk]->fwCells[f]->row == i) && (players[kk]->fwCells[f]->col == j)) {
+									hasFW = true;
+									break;
+								}
+							}
 						}
+
+						// only color the background white if there is no firewall on this cell
+						if (!hasFW) w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::White);
+						w.fillCircle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2,playersColor[k]);
 						std::string description = players[k]->links[t]->linkDescription();
 						std::string name = std::string(1,players[k]->links[t]->getId()) + ":";
 						w.drawString(25+padding+col*cellSize+thickness, 20+scoreHeight+padding*2+row*cellSize+thickness, name);
@@ -178,7 +235,6 @@ void Graphics::notify(Subject& whoNotified){
 						else {
 							w.drawString(25+padding+col*cellSize+thickness, 40+scoreHeight+padding*2+row*cellSize+thickness, "?"); 
 						}
-						empty = false;
 						break;
 					}
 				}
@@ -187,16 +243,5 @@ void Graphics::notify(Subject& whoNotified){
 				w.fillRectangle(padding+j*cellSize+thickness, scoreHeight+padding*2+i*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::White);
 			};
 		}
-	}
-
-	//highlight the opponent edge for curr player
-	if (currPlayer == 1) {
-		w.fillRectangle(padding - thickness, scoreHeight + padding*2 - thickness, boardLength + thickness, thickness*2, Xwindow::Black);
-		w.fillRectangle(padding - thickness, scoreHeight + padding*2 + boardLength - thickness, boardLength + thickness*2, thickness*2, highlight);
-	}
-	else if (currPlayer == 2) {
-		w.fillRectangle(padding - thickness, scoreHeight + padding*2 + boardLength - thickness, boardLength + thickness*2, thickness*2, Xwindow::Black);
-		w.fillRectangle(padding - thickness, scoreHeight + padding*2 - thickness, boardLength + thickness, thickness*2, highlight);
-
 	}
 }

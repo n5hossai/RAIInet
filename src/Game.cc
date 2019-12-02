@@ -41,6 +41,7 @@ int whoseLink(char id){
     }else if(id>='A'&& id<='H'){
         return 2;
     }
+    return 0;
 }
 
 //TODO:check if ability is available FOR ALL ABILITIES
@@ -174,7 +175,7 @@ void Game::applySand(int r, int c)
 
 void Game::applyDownload(char id){
     
-    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF DOWNLOAD ABILITY: LINK NOT IN PLAY");
+    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF DOWNLOAD ABILITY: LINK NOT IN PLAY");
     if(whoseLink(id)!= currPlayer){
         generalDownload(whoseLink(id),id,currPlayer);
 
@@ -184,15 +185,15 @@ void Game::applyDownload(char id){
 
 void Game::applyPolarize(char id)
 {
-    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY");
+    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY");
     bool tmp= players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getType();
     players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setType(!tmp);
 }
 
 void Game::applyScan(char id)
 {   
-    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF SCAN ABILITY: LINK NOT IN PLAY");
-    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) throw runtime_error("INVALID USE OF SCAN ABILITY: LINK ALREADY VISIBLE");
+    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY");
+    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK ALREADY VISIBLE");
     players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setIsVisible(true);
 }
 
@@ -291,6 +292,7 @@ void Game::generalDownload(int linkOwner, char toDownloadLink, int toDownloadPla
     if(players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF DOWNLOAD: LINK NOT IN PLAY");;
     players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setIsVisible(true);
     players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setIsDownloaded(true);
+    players[toDownloadPlayer-1]->downloaded.push_back(players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]);
     int linkType = players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getType();
     linkType == 0 ? players[toDownloadPlayer - 1]->dataDownload() : players[toDownloadPlayer - 1]->virusDownload();
     int row = players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getRow();
@@ -302,7 +304,7 @@ void Game::generalDownload(int linkOwner, char toDownloadLink, int toDownloadPla
 }
 
 void Game::wonGame(){
-    for (unsigned int i=0;i< numOfPlayers; i++){
+    for (int i=0;i< numOfPlayers; i++){
         if(players[i]->getNumOfData() == 4){
             gameWon=true;
             gameWinner = i+1;

@@ -48,7 +48,12 @@ bool Link::getIsDownloaded() const
 
 int Link::getMoveFactor() const
 {
-return this->moveFactor;
+    return this->moveFactor;
+}
+
+int Link::getOwnedBy() const
+{
+    return this->ownedBy;
 }
 
 //setters:
@@ -94,6 +99,11 @@ void Link::setIsDownloaded(bool boolean_)
     this->isDownloaded = boolean_;
 }
 
+void Link::setOwnedBy(int player_)
+{
+    if (getIsDownloaded()) return;
+    this->ownedBy = player_;
+}
 // functions:
 std::string Link::linkDescription(){
     std::string s = "";

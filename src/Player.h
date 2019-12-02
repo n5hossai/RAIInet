@@ -20,7 +20,8 @@ class Player{
         vector <Cell*> fwCells;
         vector <Cell*> SSCells;
         vector<shared_ptr<Ability>> abilities;
-        vector<shared_ptr<Link>> links; 
+        vector<shared_ptr<Link>> links;
+        vector<shared_ptr<Link>> downloaded;
         Player(std::string abilityOrder, std::string linkOrder, int number);
         ~Player();
         char getFirstId();

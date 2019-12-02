@@ -34,10 +34,10 @@ Xwindow::Xwindow(int width, int height) {
 	XColor xcolour;
 	Colormap cmap;
 
-	const size_t numColours = 6;
+	const size_t numColours = 8;
 	char color_vals[numColours][10] = {
 		"white", "black", "red", 
-		"green", "blue", "yellow"
+		"green", "blue", "yellow", "pink", "orange"
 	};
 
 	cmap = DefaultColormap(d, DefaultScreen(d));
@@ -75,14 +75,20 @@ void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
 	XFillRectangle(d, w, gc, x, y, width, height);
 	XFlush(d);
 }
-void Xwindow::drawRectangle(int x, int y, int width, int height, int colour) {
-	XSetForeground(d, gc, colours[colour]);
-	XDrawRectangle(d, w, gc, x, y, width, height);
-	XFlush(d);
-}
 
 void Xwindow::drawString(int x, int y,  string msg) {
 	XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 	XFlush(d);
 }
 
+void Xwindow::fillCircle (int x, int y, int r, int colour) {
+	XSetForeground(d, gc, colours[colour]);
+	XFillArc(d, w, gc, x, y, r, r, 0, 360*64);
+	XFlush(d);
+}
+
+void Xwindow::drawCircle (int x, int y, int r, int colour) {
+	XSetForeground(d, gc, colours[colour]);
+	XDrawArc(d, w, gc, x, y, r, r, 0, 360*64);
+	XFlush(d);
+}
