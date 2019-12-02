@@ -121,6 +121,9 @@ void Graphics::notify(Subject& whoNotified){
 		ss << whoWon;
 		std::string msg = "CONGRATUALTIONS PLAYER " + ss.str()+ ": YOU ARE THE RAIINET CHAMPION!!!";
 		w.drawString(0, windowHeight/2, msg);
+		
+		XFlush(w);
+		sleep(5);
 		return;
 	}
 	
