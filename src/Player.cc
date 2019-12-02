@@ -49,7 +49,7 @@ void Player::setLinks(string order){
         ++j;
     }
 
-    // set up row and col numbers for each link
+    // set up row and col numbers and ownedBy for each link
     for (int i = 0; i < 8; ++i ) {
         links[i]->setCol(i);
         if ((i != 3) && (i != 4)) {
@@ -60,6 +60,7 @@ void Player::setLinks(string order){
             if (playerNumber == 1) links[i]->setRow(1);
             else links[i]->setRow(6);
         }
+        links[i]->setOwnedBy(playerNumber);
     }
 }
 
