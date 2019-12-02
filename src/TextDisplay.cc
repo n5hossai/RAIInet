@@ -37,27 +37,18 @@ TextDisplay::TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_pt
 		}
 		this->board.emplace_back(row_i);
 	}
-	// for (int i = 0; i < boardSize; ++i) {
-	// 	std::vector<char> row_i;
-	// 	for (int j = 0; j < boardSize; ++j) {
-	// 		if (((i == 0) || (i == boardSize - 1)) && ((j == 3) || (j == 4))) {
-	// 			row_i.emplace_back('S');
-	// 		}
-	// 		else if (((i == 0) && (j < 3)) || ((i == 1) && (j > 2) && (j < 5)) || ((i ==0) && (j > 4))) {
-	// 			row_i.emplace_back('a' + j);
-	// 		}
-	// 		else if (((i == boardSize - 1) && (j < 3)) || ((i == 6) && (j > 2) && (j < 5)) || ((i == boardSize - 1) && (j > 4))) {
-	// 			row_i.emplace_back('A' + j);
-	// 		}
-	// 		else row_i.emplace_back('.');
-	// 	}
-	// 	this->board.emplace_back(row_i);
-	// }
 }
 
 void TextDisplay::notify(Subject& whoNotified) {
 	this->currPlayer = whoNotified.getCurrPlayer();
 	this->players = whoNotified.getPlayers();
+	this->whoWon = whoNotified.getWinner();
+	this->hasWonGame = whoNotified.getGameWon();
+
+	if (hasWonGame) {
+		notifyObservers();
+		return;
+	}
 	std::vector<std::vector<Cell>> board = whoNotified.getBoard();
 	for (int i = 0; i < boardSize; ++i) {
 		for (int j = 0; j < boardSize; ++j) {
@@ -137,4 +128,12 @@ int TextDisplay::getCurrPlayer() {
 
 std::vector<shared_ptr<Player>> TextDisplay::getPlayers() {
 	return this->players;
+}
+
+bool TextDisplay::getGameWon() const {
+	return this->hasWonGame;
+}
+
+int TextDisplay::getWinner() const {
+	return this->whoWon;
 }

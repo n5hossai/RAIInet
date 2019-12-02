@@ -43,8 +43,8 @@ class Game : public Subject{
         int getNumOfPlayers() const;
         int getBoardSize() const;
         bool getIsGraphics() const;
-        int getWinner() const;
-        bool getGameWon() const;
+        int getWinner() const override;
+        bool getGameWon() const override;
         //setters
         void setBoardSize(int size);
         void setIsGraphics(bool boolean_);

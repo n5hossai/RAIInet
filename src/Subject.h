@@ -14,5 +14,7 @@ class Subject {
 	virtual int getCurrPlayer() = 0;
 	virtual std::vector<shared_ptr<Player>> getPlayers() = 0;
 	virtual std::vector<std::vector<Cell>> getBoard() = 0;
+	virtual bool getGameWon() const = 0;
+	virtual int getWinner() const = 0;
 };
 #endif

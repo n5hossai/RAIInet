@@ -111,6 +111,18 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 void Graphics::notify(Subject& whoNotified){
 	this->currPlayer = whoNotified.getCurrPlayer();
 	this->players = whoNotified.getPlayers();
+	this->hasWonGame = whoNotified.getGameWon();
+	this->whoWon = whoNotified.getWinner();
+
+	//if the game is over
+	if (hasWonGame) {
+		w.fillRectangle(0, 0, windowWidth, windowHeight, Xwindow::White);
+		stringstream ss;
+		ss << whoWon;
+		std::string msg = "CONGRATUALTIONS PLAYER " + ss.str()+ ": YOU ARE THE RAIINET CHAMPION!!!";
+		w.drawString(0, windowHeight/2, msg);
+		return;
+	}
 	
 	//update the score board
 	w.fillRectangle(padding + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
