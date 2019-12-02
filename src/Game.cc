@@ -200,7 +200,7 @@ void Game::applyScan(char id)
 
 void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, bool ignoreFirewall){
     if(curRow<0 || curRow >=boardSize || curCol < 0 || curCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: LINK NOT ON BOARD");
-    if(currPlayer==1 && newRow<0 || currPlayer==2 && newRow >=boardSize || newCol < 0 || newCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: DESTINATION NOT ON BOARD");
+    if((currPlayer==1 && newRow<0) || (currPlayer==2 && newRow >=boardSize) || newCol < 0 || newCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: DESTINATION NOT ON BOARD");
     
     //Moves off opponents edge
     if((currPlayer==2 && newRow<0) || (currPlayer==1 && newRow>7)){

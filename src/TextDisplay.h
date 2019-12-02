@@ -23,7 +23,7 @@ public:
 
     int getCurrPlayer() override;
     std::vector<shared_ptr<Player>> getPlayers() override;
-    std::vector<std::vector<Cell>> getBoard() override {};
+    std::vector<std::vector<Cell>> getBoard() override;
     bool getGameWon() const override;
     int getWinner() const override;
 };

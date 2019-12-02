@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include "Subject.h"
+#include "Cell.h"
 
 TextDisplay::TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Player>> players) {
 	this->numOfPlayers = numOfPlayers;
@@ -128,6 +129,12 @@ int TextDisplay::getCurrPlayer() {
 
 std::vector<shared_ptr<Player>> TextDisplay::getPlayers() {
 	return this->players;
+}
+
+// ONLY HERE IN ORDER TO COMPILE. SHOULE NOT BE USED!!!
+std::vector<std::vector<Cell>> TextDisplay::getBoard(){
+	std::vector<std::vector<Cell>> v;
+	return v;
 }
 
 bool TextDisplay::getGameWon() const {
