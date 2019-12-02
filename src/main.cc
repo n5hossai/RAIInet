@@ -146,6 +146,6 @@ int main(int argc, const char* argv[]){
     if(game->getGameWon()){
       cout<<"CONGRATUALTIONS PLAYER "<< game->getWinner()<< ": YOU ARE THE RAIINET CHAMPION!!!" << endl;
       game->notifyObservers();
-      sleep(5);
+      //sleep(5); sleep should be in Graphics.cc for the congratulations message
     }
 }
