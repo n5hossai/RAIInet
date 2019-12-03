@@ -38,6 +38,14 @@ TextDisplay::TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_pt
 		}
 		this->board.emplace_back(row_i);
 	}
+
+	// set up the board for 4 players
+	if (boardSize == 10) {
+		board[0][0] = '';
+		board[0][9] = '';
+		board[9][0] = '';
+		board[9][9] = '';
+	}
 }
 
 void TextDisplay::notify(Subject& whoNotified) {
@@ -53,8 +61,11 @@ void TextDisplay::notify(Subject& whoNotified) {
 	std::vector<std::vector<Cell>> board = whoNotified.getBoard();
 	for (int i = 0; i < boardSize; ++i) {
 		for (int j = 0; j < boardSize; ++j) {
-			if (board[i][j].isFireWall) {
-				this->board[i][j] = 'x' + board[i][j].fireWallOwner - 1;  //"w", "x","y","z" represent firewalls
+			if (board[i][j].isBlocked) {
+				this->board[i][j] = '';
+			}
+			else if (board[i][j].isFireWall) {
+				this->board[i][j] = 'r' + board[i][j].fireWallOwner - 1;  //'r','t','u','v','w','x','y','z' represent firewalls
 			}
 			else this->board[i][j] = board[i][j].text;
 		}
@@ -103,22 +114,34 @@ std::string TextDisplay::printPlayerStat (shared_ptr<Player> player, char first_
 }
 
 std::ostream & operator<<(std::ostream &out, const TextDisplay &td) {
-	out << td.printPlayerStat(td.players[0], 'a', (td.currPlayer == 1));
-	out << "========" << std::endl;
-	for (int i = 0; i < td.boardSize; ++i) {
-		for (int j = 0; j < td.boardSize; ++j) {
-			out << td.board[i][j];
+	if (td.numOfPlayers == 2) {
+		out << td.printPlayerStat(td.players[0], 'a', (td.currPlayer == 1));
+		out << "========" << std::endl;
+		for (int i = 0; i < td.boardSize; ++i) {
+			for (int j = 0; j < td.boardSize; ++j) {
+				out << td.board[i][j];
+			}
+			out << std::endl;
 		}
-		out << std::endl;
+		out << "========" << std::endl;
+		out << td.printPlayerStat(td.players[1], 'A', (td.currPlayer == 2));
 	}
-	out << "========" << std::endl;
-	out << td.printPlayerStat(td.players[1], 'A', (td.currPlayer == 2));
-	
-	//not sure how to print 4 players yet
-	// else {
-	// 	out << td.printPlayerStat(td.players[2], 'A', (td.currPlayer == 3));
-	// 	out << td.printPlayerStat(td.players[3], 'A', (td.currPlayer == 4));
-	// }
+	else if (td.numOfPlayers == 4) {
+		out << td.printPlayerStat(td.players[0], 'a', (td.currPlayer == 1));
+		out << "========" << std::endl;
+		out << td.printPlayerStat(td.players[1], 'A', (td.currPlayer == 2));
+		out << "========" << std::endl;
+		for (int i = 0; i < td.boardSize; ++i) {
+			for (int j = 0; j < td.boardSize; ++j) {
+				out << td.board[i][j];
+			}
+			out << std::endl;
+		}
+		out << "========" << std::endl;
+		out << td.printPlayerStat(td.players[2], 'i', (td.currPlayer == 3));
+		out << "========" << std::endl;
+		out << td.printPlayerStat(td.players[4], 'I', (td.currPlayer == 4));
+	}
 	return out; 
 }
 

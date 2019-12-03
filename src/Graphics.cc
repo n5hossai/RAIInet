@@ -11,6 +11,7 @@ int scoreWidth = 480;
 int scoreHeight = 100;
 int boardLength = 480;
 int padding = 50;
+int padding2 = 100;
 int thickness = 3;
 
 //define colors used in graphics
@@ -24,46 +25,116 @@ Graphics::Graphics(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Play
 	this->boardSize = (numOfPlayers == 2) ? 8 : 10 ;
 	this->players = players;
 
+	//set up for 4 player's case
+	if (boardSize == 10) {
+		boardLength = cellSize * boardSize;
+		windowWidth = 800;
+		windowHeight = 1100;
+		scoreWidth = boardLength;
+	}
+
 	//draw the window
 	w.fillRectangle(0, 0, windowWidth, windowHeight, Xwindow::White);
 
 	//draw the scoreboard
-	w.fillRectangle(padding-thickness, padding - thickness, scoreWidth + thickness*2, scoreHeight + thickness*2, Xwindow::Black);
-	w.fillRectangle(padding + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
-	w.fillRectangle(padding + scoreWidth/2 + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+	if (numOfPlayers == 2){
+		w.fillRectangle(padding-thickness, padding - thickness, scoreWidth + thickness*2, scoreHeight + thickness*2, Xwindow::Black);
+		w.fillRectangle(padding + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+		w.fillRectangle(padding + scoreWidth/2 + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+	}
+	else {
+		w.fillRectangle(padding2-thickness, padding - thickness, scoreWidth + thickness*2, scoreHeight*2 + thickness*2, Xwindow::Black);
+		w.fillRectangle(padding2 + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+		w.fillRectangle(padding2 + scoreWidth/2 + thickness, padding + thickness, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+		w.fillRectangle(padding2 + thickness, padding + thickness + scoreHeight, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+		w.fillRectangle(padding2 + scoreWidth/2 + thickness, padding + thickness + scoreHeight, scoreWidth/2 - thickness*2, scoreHeight - thickness*2, Xwindow::White);
+	}
 
-	//display score in the scoreboard:  (STRING COLOR IS NOT WORKING)
-	for (int i = 0; i < numOfPlayers; ++i) {
-		std::stringstream ss;
-		ss << players[i]->getPlayerNum();
-		std::string score = "Player " + ss.str();
-		ss.str(std::string());
-		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 30 + thickness, score);
+	//display score in the scoreboard:
+	if (numOfPlayers == 2) {
+		for (int i = 0; i < numOfPlayers; ++i) {
+			std::stringstream ss;
+			ss << players[i]->getPlayerNum();
+			std::string score = "Player " + ss.str();
+			ss.str(std::string());
+			w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 30 + thickness, score);
 
-		ss << players[i]->getNumOfData();
-		score = "Number Of Data Downloaded: " + ss.str();
-		ss.str(std::string());
-		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 50 + thickness, score);
+			ss << players[i]->getNumOfData();
+			score = "Number Of Data Downloaded: " + ss.str();
+			ss.str(std::string());
+			w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 50 + thickness, score);
 
-		ss << players[i]->getNumOfVirus();
-		score = "Number Of Virus Downloaded: " + ss.str();
-		w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 70 + thickness, score);
+			ss << players[i]->getNumOfVirus();
+			score = "Number Of Virus Downloaded: " + ss.str();
+			w.drawString(10 + padding + i*scoreWidth/2 + thickness, padding + 70 + thickness, score);
+		}
+	}
+	else {
+		for (int i = 0; i < 2; ++i) {
+			std::stringstream ss;
+			ss << players[i]->getPlayerNum();
+			std::string score = "Player " + ss.str();
+			ss.str(std::string());
+			w.drawString(10 + padding2 + i*scoreWidth/2 + thickness, padding + 30 + thickness, score);
+
+			ss << players[i]->getNumOfData();
+			score = "Number Of Data Downloaded: " + ss.str();
+			ss.str(std::string());
+			w.drawString(10 + padding2 + i*scoreWidth/2 + thickness, padding + 50 + thickness, score);
+
+			ss << players[i]->getNumOfVirus();
+			score = "Number Of Virus Downloaded: " + ss.str();
+			w.drawString(10 + padding2 + i*scoreWidth/2 + thickness, padding + 70 + thickness, score);
+		}
+		for (int i = 2; i < 4; ++i) {
+			std::stringstream ss;
+			ss << players[i]->getPlayerNum();
+			std::string score = "Player " + ss.str();
+			ss.str(std::string());
+			w.drawString(10 + padding2 + i*scoreWidth/2 + thickness, padding + 30 + thickness + scoreHeight, score);
+
+			ss << players[i]->getNumOfData();
+			score = "Number Of Data Downloaded: " + ss.str();
+			ss.str(std::string());
+			w.drawString(10 + padding2 + i*scoreWidth/2 + thickness, padding + 50 + thickness + scoreHeight, score);
+
+			ss << players[i]->getNumOfVirus();
+			score = "Number Of Virus Downloaded: " + ss.str();
+			w.drawString(10 + padding2 + i*scoreWidth/2 + thickness, padding + 70 + thickness + scoreHeight, score);
+		}
 	}
 
 	//draw players' headers and highlight the curr player
-	if (currPlayer == 1) {
-		w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + padding + 20, 60,20 ,highlight);
+	if (numOfPlayers == 2) {
+	 	if (currPlayer == 1) {
+			w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + padding + 20, 60,20 ,playersColor[0]);
+		}
+		else if (currPlayer == 2) {
+			w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + boardLength + padding*2 + 20, 60,20, playersColor[1]);
+
+		}
+		std::string player1 = "Player 1";
+		w.drawString(padding + boardLength/2 - 25, scoreHeight + padding + 30,  player1);
+
+		std::string player2 = "Player 2";
+		w.drawString(padding + boardLength/2 - 25, scoreHeight + boardLength + padding*2 + 30,  player2);
 	}
-	else if (currPlayer == 2) {
-		w.fillRectangle(padding + boardLength/2 - 30, scoreHeight + boardLength + padding*2 + 20, 60,20, highlight);
+	else {
+		if (currPlayer == 1) {
+			w.fillRectangle(padding2 + boardLength/2 - 30, scoreHeight*2 + padding + 20, 60,20 ,playersColor[0]);
+		}
+		else if (currPlayer == 3) {
+			w.fillRectangle(padding2 + boardLength/2 - 30, scoreHeight*2 + boardLength + padding*2 + 20, 60,20, playersColor[2]);
+		}
+		else if (currPlayer == 2) {
+			w.fillRectangle(padding2 + boardLength/2 - 30, scoreHeight*2 + boardLength + padding*2 + 20, 60,20, playersColor[1]);
+		}
+		std::string player1 = "Player 1";
+		w.drawString(padding + boardLength/2 - 25, scoreHeight + padding + 30,  player1);
 
+		std::string player2 = "Player 2";
+		w.drawString(padding + boardLength/2 - 25, scoreHeight + boardLength + padding*2 + 30,  player2);
 	}
-	std::string player1 = "Player 1";
-	w.drawString(padding + boardLength/2 - 25, scoreHeight + padding + 30,  player1);
-
-	std::string player2 = "Player 2";
-	w.drawString(padding + boardLength/2 - 25, scoreHeight + boardLength + padding*2 + 30,  player2);
-
 
 
 	//draw the board and fill in the links
