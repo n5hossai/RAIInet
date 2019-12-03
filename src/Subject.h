@@ -7,9 +7,10 @@
 class Player;
 class Observer;
 class Subject {
-	std::vector<Observer*> observers;
+	std::vector<std::shared_ptr<Observer>> observers;
 	public:
-	void attach (Observer* o);
+	void attach (std::shared_ptr<Observer> o);
+	void clearOb();
 	void notifyObservers();
 	virtual int getCurrPlayer() = 0;
 	virtual std::vector<shared_ptr<Player>> getPlayers() = 0;

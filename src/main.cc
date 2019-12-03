@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <chrono>
 #include <thread>
+#include <memory>
 #include "Game.h"
 #include "TextDisplay.h"
 #include "Graphics.h"
@@ -113,13 +114,14 @@ int main(int argc, const char* argv[]){
     std::vector<std::string> links;
     links.push_back(link1);
     links.push_back(link2);
-    Game* game = new Game(abilities, links, hasGraphics, numOfPlayers, initPlayer);
+    unique_ptr<Game> game = make_unique<Game>(abilities, links, hasGraphics, numOfPlayers, initPlayer);
 
     // start the diaplays
-    TextDisplay* td = new TextDisplay( numOfPlayers, initPlayer, game->players);
+    shared_ptr<TextDisplay> td = make_shared<TextDisplay>(numOfPlayers, initPlayer, game->players);
+    shared_ptr<Graphics> graphics;
     game->attach(td);
     if (hasGraphics){
-      Graphics* graphics = new Graphics(numOfPlayers, initPlayer, td->players);
+      graphics=  make_shared<Graphics>(numOfPlayers, initPlayer, td->players);
       td->attach(graphics);
     }
 
@@ -204,17 +206,22 @@ int main(int argc, const char* argv[]){
       }
     }
 
+    //decide if game has won
     if(game->getGameWon()){
       cout<<"CONGRATUALTIONS PLAYER "<< game->getWinner()<< ": YOU ARE THE RAIINET CHAMPION!!!" << endl;
       game->notifyObservers();
-      for (int i = 0; i < 2; ++i) {
-        game->players[i]->links.clear();
-        game->players[i]->abilities.clear();
-        game->players[i]->downloaded.clear();
-      }
-      game->players.clear();
       std::chrono::milliseconds timespan(1000); // or whatever
       std::this_thread::sleep_for(timespan);
-      return 0;
     }
+
+    //free memory
+    for (int i = 0; i < 2; ++i) {
+      game->players[i]->links.clear();
+      game->players[i]->abilities.clear();
+      game->players[i]->downloaded.clear();
+    }
+    game->players.clear();
+    game->clearOb();
+    td->clearOb();
+    return 0;
 }
