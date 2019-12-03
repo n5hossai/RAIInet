@@ -98,7 +98,7 @@ int main(int argc, const char* argv[]){
       }
       else{
           cerr << "ERROR: INVALID COMMAND LINE ARGUMENT" << endl;
-          continue;
+          return 1;
       }
     }
 
@@ -133,20 +133,21 @@ int main(int argc, const char* argv[]){
       else if(command == "ability" ){
         if (usedAbilityOnTurn) {
           cout<< "ONLY 1 ABILITY ALLOWED PER TURN: PLEASE EXECUTE A MOVE"<<endl;
+          continue;
         }
         else {
           try{
             int ab;
-            if (cin>>ab) { 
-              if (ab > 5) throw runtime_error("CHECK YOUR ABILITY NUMBER.");
-              game->applyAbility(ab);
-              usedAbilityOnTurn = true;
-              cout << *td;
-              if(game->getGameWon()){
-                break;
-              }
+            if (!(cin >> ab) || ab > 5 || ab < 1) {
+              cout << "PLEASE ENTER A NUMBER IN RANGE 1-5." <<endl;
+              continue;
             }
-            else throw runtime_error("PLEASE ENTER A NUMBER.");
+            game->applyAbility(ab);
+            usedAbilityOnTurn = true;
+            cout << *td;
+            if(game->getGameWon()){
+              break;
+            }
           }catch(const exception& ex){
             cout<<ex.what()<<" PLEASE TRY AGAIN"<<endl;
             continue;
@@ -157,9 +158,12 @@ int main(int argc, const char* argv[]){
         try{
           char id;
           string dir;
-          cin >> id >> dir;
+          if (!(cin >> id >> dir)) {
+            cout << "PLEASE ENTER AN ID AND A DIRECTION." << endl;
+            continue;
+          }
           game->applyMove(id,dir);
-          std::chrono::milliseconds timespan(1000); // or whatever
+          std::chrono::milliseconds timespan(1000);
           std::this_thread::sleep_for(timespan);
           game->togglePlayer();
           usedAbilityOnTurn = false;
@@ -177,13 +181,23 @@ int main(int argc, const char* argv[]){
         cout<<"GAME TERMINATED";
         break;
       }
-
+      else {
+        cout << "COMMAND NOT RECOGNIZED. PLEASE TRY AGAIN." << endl;
+        continue;
+      }
     }
 
     if(game->getGameWon()){
       cout<<"CONGRATUALTIONS PLAYER "<< game->getWinner()<< ": YOU ARE THE RAIINET CHAMPION!!!" << endl;
       game->notifyObservers();
+      for (int i = 0; i < 2; ++i) {
+        game->players[i]->links.clear();
+        game->players[i]->abilities.clear();
+        game->players[i]->downloaded.clear();
+      }
+      game->players.clear();
       std::chrono::milliseconds timespan(1000); // or whatever
       std::this_thread::sleep_for(timespan);
+      return 0;
     }
 }

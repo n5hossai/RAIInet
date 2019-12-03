@@ -121,6 +121,12 @@ void Graphics::notify(Subject& whoNotified){
 		ss << whoWon;
 		std::string msg = "CONGRATUALTIONS PLAYER " + ss.str()+ ": YOU ARE THE RAIINET CHAMPION!!!";
 		w.drawString(70, windowHeight/2, msg);
+		for (int i = 0; i < 2; ++i) {
+			this->players[i]->links.clear();
+			this->players[i]->abilities.clear();
+			this->players[i]->downloaded.clear();
+		}
+		this->players.clear();
 		return;
 	}
 	

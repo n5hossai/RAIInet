@@ -48,6 +48,12 @@ void TextDisplay::notify(Subject& whoNotified) {
 
 	if (hasWonGame) {
 		notifyObservers();
+		for (int i = 0; i < 2; ++i) {
+			this->players[i]->links.clear();
+			this->players[i]->abilities.clear();
+			this->players[i]->downloaded.clear();
+		}
+		this->players.clear();
 		return;
 	}
 	std::vector<std::vector<Cell>> board = whoNotified.getBoard();
