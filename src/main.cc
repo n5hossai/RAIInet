@@ -59,8 +59,10 @@ int main(int argc, const char* argv[]){
         istringstream optionReader(argv[i]);
         string abilityOrder;
         optionReader >> ability1;
-        if (!isAbilitiesValid(ability1)) cerr << "ERROR: INVALID ABILITIES ENTERED." << endl;
-        continue;
+        if (!isAbilitiesValid(ability1)) {
+          cerr << "ERROR: INVALID ABILITIES ENTERED." << endl;
+          return 1;
+        }
       }
       else if(argument=="-ability2"){
         //Player 2 Ability already default initialize
@@ -68,8 +70,10 @@ int main(int argc, const char* argv[]){
         istringstream optionReader(argv[i]);
         string abilityOrder;
         optionReader >> ability2;
-        if (!isAbilitiesValid(ability2)) cerr << "ERROR: INVALID ABILITIES ENTERED." << endl;
-        continue;
+        if (!isAbilitiesValid(ability2)) {
+          cerr << "ERROR: INVALID ABILITIES ENTERED." << endl;
+          return 1;
+        }
       }
       else if(argument=="-link1"){
         //Player 2 Link already default initialize
