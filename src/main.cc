@@ -120,9 +120,19 @@ int main(int argc, const char* argv[]){
 
     cout << *td;
     string command;
+    string fileName;
+    ifstream fs;
     bool usedAbilityOnTurn = false;
-    while(cin >> command){
-      if(command == "abilities"){
+   
+    
+    while(fs >> command || cin >> command){
+      if(command == "sequence"){
+        fs.close();  
+        fs.clear();
+        cin>>fileName;
+        fs.open(fileName);
+        if(!fs.is_open()) cout << "FILE NOT FOUND ENTER SEQUENCE COMMAND AGAIN"<<endl;
+      }else if(command == "abilities"){
        cout << game->getAbilityStatus();
        continue;
       }
@@ -138,7 +148,7 @@ int main(int argc, const char* argv[]){
         else {
           try{
             int ab;
-            if (!(cin >> ab) || ab > 5 || ab < 1) {
+            if (!(fs >> ab || cin >> ab) || ab > 5 || ab < 1) {
               cout << "PLEASE ENTER A NUMBER IN RANGE 1-5." <<endl;
               continue;
             }
@@ -158,7 +168,7 @@ int main(int argc, const char* argv[]){
         try{
           char id;
           string dir;
-          if (!(cin >> id >> dir)) {
+          if (!(fs >>id >> dir|| cin >> id >> dir)) {
             cout << "PLEASE ENTER AN ID AND A DIRECTION." << endl;
             continue;
           }
