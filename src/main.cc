@@ -103,7 +103,7 @@ int main(int argc, const char* argv[]){
         continue;
       }
       else{
-          cerr << "ERROR: INVALID COMMAND LINE ARGUMENT" << endl;
+          cerr << "ERROR: INVALID COMMAND LINE ARGUMENT." << endl;
           return 1;
       }
     }
@@ -114,12 +114,12 @@ int main(int argc, const char* argv[]){
     std::vector<std::string> links;
     links.push_back(link1);
     links.push_back(link2);
-    unique_ptr<Game> game = make_unique<Game>(abilities, links, hasGraphics, numOfPlayers, initPlayer);
+    Game game = Game(abilities, links, hasGraphics, numOfPlayers, initPlayer);
 
     // start the diaplays
-    shared_ptr<TextDisplay> td = make_shared<TextDisplay>(numOfPlayers, initPlayer, game->players);
+    shared_ptr<TextDisplay> td = make_shared<TextDisplay>(numOfPlayers, initPlayer, game.players);
     shared_ptr<Graphics> graphics;
-    game->attach(td);
+    game.attach(td);
     if (hasGraphics){
       graphics=  make_shared<Graphics>(numOfPlayers, initPlayer, td->players);
       td->attach(graphics);
@@ -140,7 +140,7 @@ int main(int argc, const char* argv[]){
         fs.open(fileName);
         if(!fs.is_open()) cout << "FILE NOT FOUND ENTER SEQUENCE COMMAND AGAIN"<<endl;
       }else if(command == "abilities"){
-       cout << game->getAbilityStatus();
+       cout << game.getAbilityStatus();
        continue;
       }
       else if(command == "board"){
@@ -155,15 +155,35 @@ int main(int argc, const char* argv[]){
         else {
           try{
             int ab;
-            if (!(fs >> ab || cin >> ab) || ab > 5 || ab < 1) {
-              cout << "PLEASE ENTER A NUMBER IN RANGE 1-5." <<endl;
-              continue;
+            string s;
+            if (cin >> s) {
+              istringstream ss{s};
+              if(ss >> ab && ab < 6 && ab > 0) {
+                game.applyAbility(ab);
+                usedAbilityOnTurn = true;
+                cout << *td;
+                if(game.getGameWon()){
+                  break;
+                }
+              }
+              else {
+                cout << "PLEASE ENTER A NUMBER IN RANGE 1-5." <<endl;
+                continue;
+              }
             }
-            game->applyAbility(ab);
-            usedAbilityOnTurn = true;
-            cout << *td;
-            if(game->getGameWon()){
-              break;
+            else {
+              if (fs >> ab && ab < 6 && ab > 0) {
+                game.applyAbility(ab);
+                usedAbilityOnTurn = true;
+                cout << *td;
+                if(game.getGameWon()){
+                  break;
+                }
+              }
+              else {
+                cout << "PLEASE ENTER A NUMBER IN RANGE 1-5." <<endl;
+                continue;
+              }
             }
           }catch(const exception& ex){
             cout<<ex.what()<<" PLEASE TRY AGAIN"<<endl;
@@ -179,15 +199,15 @@ int main(int argc, const char* argv[]){
             cout << "PLEASE ENTER AN ID AND A DIRECTION." << endl;
             continue;
           }
-          game->applyMove(id,dir);
+          game.applyMove(id,dir);
           if (sleep) {
             std::chrono::milliseconds timespan(1000);
             std::this_thread::sleep_for(timespan);
           }
-          game->togglePlayer();
+          game.togglePlayer();
           usedAbilityOnTurn = false;
           cout << *td;
-          if(game->getGameWon()){
+          if(game.getGameWon()){
               break;
             }
         }
@@ -197,7 +217,7 @@ int main(int argc, const char* argv[]){
           }
       }
       else if(command == "quit"){
-        cout<<"GAME TERMINATED";
+        cout<<"GAME TERMINATED" << endl;
         break;
       }
       else {
@@ -207,21 +227,21 @@ int main(int argc, const char* argv[]){
     }
 
     //decide if game has won
-    if(game->getGameWon()){
-      cout<<"CONGRATUALTIONS PLAYER "<< game->getWinner()<< ": YOU ARE THE RAIINET CHAMPION!!!" << endl;
-      game->notifyObservers();
+    if(game.getGameWon()){
+      cout<<"CONGRATUALTIONS PLAYER "<< game.getWinner()<< ": YOU ARE THE RAIINET CHAMPION!!!" << endl;
+      game.notifyObservers();
       std::chrono::milliseconds timespan(1000); // or whatever
       std::this_thread::sleep_for(timespan);
     }
 
     //free memory
     for (int i = 0; i < 2; ++i) {
-      game->players[i]->links.clear();
-      game->players[i]->abilities.clear();
-      game->players[i]->downloaded.clear();
+      game.players[i]->links.clear();
+      game.players[i]->abilities.clear();
+      game.players[i]->downloaded.clear();
     }
-    game->players.clear();
-    game->clearOb();
+    game.players.clear();
+    game.clearOb();
     td->clearOb();
     return 0;
 }

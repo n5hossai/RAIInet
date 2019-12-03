@@ -47,7 +47,7 @@ int whoseLink(char id){
 //TODO:check if ability is available FOR ALL ABILITIES
 //TODO:check if meets the condition of using abilities
 void Game::applyAbility(int ab){
-    if(players[currPlayer-1]->abilities[ab-1]->getIsUsed()) throw runtime_error("CHECK YOUR ABILITY STATUS AND TRY AGAIN, CANNOT USE ABILITY");
+    if(players[currPlayer-1]->abilities[ab-1]->getIsUsed()) throw runtime_error("CHECK YOUR ABILITY STATUS AND TRY AGAIN, CANNOT USE ABILITY.");
     string ability = players[currPlayer-1]->abilities[ab-1]->getAbilityName();
     try{
         if(ability == "LinkBoost"){
@@ -56,7 +56,16 @@ void Game::applyAbility(int ab){
             else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Firewall"){
             int r,c;
-            if(cin >> r >> c) applyFirewall(r,c);
+            string s1, s2;
+            cin >> s1;
+            istringstream ss1{s1};
+            if(ss1 >> r) {
+                cin >> s2;
+                istringstream ss2{s2};
+                if (ss2 >> c) {
+                    applyFirewall(r,c);
+                }
+            }
             else throw runtime_error("PLEASE ENTER ROW AND COL NUMBERS.");
         }else if(ability == "Download"){
             char id;
@@ -72,12 +81,32 @@ void Game::applyAbility(int ab){
             else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Sand"){
             int r,c;
-            if (cin >> r >> c) applySand(r,c);
+            string s1, s2;
+            cin >> s1;
+            istringstream ss1{s1};
+            if(ss1 >> r) {
+                cin >> s2;
+                istringstream ss2{s2};
+                if (ss2 >> c) {
+                    applySand(r,c);
+                }
+            }
             else throw runtime_error("PLEASE ENTER ROW AND COL NUMBERS.");
         }else if(ability == "Portal"){
             char id;
             int r,c;
-            if (cin >> id >> r >> c) applyPortal(id,r,c);
+            if (cin >> id) {
+                string s1, s2;
+                cin >> s1;
+                istringstream ss1{s1};
+                if(ss1 >> r) {
+                    cin >> s2;
+                    istringstream ss2{s2};
+                    if (ss2 >> c) {
+                        applyPortal(id,r,c);
+                    }
+                }
+            }
             else throw runtime_error("PLEASE ENTER LINK ID AND ROW, COL NUMBERS.");
         }else if(ability == "Strengthen"){
             char id;
@@ -93,13 +122,13 @@ void Game::applyAbility(int ab){
 }
 void Game::applyLinkBoost(char id)
 {   
-    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF LINKBOOST ABILITY: NOT YOUR LINK");
+    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF LINKBOOST ABILITY: NOT YOUR LINK.");
     if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF PORTAL ABILITY: LINK NOT IN PLAY");
     players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setIsLinkBoosted(true);
 }
 
 void Game::applyPortal(char id, int r, int c){
-    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF PORTAL ABILITY: NOT YOUR LINK");
+    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF PORTAL ABILITY: NOT YOUR LINK.");
     if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF PORTAL ABILITY: LINK NOT IN PLAY");
     int curRow = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getRow();
     int curCol = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getCol();
@@ -107,14 +136,14 @@ void Game::applyPortal(char id, int r, int c){
     if ((curRow<half && r < half) || (curRow>=half && r>=half)){
         generalMove(id, curRow, curCol, r, c);
     }else{
-        throw runtime_error("INVALID USE OF PORTAL ABILITY: PORTAL CAN ONLY BE USED ON WITHIN LINKS CURRENT SIDE");
+        throw runtime_error("INVALID USE OF PORTAL ABILITY: PORTAL CAN ONLY BE USED ON WITHIN LINKS CURRENT SIDE.");
     }
 }
 
 void Game::applyStrengthen(char id)
 {
-    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF STRENGTHEN ABILITY: NOT YOUR LINK");
-    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF STRENGTHEN ABILITY: LINK NOT IN PLAY");
+    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF STRENGTHEN ABILITY: NOT YOUR LINK.");
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF STRENGTHEN ABILITY: LINK NOT IN PLAY.");
     int tmp_strength = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getStrength();
     if (tmp_strength <=3)
     {
@@ -127,20 +156,20 @@ void Game::applyFirewall(int r, int c)
     
     if (((r == 0) || (r == 7)) && ((c == 3) || (c == 4)))
     {
-        throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED ON SERVERPORT");
+        throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED ON SERVERPORT.");
     }
     else if ((r < 0) || (r > 7) || (c < 0) || (c > 7))
     {
-        throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED OUTSIDE OF THE BOARD");
+        throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED OUTSIDE OF THE BOARD.");
     }
     else if (board[r][c].isFireWall)
     {
 
-        throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED ON ANOTHER FIREWALL");
+        throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED ON ANOTHER FIREWALL.");
     }
     else if (!board[r][c].isEmpty)
     {
-        throw runtime_error("INVALID USE OF FIREWALL ABILITY: PLACE FIREWALL ON EMPTY CELL");
+        throw runtime_error("INVALID USE OF FIREWALL ABILITY: PLACE FIREWALL ON EMPTY CELL.");
     }
     else
     {
@@ -155,15 +184,15 @@ void Game::applySand(int r, int c)
 {
     if ((r < 0) || (r > 7) || (c < 0) || (c > 7))
     {
-        throw runtime_error("INVALID USE OF SAND ABILITY: CAN'T BE USED OUTSIDE OF THE BOARD");
+        throw runtime_error("INVALID USE OF SAND ABILITY: CAN'T BE USED OUTSIDE OF THE BOARD.");
     }
     else if (!board[r][c].isFireWall)
     {
-        throw runtime_error("INVALID USE OF SAND ABILITY: NO FIREWALL TO BE SANDED");
+        throw runtime_error("INVALID USE OF SAND ABILITY: NO FIREWALL TO BE SANDED.");
     }
     else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner == currPlayer))
     {
-        throw runtime_error("INVALID USE OF SAND ABILITY: SAND OPPONENTS FIREWALL");
+        throw runtime_error("INVALID USE OF SAND ABILITY: SAND OPPONENTS FIREWALL.");
     }
     else
     {
@@ -183,7 +212,7 @@ void Game::applySand(int r, int c)
 
 void Game::applyDownload(char id){
     
-    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF DOWNLOAD ABILITY: LINK NOT IN PLAY");
+    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF DOWNLOAD ABILITY: LINK NOT IN PLAY.");
     if(whoseLink(id)!= currPlayer){
         generalDownload(whoseLink(id),id,currPlayer);
 
@@ -193,22 +222,22 @@ void Game::applyDownload(char id){
 
 void Game::applyPolarize(char id)
 {
-    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY");
+    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY.");
     bool tmp= players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getType();
     players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setType(!tmp);
 }
 
 void Game::applyScan(char id)
 {   
-    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY");
-    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK ALREADY VISIBLE");
+    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY.");
+    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK ALREADY VISIBLE.");
     players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setIsVisible(true);
 }
 
 
 void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, bool ignoreFirewall){
-    if(curRow<0 || curRow >=boardSize || curCol < 0 || curCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: LINK NOT ON BOARD");
-    if((currPlayer==1 && newRow<0) || (currPlayer==2 && newRow >=boardSize) || newCol < 0 || newCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: DESTINATION NOT ON BOARD");
+    if(curRow<0 || curRow >=boardSize || curCol < 0 || curCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: LINK NOT ON BOARD.");
+    if((currPlayer==1 && newRow<0) || (currPlayer==2 && newRow >=boardSize) || newCol < 0 || newCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: DESTINATION NOT ON BOARD.");
 
     //Moves off opponents edge
     if((currPlayer==2 && newRow<0) || (currPlayer==1 && newRow>7)){
@@ -281,13 +310,13 @@ void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, 
         // players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setRow(newRow);
         // players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setCol(newCol);
     }
-    else throw runtime_error("INVALID USE OF MOVE");   
+    else throw runtime_error("INVALID USE OF MOVE.");   
     notifyObservers();
 }
 
 void Game::applyMove(char id, string direction){
-    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF MOVE: MUST MOVE YOUR OWN LINK");
-    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF MOVE: LINK NOT IN PLAY");
+    if(whoseLink(id)!= currPlayer) throw runtime_error("INVALID USE OF MOVE: MUST MOVE YOUR OWN LINK.");
+    if(players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF MOVE: LINK NOT IN PLAY.");
 
     int moveFactor = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getMoveFactor();
 
@@ -305,13 +334,14 @@ void Game::applyMove(char id, string direction){
     }else if(direction =="left"){
         newCol = curCol-moveFactor;
     }
+    else throw runtime_error("INVALID USE OF MOVE: DIRECTION NOT RECOGNIZED.");
 
     generalMove(id,curRow,curCol,newRow,newCol);
 
 }
 
 void Game::generalDownload(int linkOwner, char toDownloadLink, int toDownloadPlayer){
-    if(players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF DOWNLOAD: LINK NOT IN PLAY");;
+    if(players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF DOWNLOAD: LINK NOT IN PLAY.");
     players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setIsVisible(true);
     players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]->setIsDownloaded(true);
     players[toDownloadPlayer-1]->downloaded.push_back(players[linkOwner - 1]->links[toDownloadLink - players[linkOwner - 1]->getFirstId()]);
