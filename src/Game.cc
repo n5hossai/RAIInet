@@ -52,7 +52,7 @@ void Game::applyAbility(int ab){
     try{
         if(ability == "LinkBoost"){
             char id;
-            if (cin >> id) applyLinkBoost(id);
+            if (cin >> id && ((('a'<=id) && (id<='h')) || (('A'<=id) && (id <= 'H')))) applyLinkBoost(id);
             else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Firewall"){
             int r,c;
@@ -65,19 +65,20 @@ void Game::applyAbility(int ab){
                 if (ss2 >> c) {
                     applyFirewall(r,c);
                 }
+                else throw runtime_error("PLEASE ENTER ROW AND COL NUMBERS.");
             }
             else throw runtime_error("PLEASE ENTER ROW AND COL NUMBERS.");
         }else if(ability == "Download"){
             char id;
-            if (cin >> id) applyDownload(id);
+            if (cin >> id && ((('a'<=id) && (id<='h')) || (('A'<=id) && (id <= 'H')))) applyDownload(id);
             else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Polarize"){
             char id;
-            if (cin >> id) applyPolarize(id);
+            if (cin >> id && ((('a'<=id) && (id<='h')) || (('A'<=id) && (id <= 'H')))) applyPolarize(id);
             else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Scan"){
             char id;
-            if (cin >> id) applyScan(id);
+            if (cin >> id && ((('a'<=id) && (id<='h')) || (('A'<=id) && (id <= 'H')))) applyScan(id);
             else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Sand"){
             int r,c;
@@ -90,12 +91,13 @@ void Game::applyAbility(int ab){
                 if (ss2 >> c) {
                     applySand(r,c);
                 }
+                else throw runtime_error("PLEASE ENTER ROW AND COL NUMBERS.");
             }
             else throw runtime_error("PLEASE ENTER ROW AND COL NUMBERS.");
         }else if(ability == "Portal"){
             char id;
             int r,c;
-            if (cin >> id) {
+            if (cin >> id && ((('a'<=id) && (id<='h')) || (('A'<=id) && (id <= 'H')))) {
                 string s1, s2;
                 cin >> s1;
                 istringstream ss1{s1};
@@ -105,7 +107,9 @@ void Game::applyAbility(int ab){
                     if (ss2 >> c) {
                         applyPortal(id,r,c);
                     }
+                    else throw runtime_error("PLEASE ENTER LINK ID AND ROW, COL NUMBERS.");
                 }
+                else throw runtime_error("PLEASE ENTER LINK ID AND ROW, COL NUMBERS.");
             }
             else throw runtime_error("PLEASE ENTER LINK ID AND ROW, COL NUMBERS.");
         }else if(ability == "Strengthen"){
@@ -229,8 +233,9 @@ void Game::applyPolarize(char id)
 
 void Game::applyScan(char id)
 {   
-    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK NOT IN PLAY.");
-    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) throw runtime_error("INVALID USE OF POLARIZE ABILITY: LINK ALREADY VISIBLE.");
+    if (whoseLink(id) == currPlayer) throw runtime_error("INVALID USE OF SCAN ABILITY: CANNOT SCAN YOUR OWN LINK.");
+    if(players[whoseLink(id) - 1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsDownloaded()) throw runtime_error("INVALID USE OF SCAN ABILITY: LINK NOT IN PLAY.");
+    if(players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->getIsVisible()) throw runtime_error("INVALID USE OF SCAN ABILITY: LINK ALREADY VISIBLE.");
     players[whoseLink(id)-1]->links[id - players[whoseLink(id) - 1]->getFirstId()]->setIsVisible(true);
 }
 

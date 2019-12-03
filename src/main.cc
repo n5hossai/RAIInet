@@ -45,8 +45,8 @@ int main(int argc, const char* argv[]){
     //Initialize Game players default links V1D4V3V2D3V4D2D1
 
     //Setting Command Line Argument Options
-    string ability1 = "LFDPS";
-    string ability2="LFDPS";
+    string ability1 = "LFDSP";
+    string ability2="LFDSP";
     string link1="V1V2V3V4D1D2D3D4";
     string link2="V1V2V3V4D1D2D3D4";
     bool hasGraphics = false;
