@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class Cell;
+struct Cell;
 class Player{
     private:
         int numOfDataDld = 0;

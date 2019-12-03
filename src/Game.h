@@ -54,7 +54,7 @@ class Game : public Subject{
         //override Subject class public methods
         int getCurrPlayer() override;
         vector<shared_ptr<Player>> getPlayers() override;
-        vector<vector<Cell>> getBoard();
+        vector<vector<Cell>> getBoard() override;
 };
 
 #endif

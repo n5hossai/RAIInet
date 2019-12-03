@@ -18,7 +18,7 @@ public:
 	int whoWon = 0;
 	std::vector<shared_ptr<Player>> players;
 	TextDisplay(int numOfPlayers, int initPlayer, std::vector<shared_ptr<Player>> players);
-	void notify(Subject& whoNotified);
+	void notify(Subject& whoNotified) override;
 	friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
 
     int getCurrPlayer() override;
