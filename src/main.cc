@@ -49,6 +49,7 @@ int main(int argc, const char* argv[]){
     string link1="V1V2V3V4D1D2D3D4";
     string link2="V1V2V3V4D1D2D3D4";
     bool hasGraphics = false;
+    bool sleep = false;
     for(int i = 1 ; i < argc ; i++){
         string argument;
         istringstream argReader(argv[i]);
@@ -94,6 +95,10 @@ int main(int argc, const char* argv[]){
       else if(argument=="-graphics"){
         //Game default graphic display option is false
         hasGraphics=true;
+        continue;
+      }
+      else if(argument == "-sleep") {
+        sleep = true;
         continue;
       }
       else{
@@ -173,8 +178,10 @@ int main(int argc, const char* argv[]){
             continue;
           }
           game->applyMove(id,dir);
-          std::chrono::milliseconds timespan(1000);
-          std::this_thread::sleep_for(timespan);
+          if (sleep) {
+            std::chrono::milliseconds timespan(1000);
+            std::this_thread::sleep_for(timespan);
+          }
           game->togglePlayer();
           usedAbilityOnTurn = false;
           cout << *td;
