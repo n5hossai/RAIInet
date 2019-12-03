@@ -52,37 +52,37 @@ void Game::applyAbility(int ab){
     try{
         if(ability == "LinkBoost"){
             char id;
-            cin >> id;
-            applyLinkBoost(id);
+            if (cin >> id) applyLinkBoost(id);
+            else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Firewall"){
             int r,c;
-            cin >> r >> c;
-            applyFirewall(r,c);
+            if(cin >> r >> c) applyFirewall(r,c);
+            else throw runtime_error("PLEASE ENTER ROW AND COL NUMBERS.");
         }else if(ability == "Download"){
             char id;
-            cin >> id;
-            applyDownload(id);
+            if (cin >> id) applyDownload(id);
+            else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Polarize"){
             char id;
-            cin >> id;
-            applyPolarize(id);
+            if (cin >> id) applyPolarize(id);
+            else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Scan"){
             char id;
-            cin >> id;
-            applyScan(id);
+            if (cin >> id) applyScan(id);
+            else throw runtime_error("PLEASE ENTER A LINK ID.");
         }else if(ability == "Sand"){
             int r,c;
-            cin >> r >> c;
-            applySand(r,c);
+            if (cin >> r >> c) applySand(r,c);
+            else throw runtime_error("PLEASE ENTER ROW AND COL NUMBERS.");
         }else if(ability == "Portal"){
             char id;
             int r,c;
-            cin >> id >> r >> c;
-            applyPortal(id,r,c);
+            if (cin >> id >> r >> c) applyPortal(id,r,c);
+            else throw runtime_error("PLEASE ENTER LINK ID AND ROW, COL NUMBERS.");
         }else if(ability == "Strengthen"){
             char id;
-            cin >> id;
-            applyStrengthen(id);
+            if (cin >> id) applyStrengthen(id);
+            else throw runtime_error("PLEASE ENTER A LINK ID.");
         }
         players[currPlayer-1]->useAbility(ab-1);
         notifyObservers();
@@ -129,34 +129,43 @@ void Game::applyFirewall(int r, int c)
     {
         throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED ON SERVERPORT");
     }
+    else if ((r < 0) || (r > 7) || (c < 0) || (c > 7))
+    {
+        throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED OUTSIDE OF THE BOARD");
+    }
     else if (board[r][c].isFireWall)
     {
 
         throw runtime_error("INVALID USE OF FIREWALL ABILITY: CAN'T BE PLACED ON ANOTHER FIREWALL");
     }
-    else if ((!board[r][c].isFireWall) && (!board[r][c].isEmpty))
+    else if (!board[r][c].isEmpty)
     {
         throw runtime_error("INVALID USE OF FIREWALL ABILITY: PLACE FIREWALL ON EMPTY CELL");
     }
-    else if ((!board[r][c].isFireWall) && (board[r][c].isEmpty))
+    else
     {
         board[r][c].isFireWall = true; 
         board[r][c].fireWallOwner = currPlayer; 
         players[currPlayer-1]->fwCells.push_back(&board[r][c]);
-    }
-    else{
-        throw runtime_error("INVALID USE OF FIREWALL ABILITY");
     }
 }
     
 
 void Game::applySand(int r, int c)
 {
-    if (!board[r][c].isFireWall)
+    if ((r < 0) || (r > 7) || (c < 0) || (c > 7))
+    {
+        throw runtime_error("INVALID USE OF SAND ABILITY: CAN'T BE USED OUTSIDE OF THE BOARD");
+    }
+    else if (!board[r][c].isFireWall)
     {
         throw runtime_error("INVALID USE OF SAND ABILITY: NO FIREWALL TO BE SANDED");
     }
-    else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner != currPlayer))
+    else if ((board[r][c].isFireWall) && (board[r][c].fireWallOwner == currPlayer))
+    {
+        throw runtime_error("INVALID USE OF SAND ABILITY: SAND OPPONENTS FIREWALL");
+    }
+    else
     {
         board[r][c].isFireWall = false;
         int numOfFW = players[board[r][c].fireWallOwner - 1]->fwCells.size();
@@ -168,7 +177,6 @@ void Game::applySand(int r, int c)
 
         board[r][c].fireWallOwner = 0;
     }
-    else throw runtime_error("INVALID USE OF SAND ABILITY: SAND OPPONENTS FIREWALL");
 }
     
 
@@ -201,15 +209,19 @@ void Game::applyScan(char id)
 void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, bool ignoreFirewall){
     if(curRow<0 || curRow >=boardSize || curCol < 0 || curCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: LINK NOT ON BOARD");
     if((currPlayer==1 && newRow<0) || (currPlayer==2 && newRow >=boardSize) || newCol < 0 || newCol >=boardSize) throw runtime_error("INVALID USE OF MOVE: DESTINATION NOT ON BOARD");
-    
+
     //Moves off opponents edge
     if((currPlayer==2 && newRow<0) || (currPlayer==1 && newRow>7)){
         generalDownload(currPlayer,id,currPlayer);
+        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(newRow);
+        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(newCol);
     }
 
     //Moves into opponents server port
     else if(board[newRow][newCol].isServerPort && board[newRow][newCol].whoseServerPort!=currPlayer){
         generalDownload(currPlayer, id, board[newRow][newCol].whoseServerPort);
+        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(newRow);
+        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(newCol);
     }
 
     //Moves onto a fireWall
@@ -219,6 +231,8 @@ void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, 
         int linkType = players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->getType();
         if(linkType == 1){
             generalDownload(currPlayer,id,currPlayer);
+            players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(newRow);
+            players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(newCol);
         }
 
         generalMove(id, curRow, curCol, newRow, newCol, true);
@@ -230,8 +244,10 @@ void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, 
     else if(board[newRow][newCol].isEmpty && board[newRow][newCol].text == '.'){
         board[curRow][curCol].text = '.';
         board[curRow][curCol].isEmpty =true;
-        board[newRow][newCol].text = id;
-        board[newRow][newCol].isEmpty =false;
+        if (!board[newRow][newCol].isFireWall){
+            board[newRow][newCol].text = id;
+            board[newRow][newCol].isEmpty =false;
+        }
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(newRow);
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(newCol);
     }
@@ -253,13 +269,17 @@ void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, 
         int loserID = myStrength<yourStrength ? id : otherId;
 
         generalDownload(loser, loserID, winner);
-        
         board[curRow][curCol].text = '.';
         board[curRow][curCol].isEmpty =true;
-        board[newRow][newCol].text = winnerID;
-        board[newRow][newCol].isEmpty =false;
-        players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setRow(newRow);
-        players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setCol(newCol);
+        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(newRow);
+        players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(newCol);
+        
+        if (!board[newRow][newCol].isFireWall) {
+            board[newRow][newCol].text = winnerID;
+            board[newRow][newCol].isEmpty =false;
+        }
+        // players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setRow(newRow);
+        // players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setCol(newCol);
     }
     else throw runtime_error("INVALID USE OF MOVE");   
     notifyObservers();
@@ -359,7 +379,7 @@ string Game::getAbilityStatus(){
             ss << i+1;
             builder += "["+ ss.str()+"] ";
             builder += players[currPlayer - 1]->abilities[i]->getAbilityName();
-            builder += (players[currPlayer - 1]->abilities[i]->getIsUsed()) ?" USED" : "";
+            builder += (players[currPlayer - 1]->abilities[i]->getIsUsed()) ?" [USED]" : "";
             builder += "\n";
     }
     return builder;

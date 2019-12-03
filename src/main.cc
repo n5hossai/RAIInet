@@ -3,11 +3,37 @@
 #include <sstream>
 #include <string>
 #include <stdexcept>
+#include <chrono>
+#include <thread>
 #include "Game.h"
 #include "TextDisplay.h"
 #include "Graphics.h"
 
 using namespace std;
+
+bool isAbilitiesValid(string s) {
+  int L = 0;
+  int F = 0;
+  int D = 0;
+  int P = 0;
+  int S = 0;
+  int N = 0;
+  int O = 0;
+  int R = 0;
+  for (unsigned int i = 0; i < s.size(); ++i){
+      if (s[i] == 'L') L += 1;
+      else if (s[i] == 'F') F += 1;
+      else if (s[i] == 'D') D += 1;
+      else if (s[i] == 'P') P += 1;
+      else if (s[i] == 'S') S += 1;
+      else if (s[i] == 'N') N += 1;
+      else if (s[i] == 'O') O += 1;
+      else if (s[i] == 'R') R += 1;
+      else return false;
+  }
+  if (L > 2 || F > 2 || D > 2 || P > 2 || S > 2 || N > 2 || O > 2 || R > 2) return false;
+  return true;
+}
 
 int main(int argc, const char* argv[]){
     int numOfPlayers = 2; //Only support 2 player from command line rn
@@ -33,6 +59,7 @@ int main(int argc, const char* argv[]){
         istringstream optionReader(argv[i]);
         string abilityOrder;
         optionReader >> ability1;
+        if (!isAbilitiesValid(ability1)) cerr << "ERROR: INVALID ABILITIES ENTERED." << endl;
         continue;
       }
       else if(argument=="-ability2"){
@@ -41,6 +68,7 @@ int main(int argc, const char* argv[]){
         istringstream optionReader(argv[i]);
         string abilityOrder;
         optionReader >> ability2;
+        if (!isAbilitiesValid(ability2)) cerr << "ERROR: INVALID ABILITIES ENTERED." << endl;
         continue;
       }
       else if(argument=="-link1"){
@@ -65,7 +93,7 @@ int main(int argc, const char* argv[]){
         continue;
       }
       else{
-          cerr << "ERROR: INVALID COMMAND LINE ARGUMENT";
+          cerr << "ERROR: INVALID COMMAND LINE ARGUMENT" << endl;
           continue;
       }
     }
@@ -105,18 +133,21 @@ int main(int argc, const char* argv[]){
         else {
           try{
             int ab;
-            cin>>ab;
-            game->applyAbility(ab);
-            usedAbilityOnTurn = true;
-            cout << *td;
-            if(game->getGameWon()){
-              break;
+            if (cin>>ab) { 
+              if (ab > 5) throw runtime_error("CHECK YOUR ABILITY NUMBER.");
+              game->applyAbility(ab);
+              usedAbilityOnTurn = true;
+              cout << *td;
+              if(game->getGameWon()){
+                break;
+              }
             }
+            else throw runtime_error("PLEASE ENTER A NUMBER.");
           }catch(const exception& ex){
             cout<<ex.what()<<" PLEASE TRY AGAIN"<<endl;
+            continue;
           }
        }
-         continue;
       }
       else if(command == "move"){
         try{
@@ -124,6 +155,8 @@ int main(int argc, const char* argv[]){
           string dir;
           cin >> id >> dir;
           game->applyMove(id,dir);
+          std::chrono::milliseconds timespan(1000); // or whatever
+          std::this_thread::sleep_for(timespan);
           game->togglePlayer();
           usedAbilityOnTurn = false;
           cout << *td;
@@ -138,7 +171,7 @@ int main(int argc, const char* argv[]){
       }
       else if(command == "quit"){
         cout<<"GAME TERMINATED";
-       break;
+        break;
       }
 
     }
@@ -146,5 +179,7 @@ int main(int argc, const char* argv[]){
     if(game->getGameWon()){
       cout<<"CONGRATUALTIONS PLAYER "<< game->getWinner()<< ": YOU ARE THE RAIINET CHAMPION!!!" << endl;
       game->notifyObservers();
+      std::chrono::milliseconds timespan(1000); // or whatever
+      std::this_thread::sleep_for(timespan);
     }
 }

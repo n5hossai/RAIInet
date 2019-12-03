@@ -120,7 +120,7 @@ void Graphics::notify(Subject& whoNotified){
 		stringstream ss;
 		ss << whoWon;
 		std::string msg = "CONGRATUALTIONS PLAYER " + ss.str()+ ": YOU ARE THE RAIINET CHAMPION!!!";
-		w.drawString(0, windowHeight/2, msg);
+		w.drawString(70, windowHeight/2, msg);
 		return;
 	}
 	
@@ -220,7 +220,7 @@ void Graphics::notify(Subject& whoNotified){
 
 						//skip downloaded links
 						if (players[k]->links[t]->getIsDownloaded()) {
-							break;
+							continue;
 						}
 
 						// found un-downloaded links, looking for firewall on this cell
