@@ -269,7 +269,7 @@ void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, 
             players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(newCol);
         }
 
-        generalMove(id, curRow, curCol, newRow, newCol, true);
+        else generalMove(id, curRow, curCol, newRow, newCol, true);
      
     //Move onto firewall remember to handle if someone already there
     }
@@ -278,10 +278,8 @@ void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, 
     else if(board[newRow][newCol].isEmpty && board[newRow][newCol].text == '.'){
         board[curRow][curCol].text = '.';
         board[curRow][curCol].isEmpty =true;
-        if (!board[newRow][newCol].isFireWall){
-            board[newRow][newCol].text = id;
-            board[newRow][newCol].isEmpty =false;
-        }
+        board[newRow][newCol].text = id;
+        board[newRow][newCol].isEmpty =false;
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(newRow);
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(newCol);
     }
@@ -308,10 +306,8 @@ void Game::generalMove(char id, int curRow, int curCol, int newRow, int newCol, 
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setRow(newRow);
         players[currPlayer - 1]->links[id - players[currPlayer - 1]->getFirstId()]->setCol(newCol);
         
-        if (!board[newRow][newCol].isFireWall) {
-            board[newRow][newCol].text = winnerID;
-            board[newRow][newCol].isEmpty =false;
-        }
+        board[newRow][newCol].text = winnerID;
+        board[newRow][newCol].isEmpty =false;
         // players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setRow(newRow);
         // players[winner - 1]->links[winnerID - players[winner - 1]->getFirstId()]->setCol(newCol);
     }

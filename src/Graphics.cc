@@ -195,8 +195,8 @@ void Graphics::notify(Subject& whoNotified){
 		for (int j = 0; j < boardSize; ++j) {
 			bool empty= true;
 			bool hasFW = false;
-			for (int k = 0; k < numOfPlayers; ++k) {
 
+			for (int k = 0; k < numOfPlayers; ++k) {
 				// find server ports
 				if (((players[k]->SSCells[0]->row == i) && (players[k]->SSCells[0]->col == j)) 
 					|| ((players[k]->SSCells[1]->row == i) && (players[k]->SSCells[1]->col == j))) {
@@ -212,13 +212,14 @@ void Graphics::notify(Subject& whoNotified){
 				for (int t = 0; t < numOfFW; ++t) {
 					if ((players[k]->fwCells[t]->row == i) && (players[k]->fwCells[t]->col == j)) {
 						empty = false;
+						hasFW = true;
 						w.fillRectangle(padding+j*cellSize+thickness, scoreHeight+padding*2+i*cellSize+thickness, cellSize-thickness*2, cellSize-thickness*2,playersColor[k]);
 						w.fillRectangle(padding+j*cellSize+thickness*2, scoreHeight+padding*2+i*cellSize+thickness*2, cellSize-thickness*4, cellSize-thickness*4,FirewallColor);
-						break;
 					}
 				}
+			}
 
-				//find links
+			for (int k = 0; k < numOfPlayers; ++k) {
 				for (int t = 0; t < 8; ++t) {
 					int row = players[k]->links[t]->getRow();
 					int col = players[k]->links[t]->getCol();
@@ -229,18 +230,7 @@ void Graphics::notify(Subject& whoNotified){
 							continue;
 						}
 
-						// found un-downloaded links, looking for firewall on this cell
 						empty = false;
-						for (int kk = 0; kk < numOfPlayers; ++kk) {
-							int numOfFW = players[kk]->fwCells.size();
-							for (int f = 0; f < numOfFW; ++f) {
-								if ((players[kk]->fwCells[f]->row == i) && (players[kk]->fwCells[f]->col == j)) {
-									hasFW = true;
-									break;
-								}
-							}
-						}
-
 						// only color the background white if there is no firewall on this cell
 						if (!hasFW) w.fillRectangle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2, cellSize-thickness*2, Xwindow::White);
 						w.fillCircle(padding+col*cellSize+thickness, scoreHeight+padding*2+row*cellSize+thickness,cellSize-thickness*2,playersColor[k]);
@@ -262,5 +252,4 @@ void Graphics::notify(Subject& whoNotified){
 			};
 		}
 	}
-	//sleep(3);
 }
